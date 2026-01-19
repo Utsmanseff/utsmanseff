@@ -156,7 +156,7 @@ export default function Portfolio() {
           <div className="flex justify-between items-center">
             <h1 className="text-xl font-bold text-gray-900 dark:text-white transition-colors">Utsman</h1>
             
-            {/* Desktop Navigation */}
+            {/* Desktop Menu */}
             <div className="hidden md:flex items-center gap-8">
               <a href="#about" className="text-gray-700 dark:text-gray-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors font-medium">Tentang</a>
               <a href="#skills" className="text-gray-700 dark:text-gray-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors font-medium">Keahlian</a>
@@ -176,7 +176,7 @@ export default function Portfolio() {
             </div>
 
             {/* Mobile Menu Button */}
-            <div className="flex md:hidden items-center gap-4">
+            <div className="flex md:hidden items-center gap-3">
               <button
                 onClick={toggleDarkMode}
                 className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
@@ -202,41 +202,45 @@ export default function Portfolio() {
             </div>
           </div>
 
-          {/* Mobile Navigation Menu */}
-          {mobileMenuOpen && (
-            <div className="md:hidden mt-4 pb-4 border-t border-gray-200 dark:border-gray-700 pt-4">
-              <div className="flex flex-col gap-4">
+          {/* Mobile Menu dengan Animasi Slide Down */}
+          <div 
+            className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+              mobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+            }`}
+          >
+            <div className="border-t border-gray-100 dark:border-gray-800 pt-4 pb-4 mt-4">
+              <div className="flex flex-col gap-1">
                 <a 
                   href="#about" 
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-gray-700 dark:text-gray-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors font-medium py-2"
+                  className="text-gray-700 dark:text-gray-300 hover:text-teal-600 dark:hover:text-teal-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all font-medium py-3 px-4 rounded-lg"
                 >
                   Tentang
                 </a>
                 <a 
                   href="#skills" 
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-gray-700 dark:text-gray-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors font-medium py-2"
+                  className="text-gray-700 dark:text-gray-300 hover:text-teal-600 dark:hover:text-teal-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all font-medium py-3 px-4 rounded-lg"
                 >
                   Keahlian
                 </a>
                 <a 
                   href="#projects" 
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-gray-700 dark:text-gray-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors font-medium py-2"
+                  className="text-gray-700 dark:text-gray-300 hover:text-teal-600 dark:hover:text-teal-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all font-medium py-3 px-4 rounded-lg"
                 >
                   Project
                 </a>
                 <a 
                   href="#contact" 
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-gray-700 dark:text-gray-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors font-medium py-2"
+                  className="text-gray-700 dark:text-gray-300 hover:text-teal-600 dark:hover:text-teal-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all font-medium py-3 px-4 rounded-lg"
                 >
                   Kontak
                 </a>
               </div>
             </div>
-          )}
+          </div>
         </div>
       </nav>
 

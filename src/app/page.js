@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Github, Mail, Phone, MapPin, Code, Database, Wrench, ChevronRight, ExternalLink, User, Image, Sun, Moon } from 'lucide-react';
+import { Github, Mail, Phone, MapPin, Code, Database, Wrench, ChevronRight, ExternalLink, User, Image, Sun, Moon, Menu, X } from 'lucide-react';
 
 export default function Portfolio() {
   const [activeProject, setActiveProject] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
  useEffect(() => {
     setMounted(true);
@@ -154,7 +155,9 @@ export default function Portfolio() {
         <div className="max-w-6xl mx-auto px-6 py-5">
           <div className="flex justify-between items-center">
             <h1 className="text-xl font-bold text-gray-900 dark:text-white transition-colors">Utsman</h1>
-            <div className="flex items-center gap-8">
+            
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center gap-8">
               <a href="#about" className="text-gray-700 dark:text-gray-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors font-medium">Tentang</a>
               <a href="#skills" className="text-gray-700 dark:text-gray-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors font-medium">Keahlian</a>
               <a href="#projects" className="text-gray-700 dark:text-gray-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors font-medium">Project</a>
@@ -171,7 +174,69 @@ export default function Portfolio() {
                 )}
               </button>
             </div>
+
+            {/* Mobile Menu Button */}
+            <div className="flex md:hidden items-center gap-4">
+              <button
+                onClick={toggleDarkMode}
+                className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
+                aria-label="Toggle dark mode"
+              >
+                {darkMode ? (
+                  <Sun size={20} className="text-yellow-500" />
+                ) : (
+                  <Moon size={20} className="text-gray-700" />
+                )}
+              </button>
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
+                aria-label="Toggle menu"
+              >
+                {mobileMenuOpen ? (
+                  <X size={24} className="text-gray-700 dark:text-gray-300" />
+                ) : (
+                  <Menu size={24} className="text-gray-700 dark:text-gray-300" />
+                )}
+              </button>
+            </div>
           </div>
+
+          {/* Mobile Navigation Menu */}
+          {mobileMenuOpen && (
+            <div className="md:hidden mt-4 pb-4 border-t border-gray-200 dark:border-gray-700 pt-4">
+              <div className="flex flex-col gap-4">
+                <a 
+                  href="#about" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-gray-700 dark:text-gray-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors font-medium py-2"
+                >
+                  Tentang
+                </a>
+                <a 
+                  href="#skills" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-gray-700 dark:text-gray-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors font-medium py-2"
+                >
+                  Keahlian
+                </a>
+                <a 
+                  href="#projects" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-gray-700 dark:text-gray-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors font-medium py-2"
+                >
+                  Project
+                </a>
+                <a 
+                  href="#contact" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-gray-700 dark:text-gray-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors font-medium py-2"
+                >
+                  Kontak
+                </a>
+              </div>
+            </div>
+          )}
         </div>
       </nav>
 
@@ -194,16 +259,16 @@ export default function Portfolio() {
                 Berpengalaman dalam membangun sistem kritikal untuk sektor kesehatan, termasuk Rekam Medis 
                 Elektronik dan integrasi BPJS Kesehatan.
               </p>
-              <div className="flex gap-4">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <a 
                   href="#contact" 
-                  className="bg-linear-to-r from-teal-600 to-cyan-600 dark:from-teal-500 dark:to-cyan-500 text-white px-7 py-3.5 rounded-lg hover:from-teal-700 hover:to-cyan-700 dark:hover:from-teal-600 dark:hover:to-cyan-600 transition-all shadow-lg shadow-teal-600/30 dark:shadow-teal-500/20 hover:shadow-xl hover:shadow-teal-600/40 inline-flex items-center gap-2 font-semibold"
+                  className="bg-linear-to-r from-teal-600 to-cyan-600 dark:from-teal-500 dark:to-cyan-500 text-white px-5 py-2.5 sm:px-6 sm:py-3 rounded-lg hover:from-teal-700 hover:to-cyan-700 dark:hover:from-teal-600 dark:hover:to-cyan-600 transition-all shadow-lg shadow-teal-600/30 dark:shadow-teal-500/20 hover:shadow-xl hover:shadow-teal-600/40 inline-flex items-center justify-center gap-2 font-semibold text-sm sm:text-base"
                 >
-                  Hubungi Saya <ChevronRight size={20} />
+                  Hubungi Saya <ChevronRight size={18} />
                 </a>
                 <a 
                   href="#projects" 
-                  className="border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 px-7 py-3.5 rounded-lg hover:border-teal-600 dark:hover:border-teal-500 hover:text-teal-600 dark:hover:text-teal-400 transition-all font-semibold"
+                  className="border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 px-5 py-2.5 sm:px-6 sm:py-3 rounded-lg hover:border-teal-600 dark:hover:border-teal-500 hover:text-teal-600 dark:hover:text-teal-400 transition-all font-semibold text-sm sm:text-base text-center"
                 >
                   Lihat Project
                 </a>

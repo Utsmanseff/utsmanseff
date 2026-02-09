@@ -301,50 +301,91 @@ export default function Portfolio() {
           
           <div className="grid md:grid-cols-2 gap-8">
             <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg shadow-gray-100 dark:shadow-gray-900/50 border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 bg-linear-to-br from-teal-600 to-cyan-600 rounded-xl flex items-center justify-center">
-                  <Code size={24} className="text-white" />
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white transition-colors">Pengalaman Kerja</h3>
-              </div>
-              <div className="space-y-6">
-                <div className="pl-5 border-l-4 border-teal-600 dark:border-teal-500">
-                  <h4 className="font-bold text-lg text-gray-900 dark:text-white transition-colors">Staff IT</h4>
-                  <p className="text-gray-700 dark:text-gray-300 font-medium mb-1 transition-colors">RSU Nirwana</p>
-                  <p className="text-gray-500 dark:text-gray-400 text-sm mb-3 transition-colors">2024 - Sekarang (Shift Malam)</p>
-                  <ul className="text-gray-700 dark:text-gray-300 space-y-2 transition-colors">
-                    <li className="flex items-start gap-2">
-                      <span className="text-teal-600 dark:text-teal-400 mt-1 font-bold">→</span>
-                      <span>Pengembangan aplikasi RME dan e-Klaim BPJS</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-teal-600 dark:text-teal-400 mt-1 font-bold">→</span>
-                      <span>Implementasi full bridging IDRG/INA-CBGs</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-teal-600 dark:text-teal-400 mt-1 font-bold">→</span>
-                      <span>Maintenance sistem dan infrastruktur IT</span>
-                    </li>
-                  </ul>
-                </div>
-                <div className="pl-5 border-l-4 border-gray-300 dark:border-gray-600">
-                  <h4 className="font-bold text-lg text-gray-900 dark:text-white transition-colors">Staff Data & Administrasi</h4>
-                  <p className="text-gray-700 dark:text-gray-300 font-medium mb-1 transition-colors">DPMPTSP Kota Banjarbaru</p>
-                  <p className="text-gray-500 dark:text-gray-400 text-sm mb-3 transition-colors">2023 (Magang)</p>
-                  <ul className="text-gray-700 dark:text-gray-300 space-y-2 transition-colors">
-                    <li className="flex items-start gap-2">
-                      <span className="text-gray-400 dark:text-gray-500 mt-1 font-bold">→</span>
-                      <span>Pengolahan data perizinan</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-gray-400 dark:text-gray-500 mt-1 font-bold">→</span>
-                      <span>Pengelolaan dokumen digital</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            
+  <div className="flex items-center gap-3 mb-6">
+    <div className="w-12 h-12 bg-linear-to-br from-teal-600 to-cyan-600 rounded-xl flex items-center justify-center">
+      <Code size={24} className="text-white" />
+    </div>
+    <h3 className="text-2xl font-bold text-gray-900 dark:text-white transition-colors">
+      Pengalaman Kerja
+    </h3>
+  </div>
+
+  <div className="space-y-6">
+    <div className="pl-5 border-l-4 border-teal-600 dark:border-teal-500">
+      <h4 className="font-bold text-lg text-gray-900 dark:text-white transition-colors">
+        Staff IT
+      </h4>
+      <p className="text-gray-700 dark:text-gray-300 font-medium mb-1 transition-colors">
+        RSU Nirwana
+      </p>
+      <p className="text-gray-500 dark:text-gray-400 text-sm mb-3 transition-colors">
+        2024 - Sekarang (Shift Malam)
+      </p>
+      <ul className="text-gray-700 dark:text-gray-300 space-y-2 transition-colors">
+        <li className="flex items-start gap-2">
+          <span className="text-teal-600 dark:text-teal-400 mt-1 font-bold">→</span>
+          <span>Pengelolaan dan pemeliharaan sistem RME dan e-Klaim BPJS</span>
+        </li>
+        <li className="flex items-start gap-2">
+          <span className="text-teal-600 dark:text-teal-400 mt-1 font-bold">→</span>
+          <span>Implementasi full bridging IDRG/INA-CBGs</span>
+        </li>
+        <li className="flex items-start gap-2">
+          <span className="text-teal-600 dark:text-teal-400 mt-1 font-bold">→</span>
+          <span>Maintenance sistem, jaringan, dan infrastruktur IT</span>
+        </li>
+      </ul>
+    </div>
+
+    <div className="pl-5 border-l-4 border-cyan-600 dark:border-cyan-500">
+      <h4 className="font-bold text-lg text-gray-900 dark:text-white transition-colors">
+        Freelance Web Developer
+      </h4>
+      <p className="text-gray-700 dark:text-gray-300 font-medium mb-1 transition-colors">
+        Proyek Mandiri / Klien
+      </p>
+      <p className="text-gray-500 dark:text-gray-400 text-sm mb-3 transition-colors">
+        2024 - Sekarang
+      </p>
+      <ul className="text-gray-700 dark:text-gray-300 space-y-2 transition-colors">
+        <li className="flex items-start gap-2">
+          <span className="text-cyan-600 dark:text-cyan-400 mt-1 font-bold">→</span>
+          <span>Mengelola proyek pengembangan website dan sistem informasi berbasis web</span>
+        </li>
+        <li className="flex items-start gap-2">
+          <span className="text-cyan-600 dark:text-cyan-400 mt-1 font-bold">→</span>
+          <span>Koordinasi dengan klien untuk analisis kebutuhan dan solusi sistem</span>
+        </li>
+        <li className="flex items-start gap-2">
+          <span className="text-cyan-600 dark:text-cyan-400 mt-1 font-bold">→</span>
+          <span>Maintenance, pengembangan fitur, dan optimasi aplikasi</span>
+        </li>
+      </ul>
+    </div>
+
+    <div className="pl-5 border-l-4 border-gray-300 dark:border-gray-600">
+      <h4 className="font-bold text-lg text-gray-900 dark:text-white transition-colors">
+        Staff Data & Administrasi
+      </h4>
+      <p className="text-gray-700 dark:text-gray-300 font-medium mb-1 transition-colors">
+        DPMPTSP Kota Banjarbaru
+      </p>
+      <p className="text-gray-500 dark:text-gray-400 text-sm mb-3 transition-colors">
+        2023 (Magang)
+      </p>
+      <ul className="text-gray-700 dark:text-gray-300 space-y-2 transition-colors">
+        <li className="flex items-start gap-2">
+          <span className="text-gray-400 dark:text-gray-500 mt-1 font-bold">→</span>
+          <span>Pengolahan dan rekapitulasi data perizinan</span>
+        </li>
+        <li className="flex items-start gap-2">
+          <span className="text-gray-400 dark:text-gray-500 mt-1 font-bold">→</span>
+          <span>Pengelolaan dokumen digital dan administrasi</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>      
             <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg shadow-gray-100 dark:shadow-gray-900/50 border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 bg-linear-to-br from-teal-600 to-cyan-600 rounded-xl flex items-center justify-center">

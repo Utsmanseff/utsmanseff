@@ -21,8 +21,8 @@
 |-------|------|------|--------|
 | 1 | Foundation (deps, fonts, tokens, skeleton) | T1-T5 | done |
 | 2 | i18n + hooks (config, dict, useLocale, useTheme, useInView) | T6-T8 | done |
-| 3 | Content data (projects, skills, experience, education, meta) | T9-T13 | pending |
-| 4 | UI primitives (Providers, SectionTitle, Rule, Tag, FadeIn, ExternalLink, LangSwitcher, ThemeToggle) | T14-T15 | pending |
+| 3 | Content data (projects, skills, experience, education, meta) | T9-T10 | done |
+| 4 | UI primitives (Providers, SectionTitle, Rule, Tag, FadeIn, ExternalLink, LangSwitcher, ThemeToggle) | T11-T13 | pending |
 | 5 | Nav | T16 | pending |
 | 6 | Hero | T17 | pending |
 | 7 | About | T18 | pending |
@@ -36,9 +36,12 @@
 | 15 | SEO + OG image + favicon | T27-T28 | pending |
 | 16 | Performance + a11y + README + cleanup | T29-T31 | pending |
 
-## Commit Log (Phase 1-2)
+## Commit Log (Phase 1-3)
 
 ```
+8baf53f feat(data): add skills, experience, education, meta datasets
+8b9f4d2 feat(data): add bilingual project dataset (3 case studies + others + soon)
+50029c6 docs: add PROGRESS memory file for cross-session context
 439b43c feat(motion): add useInView hook for scroll-triggered animations
 1b607f6 feat(theme): add useTheme hook with localStorage + prefers-color-scheme
 58ef9ff feat(i18n): add useLocale hook with URL/storage/browser resolution
@@ -76,6 +79,13 @@ b544eaf docs: add portfolio redesign spec (editorial warm, bilingual)
 - Test: `useLocale.test.jsx` (4), `useTheme.test.jsx` (3), `useInView.test.jsx` (1)
 
 **Total: 11 test pass, 4 file test.**
+
+### Data (Phase 3)
+- `src/lib/data/projects.js` — 3 featured case studies (RSU Nirwana web, IDRG bridging, RME) + 3 other (sigap-bpn, aset-kphl, sertifikasi-benih) + 1 soon (ppdb-cbt). Bilingual `{ id, en }` per field.
+- `src/lib/data/skills.js` — daily/comfortable/exploring + timeline
+- `src/lib/data/experience.js` — 3 entry (RSU Nirwana programmer, freelance, DPMPTSP intern)
+- `src/lib/data/education.js` — Uniska MAB + BNSP cert
+- `src/lib/data/meta.js` — kontak, sosmed, CV path, foto path
 
 ## Keputusan Teknis Penting
 

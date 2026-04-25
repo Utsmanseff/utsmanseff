@@ -8,6 +8,7 @@ import Experience from '@/components/sections/Experience';
 import Education from '@/components/sections/Education';
 import SelectedWork from '@/components/sections/SelectedWork';
 import OtherProjects from '@/components/sections/OtherProjects';
+import Contact from '@/components/sections/Contact';
 
 export default function Portfolio() {
   return (
@@ -21,6 +22,7 @@ export default function Portfolio() {
         <Education />
         <SelectedWork />
         <OtherProjects />
+        <Contact />
       </main>
     </>
   );

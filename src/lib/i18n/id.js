@@ -18,9 +18,8 @@ const id = {
   about: {
     title: 'Tentang',
     body: [
-      'Web developer fullstack berbasis di Banjarbaru. Fokus utama teknologi kesehatan: Rekam Medis Elektronik, integrasi klaim BPJS, dan pipeline OCR pendaftaran rumah sakit.',
-      'Sehari-hari di RSU Nirwana — sistem yang menyangkut audit Kementerian Kesehatan, alur kerja dokter, dan pendapatan rumah sakit lewat klaim. Di luar healthcare, mengerjakan project freelance untuk instansi pemerintah dan UMKM di Kalimantan.',
-      'Prinsip kerja: pahami masalah lapangan dulu, kirim solusi paling kecil yang menyelesaikan, perbaiki sebelum ada yang sadar rusak. Software yang nyaman dipakai lebih penting daripada arsitektur sempurna di atas kertas.',
+      'Saya web developer fullstack berbasis di Banjarbaru. Pekerjaan utama saya membangun dan merawat sistem rumah sakit di RSU Nirwana — rekam medis elektronik, integrasi klaim BPJS, dan pendaftaran pasien dengan OCR. Selain itu, saya menerima project freelance dari instansi pemerintah dan UMKM di sekitar Kalimantan.',
+      'Buat saya, software yang nyaman dipakai sehari-hari jauh lebih berharga daripada arsitektur sempurna yang sulit dirawat. Pahami masalah lapangan dulu — bagaimana orang sebenarnya bekerja — baru menulis baris pertama.',
     ],
     facts: {
       location: 'Lokasi',

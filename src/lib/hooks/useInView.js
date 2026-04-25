@@ -10,19 +10,28 @@ export function useInView({ threshold = 0, rootMargin = '0px', once = true } = {
     const node = ref.current;
     if (!node) return;
 
-    // Reduced motion or no IntersectionObserver -> show immediately, skip animation
+    // Reduced motion -> show immediately, skip transition
     const reduceMotion =
       typeof window !== 'undefined' &&
       window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    if (reduceMotion || typeof IntersectionObserver === 'undefined') {
+    if (reduceMotion) {
       setInView(true);
       return;
     }
 
+    // No IntersectionObserver -> show after a frame
+    if (typeof IntersectionObserver === 'undefined') {
+      const id = requestAnimationFrame(() => setInView(true));
+      return () => cancelAnimationFrame(id);
+    }
+
+    let raf = 0;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setInView(true);
+          // Defer state flip to next frame so browser paints initial
+          // opacity-0 first; ensures CSS transition actually fires.
+          raf = requestAnimationFrame(() => setInView(true));
           if (once) observer.disconnect();
         } else if (!once) {
           setInView(false);
@@ -31,7 +40,11 @@ export function useInView({ threshold = 0, rootMargin = '0px', once = true } = {
       { threshold, rootMargin }
     );
     observer.observe(node);
-    return () => observer.disconnect();
+
+    return () => {
+      observer.disconnect();
+      if (raf) cancelAnimationFrame(raf);
+    };
   }, [threshold, rootMargin, once]);
 
   return { ref, inView };

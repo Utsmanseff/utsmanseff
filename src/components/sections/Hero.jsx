@@ -9,7 +9,7 @@ export default function Hero() {
   return (
     <section id="top" className="pt-32 md:pt-40 pb-24 md:pb-32 px-6">
       <div className="max-w-6xl mx-auto grid md:grid-cols-12 gap-12 md:gap-16 items-center">
-        <div className="md:col-span-7 order-2 md:order-1">
+        <div className="md:col-span-7">
           <p className="font-mono text-xs uppercase tracking-widest text-mute mb-6">
             {t('hero.eyebrow')}
           </p>
@@ -48,15 +48,15 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="md:col-span-5 order-1 md:order-2">
+        <div className="md:col-span-5 flex justify-center md:justify-end">
           <Image
             src={meta.photo}
             alt="Utsman"
             width={520}
             height={650}
             priority
-            sizes="(min-width: 768px) 40vw, 80vw"
-            className="rounded-lg w-full max-w-md aspect-[4/5] object-cover"
+            sizes="(min-width: 768px) 40vw, 160px"
+            className="rounded-lg w-32 md:w-full md:max-w-md aspect-[4/5] object-cover"
           />
         </div>
       </div>

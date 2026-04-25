@@ -24,11 +24,9 @@ export default function About() {
 
         <div className="grid md:grid-cols-12 gap-12">
           <FadeIn className="md:col-span-8">
-            <div className="prose-spacing text-lg leading-relaxed text-forest dark:text-cream space-y-6">
+            <div className="text-lg leading-relaxed text-forest dark:text-cream space-y-6 text-justify hyphens-auto">
               {Array.isArray(body) && body.map((p, i) => (
-                <p key={i} className={i === 0 ? 'first-letter:font-display first-letter:text-amber first-letter:text-7xl first-letter:font-black first-letter:float-left first-letter:mr-3 first-letter:leading-none' : ''}>
-                  {p}
-                </p>
+                <p key={i}>{p}</p>
               ))}
             </div>
           </FadeIn>

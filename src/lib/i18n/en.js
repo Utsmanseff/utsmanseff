@@ -18,9 +18,8 @@ const en = {
   about: {
     title: 'About',
     body: [
-      'Fullstack web developer based in Banjarbaru. Healthcare technology is the main focus: electronic medical records, BPJS claims integration, and OCR-powered hospital registration pipelines.',
-      'Day-to-day at RSU Nirwana — systems tied to Ministry of Health audits, doctor workflows, and hospital revenue through claim submissions. Outside healthcare, freelance work for government offices and small businesses across Kalimantan.',
-      'Working principle: understand the actual problem first, ship the smallest thing that solves it, fix what breaks before anyone notices. Software that feels good to use matters more than perfect architecture on paper.',
+      "I'm a fullstack web developer based in Banjarbaru. My main work is building and maintaining hospital systems at RSU Nirwana — electronic medical records, BPJS claims integration, and OCR-powered patient registration. Alongside that, I take on freelance projects for government offices and small businesses across Kalimantan.",
+      "For me, software that feels good to use day-to-day matters more than ideal architecture that's hard to maintain. Understand the problem on the ground first — how people actually work — then write the first line of code.",
     ],
     facts: {
       location: 'Location',

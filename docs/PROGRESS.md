@@ -22,7 +22,7 @@
 | 1 | Foundation (deps, fonts, tokens, skeleton) | T1-T5 | done |
 | 2 | i18n + hooks (config, dict, useLocale, useTheme, useInView) | T6-T8 | done |
 | 3 | Content data (projects, skills, experience, education, meta) | T9-T10 | done |
-| 4 | UI primitives (Providers, SectionTitle, Rule, Tag, FadeIn, ExternalLink, LangSwitcher, ThemeToggle) | T11-T13 | pending |
+| 4 | UI primitives (Providers, SectionTitle, Rule, Tag, FadeIn, ExternalLink, LangSwitcher, ThemeToggle) | T11-T13 | done |
 | 5 | Nav | T16 | pending |
 | 6 | Hero | T17 | pending |
 | 7 | About | T18 | pending |
@@ -36,9 +36,13 @@
 | 15 | SEO + OG image + favicon | T27-T28 | pending |
 | 16 | Performance + a11y + README + cleanup | T29-T31 | pending |
 
-## Commit Log (Phase 1-3)
+## Commit Log (Phase 1-4)
 
 ```
+1340211 feat(nav): add LangSwitcher and ThemeToggle
+4f21c8c feat(ui): add SectionTitle, Rule, Tag, FadeIn, ExternalLink primitives
+567da2c feat(layout): compose Theme + Locale providers in root layout
+e0f5fd3 docs: update PROGRESS — phase 3 (data) done
 8baf53f feat(data): add skills, experience, education, meta datasets
 8b9f4d2 feat(data): add bilingual project dataset (3 case studies + others + soon)
 50029c6 docs: add PROGRESS memory file for cross-session context
@@ -86,6 +90,16 @@ b544eaf docs: add portfolio redesign spec (editorial warm, bilingual)
 - `src/lib/data/experience.js` — 3 entry (RSU Nirwana programmer, freelance, DPMPTSP intern)
 - `src/lib/data/education.js` — Uniska MAB + BNSP cert
 - `src/lib/data/meta.js` — kontak, sosmed, CV path, foto path
+
+### Components (Phase 4)
+- `src/components/Providers.jsx` — `<ThemeProvider><LocaleProvider>{children}</LocaleProvider></ThemeProvider>`, wired ke `src/app/layout.js`
+- `src/components/ui/SectionTitle.jsx` — `<header>` + eyebrow (mono) + h2 (Fraunces 4xl-6xl)
+- `src/components/ui/Rule.jsx` — `<hr>` border-rule
+- `src/components/ui/Tag.jsx` — mono uppercase pill border-rule
+- `src/components/ui/FadeIn.jsx` — IntersectionObserver wrap, opacity+translate-y transition (`useInView`)
+- `src/components/ui/ExternalLink.jsx` — amber underline `target="_blank" rel="noopener noreferrer"`
+- `src/components/nav/LangSwitcher.jsx` — id/en toggle, `aria-pressed`, `role="group"`
+- `src/components/nav/ThemeToggle.jsx` — Sun/Moon icon (lucide-react), call `useTheme().toggle`
 
 ## Keputusan Teknis Penting
 

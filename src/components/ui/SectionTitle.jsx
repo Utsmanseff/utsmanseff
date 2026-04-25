@@ -1,6 +1,6 @@
 export default function SectionTitle({ eyebrow, children, id }) {
   return (
-    <header id={id} className="mb-12 md:mb-16">
+    <header id={id} className="mb-8 md:mb-10">
       {eyebrow && (
         <p className="font-mono text-xs uppercase tracking-widest text-mute mb-3">
           {eyebrow}

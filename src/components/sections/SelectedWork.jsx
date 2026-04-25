@@ -91,7 +91,7 @@ export default function SelectedWork() {
   return (
     <section
       id="work"
-      className="py-24 md:py-32 border-t border-rule bg-cream-deep/40 dark:bg-forest/30"
+      className="py-16 md:py-20 border-t border-rule bg-cream-deep/40 dark:bg-forest/30"
     >
       <div className="max-w-6xl mx-auto px-6">
         <SectionTitle eyebrow={t('work.title')} id="work-title">

@@ -18,11 +18,11 @@ export default function About() {
   const body = t('about.body');
 
   return (
-    <section id="about" className="py-24 md:py-32 px-6 border-t border-rule">
+    <section id="about" className="py-16 md:py-20 px-6 border-t border-rule">
       <div className="max-w-6xl mx-auto">
         <SectionTitle>{t('about.title')}</SectionTitle>
 
-        <div className="grid md:grid-cols-12 gap-12">
+        <div className="grid md:grid-cols-12 gap-10">
           <FadeIn className="md:col-span-8">
             <div className="text-lg leading-relaxed text-forest dark:text-cream space-y-6 text-justify hyphens-auto">
               {Array.isArray(body) && body.map((p, i) => (

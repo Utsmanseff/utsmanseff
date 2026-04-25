@@ -7,7 +7,7 @@ import { meta } from '@/lib/data/meta';
 export default function Hero() {
   const { t } = useLocale();
   return (
-    <section id="top" className="pt-32 md:pt-40 pb-24 md:pb-32 px-6">
+    <section id="top" className="pt-24 md:pt-32 pb-16 md:pb-20 px-6">
       <div className="max-w-6xl mx-auto grid md:grid-cols-12 gap-10 md:gap-16 items-center">
         <div className="md:col-span-7 order-2 md:order-1">
           <p className="font-mono text-xs uppercase tracking-widest text-mute mb-6">

@@ -26,7 +26,7 @@
 | 5 | Nav + Hero | T14-T15 | done |
 | 6 | About | T16 | done |
 | 7 | SelectedWork (3 case studies) | T17 | done |
-| 8 | OtherProjects | T18 | pending |
+| 8 | OtherProjects | T18 | done |
 | 9 | Skills | T19 | pending |
 | 10 | Experience | T20 | pending |
 | 11 | Education | T21 | pending |

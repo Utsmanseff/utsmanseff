@@ -32,13 +32,13 @@ export default function About() {
           </FadeIn>
 
           <FadeIn delay={150} className="md:col-span-4">
-            <dl className="space-y-5 md:border-l md:border-rule md:pl-8">
+            <dl className="grid grid-cols-2 gap-x-6 gap-y-5 md:flex md:flex-col md:gap-0 md:space-y-5 md:border-l md:border-rule md:pl-8">
               {FACT_KEYS.map(([labelKey, valueKey]) => (
                 <div key={labelKey}>
-                  <dt className="font-mono text-xs uppercase tracking-widest text-mute mb-1">
+                  <dt className="font-mono text-[10px] md:text-xs uppercase tracking-widest text-mute mb-1">
                     {t(`about.facts.${labelKey}`)}
                   </dt>
-                  <dd className="text-forest dark:text-cream">
+                  <dd className="text-sm md:text-base text-forest dark:text-cream">
                     {t(`about.facts.${valueKey}`)}
                   </dd>
                 </div>

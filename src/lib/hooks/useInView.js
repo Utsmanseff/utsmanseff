@@ -26,14 +26,20 @@ export function useInView({ threshold = 0, rootMargin = '0px', once = true } = {
     }
 
     let raf = 0;
+    let fired = false;
+    const trigger = () => {
+      if (fired) return;
+      fired = true;
+      raf = requestAnimationFrame(() => setInView(true));
+    };
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          // Defer state flip to next frame so browser paints initial
-          // opacity-0 first; ensures CSS transition actually fires.
-          raf = requestAnimationFrame(() => setInView(true));
+          trigger();
           if (once) observer.disconnect();
         } else if (!once) {
+          fired = false;
           setInView(false);
         }
       },
@@ -41,8 +47,12 @@ export function useInView({ threshold = 0, rootMargin = '0px', once = true } = {
     );
     observer.observe(node);
 
+    // Safety net: if observer never fires (rare edge cases), force show after 1.5s
+    const fallback = setTimeout(trigger, 1500);
+
     return () => {
       observer.disconnect();
+      clearTimeout(fallback);
       if (raf) cancelAnimationFrame(raf);
     };
   }, [threshold, rootMargin, once]);

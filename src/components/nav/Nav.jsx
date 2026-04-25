@@ -36,7 +36,7 @@ export default function Nav() {
             <a
               key={s}
               href={`#${s}`}
-              className="text-sm text-mute hover:text-forest dark:hover:text-cream transition-colors"
+              className="relative text-sm text-mute hover:text-forest dark:hover:text-cream transition-colors duration-200 ease-out after:absolute after:left-0 after:-bottom-1 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-amber after:transition-transform after:duration-300 after:ease-out hover:after:scale-x-100"
             >
               {t(`nav.${s}`)}
             </a>

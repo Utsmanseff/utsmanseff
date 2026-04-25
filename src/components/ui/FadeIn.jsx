@@ -2,15 +2,18 @@
 
 import { useInView } from '@/lib/hooks/useInView';
 
-export default function FadeIn({ children, delay = 0, className = '' }) {
+export default function FadeIn({ children, delay = 0, y = 24, duration = 700, className = '' }) {
   const { ref, inView } = useInView();
   return (
     <div
       ref={ref}
-      style={{ transitionDelay: `${delay}ms` }}
-      className={`transition-all duration-700 ease-out ${
-        inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-      } ${className}`}
+      className={className}
+      style={{
+        opacity: inView ? 1 : 0,
+        transform: inView ? 'translateY(0)' : `translateY(${y}px)`,
+        transition: `opacity ${duration}ms ease-out ${delay}ms, transform ${duration}ms ease-out ${delay}ms`,
+        willChange: inView ? 'auto' : 'opacity, transform',
+      }}
     >
       {children}
     </div>

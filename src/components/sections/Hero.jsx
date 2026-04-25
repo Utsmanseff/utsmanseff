@@ -8,8 +8,8 @@ export default function Hero() {
   const { t } = useLocale();
   return (
     <section id="top" className="pt-32 md:pt-40 pb-24 md:pb-32 px-6">
-      <div className="max-w-6xl mx-auto grid md:grid-cols-12 gap-12 md:gap-16 items-center">
-        <div className="md:col-span-7">
+      <div className="max-w-6xl mx-auto grid md:grid-cols-12 gap-10 md:gap-16 items-center">
+        <div className="md:col-span-7 order-2 md:order-1">
           <p className="font-mono text-xs uppercase tracking-widest text-mute mb-6">
             {t('hero.eyebrow')}
           </p>
@@ -28,35 +28,36 @@ export default function Hero() {
           <div className="flex flex-wrap items-center gap-4 mt-10">
             <a
               href="#work"
-              className="bg-amber text-cream px-5 py-3 text-sm font-semibold tracking-wide hover:bg-forest dark:hover:bg-cream dark:hover:text-forest transition-colors"
+              className="group inline-flex items-center gap-2 bg-amber text-cream px-5 py-3 text-sm font-semibold tracking-wide rounded-sm shadow-sm hover:shadow-lg hover:-translate-y-0.5 hover:bg-forest dark:hover:bg-cream dark:hover:text-forest transition-all duration-200 ease-out"
             >
-              {t('hero.ctaWork')}
+              <span>{t('hero.ctaWork')}</span>
+              <span className="transition-transform duration-200 ease-out group-hover:translate-x-1">→</span>
             </a>
             <a
               href={meta.cvFile}
               download
-              className="border border-forest dark:border-cream text-forest dark:text-cream px-5 py-3 text-sm font-semibold tracking-wide hover:bg-forest hover:text-cream dark:hover:bg-cream dark:hover:text-forest transition-colors"
+              className="border border-forest dark:border-cream text-forest dark:text-cream px-5 py-3 text-sm font-semibold tracking-wide rounded-sm hover:-translate-y-0.5 hover:shadow-md hover:bg-forest hover:text-cream dark:hover:bg-cream dark:hover:text-forest transition-all duration-200 ease-out"
             >
               {t('hero.ctaCV')}
             </a>
             <a
               href={`mailto:${meta.email}`}
-              className="text-sm text-amber underline underline-offset-4 hover:text-forest dark:hover:text-cream transition-colors"
+              className="text-sm text-amber underline decoration-amber/40 underline-offset-4 hover:decoration-amber hover:text-forest dark:hover:text-cream transition-all duration-200 ease-out"
             >
               {t('hero.ctaEmail')}
             </a>
           </div>
         </div>
 
-        <div className="md:col-span-5 flex justify-center md:justify-end">
+        <div className="md:col-span-5 order-1 md:order-2 flex justify-center md:justify-end">
           <Image
             src={meta.photo}
             alt="Utsman"
             width={520}
             height={650}
             priority
-            sizes="(min-width: 768px) 40vw, 160px"
-            className="rounded-lg w-32 md:w-full md:max-w-md aspect-[4/5] object-cover"
+            sizes="(min-width: 768px) 40vw, 224px"
+            className="rounded-lg w-56 md:w-full md:max-w-md aspect-[4/5] object-cover"
           />
         </div>
       </div>

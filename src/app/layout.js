@@ -1,5 +1,6 @@
 import { Fraunces, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import Providers from "@/components/Providers";
 
 const fraunces = Fraunces({
   variable: "--font-display",
@@ -34,7 +35,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${fraunces.variable} ${inter.variable} ${jetbrainsMono.variable} antialiased font-body`}
       >
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

@@ -30,8 +30,8 @@
 | 9 | Skills | T19 | done (icon-grid rewrite) |
 | 10 | Experience | T20 | done (expandable rows) |
 | 11 | Education | T21 | done |
-| 12 | Contact | T22 | pending |
-| 13 | Footer | T23 | pending |
+| 12 | Contact | T22 | done |
+| 13 | Footer | T23 | done |
 | 14 | SEO + OG image + favicon | T24-T26 | pending |
 | 15 | Perf + a11y | T27-T29 | pending |
 | 16 | README + cleanup | T30-T31 | pending |

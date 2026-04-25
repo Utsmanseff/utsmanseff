@@ -49,7 +49,7 @@ export default function Hero() {
         </div>
 
         <div className="md:col-span-5 order-1 md:order-2">
-          <div className="relative inline-block">
+          <div className="relative inline-block p-2 border border-amber/60 rounded-lg">
             <Image
               src={meta.photo}
               alt="Utsman"
@@ -57,11 +57,7 @@ export default function Hero() {
               height={650}
               priority
               sizes="(min-width: 768px) 40vw, 80vw"
-              className="rounded-lg w-full max-w-md aspect-[4/5] object-cover relative z-10"
-            />
-            <div
-              aria-hidden
-              className="absolute inset-0 translate-x-3 translate-y-3 bg-amber rounded-lg z-0"
+              className="rounded-md w-full max-w-md aspect-[4/5] object-cover"
             />
           </div>
         </div>

@@ -8,8 +8,8 @@ const id = {
   },
   hero: {
     eyebrow: 'Tersedia untuk project · Banjarbaru, ID',
-    role: 'Web Developer Fullstack',
-    tagline: 'Engineer fullstack yang mengubah pusing regulasi jadi software yang ship.',
+    role: 'Fullstack Web Developer',
+    tagline: 'Memecahkan masalah nyata dengan software yang nyaman dipakai sehari-hari.',
     bioTeaser: 'Dua tahun membangun sistem rumah sakit, instansi, dan UMKM. Fokus utama healthtech: RME, bridging BPJS, OCR pendaftaran.',
     ctaWork: 'Lihat case study',
     ctaCV: 'Unduh CV',
@@ -20,7 +20,7 @@ const id = {
     body: [
       'Saya mulai ngoding tahun 2021, berangkat dari satu pengamatan sederhana: kebanyakan pekerjaan yang orang keluhkan bisa dipercepat, dirapikan, atau dua-duanya dengan bantuan software. Tahun 2024 saya full-time di Laravel, dan sekarang sehari-hari membangun sistem untuk rumah sakit, instansi pemerintah, dan UMKM di Kalimantan.',
       'Fokus utama saya teknologi kesehatan. Di RSU Nirwana saya mengelola Rekam Medis Elektronik, alur klaim BPJS, dan website publik rumah sakit yang saya bangun ulang dengan OCR di pendaftaran. Pekerjaannya tidak ramah — audit Kementerian Kesehatan, alur kerja dokter yang tidak boleh putus di tengah shift, deadline klaim yang menyangkut pendapatan rumah sakit — dan tekanan itu yang membentuk cara saya menulis kode: ship yang jalan, dokumentasikan yang dikerjakan, perbaiki sebelum ada yang sadar rusak.',
-      'Di luar healthcare, saya ambil project freelance untuk operator café, kantor sertifikasi, dan manajemen aset untuk unit kehutanan. Pendekatan sama: pahami masalah nyata dulu, tawarkan solusi paling kecil yang menyelesaikan, ship dalam hitungan minggu bukan kuartal.',
+      'Di luar healthcare, saya ambil project freelance untuk operator café, kantor sertifikasi, dan manajemen aset untuk unit kehutanan. Pendekatan sama: pahami masalah nyata dulu, tawarkan solusi paling kecil yang menyelesaikan, selesaikan dalam hitungan minggu, bukan kuartal.',
       'Sekarang lagi mendalami TypeScript, melirik Go dan .NET untuk variasi backend, dan rencana ekspansi ke mobile pakai Flutter.',
     ],
     facts: {
@@ -37,11 +37,11 @@ const id = {
       learning: 'Sedang belajar',
       learningValue: 'TypeScript, Go, .NET, Flutter',
       languages: 'Bahasa',
-      languagesValue: 'Indonesia (native), Inggris (working)',
+      languagesValue: 'Indonesia (asli), Inggris (percakapan kerja)',
     },
   },
   work: {
-    title: 'Selected Work',
+    title: 'Project Pilihan',
     eyebrowLive: 'live',
     eyebrowInternal: 'internal',
     problem: 'Masalah',
@@ -52,9 +52,9 @@ const id = {
     screenshotsTodo: 'Screenshot internal — tersedia atas permintaan',
   },
   other: {
-    title: 'Other Projects',
+    title: 'Project Lainnya',
     intro: 'Cuplikan saja — masih banyak project klien lain yang tidak dicantumkan.',
-    soon: 'COMING SOON',
+    soon: 'SEGERA',
     expand: 'Detail',
   },
   skills: {

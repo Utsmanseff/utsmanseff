@@ -9,7 +9,7 @@ const en = {
   hero: {
     eyebrow: 'Available for projects · Banjarbaru, ID',
     role: 'Fullstack Web Developer',
-    tagline: 'Fullstack engineer turning regulatory headaches into shipped software.',
+    tagline: 'Solving real problems with software that feels effortless to use.',
     bioTeaser: 'Two years building systems for hospitals, government offices, and small businesses. Healthtech focus: EMR, BPJS bridging, OCR registration pipelines.',
     ctaWork: 'View case studies',
     ctaCV: 'Download CV',

@@ -27,9 +27,9 @@
 | 6 | About | T16 | done |
 | 7 | SelectedWork (3 case studies) | T17 | done |
 | 8 | OtherProjects | T18 | done |
-| 9 | Skills | T19 | done |
-| 10 | Experience | T20 | pending |
-| 11 | Education | T21 | pending |
+| 9 | Skills | T19 | done (icon-grid rewrite) |
+| 10 | Experience | T20 | done (expandable rows) |
+| 11 | Education | T21 | done |
 | 12 | Contact | T22 | pending |
 | 13 | Footer | T23 | pending |
 | 14 | SEO + OG image + favicon | T24-T26 | pending |

@@ -18,10 +18,9 @@ const id = {
   about: {
     title: 'Tentang',
     body: [
-      'Saya mulai ngoding tahun 2021, berangkat dari satu pengamatan sederhana: kebanyakan pekerjaan yang orang keluhkan bisa dipercepat, dirapikan, atau dua-duanya dengan bantuan software. Tahun 2024 saya full-time di Laravel, dan sekarang sehari-hari membangun sistem untuk rumah sakit, instansi pemerintah, dan UMKM di Kalimantan.',
-      'Fokus utama saya teknologi kesehatan. Di RSU Nirwana saya mengelola Rekam Medis Elektronik, alur klaim BPJS, dan website publik rumah sakit yang saya bangun ulang dengan OCR di pendaftaran. Pekerjaannya tidak ramah — audit Kementerian Kesehatan, alur kerja dokter yang tidak boleh putus di tengah shift, deadline klaim yang menyangkut pendapatan rumah sakit — dan tekanan itu yang membentuk cara saya menulis kode: ship yang jalan, dokumentasikan yang dikerjakan, perbaiki sebelum ada yang sadar rusak.',
-      'Di luar healthcare, saya ambil project freelance untuk operator café, kantor sertifikasi, dan manajemen aset untuk unit kehutanan. Pendekatan sama: pahami masalah nyata dulu, tawarkan solusi paling kecil yang menyelesaikan, selesaikan dalam hitungan minggu, bukan kuartal.',
-      'Sekarang lagi mendalami TypeScript, melirik Go dan .NET untuk variasi backend, dan rencana ekspansi ke mobile pakai Flutter.',
+      'Web developer fullstack berbasis di Banjarbaru. Fokus utama teknologi kesehatan: Rekam Medis Elektronik, integrasi klaim BPJS, dan pipeline OCR pendaftaran rumah sakit.',
+      'Sehari-hari di RSU Nirwana — sistem yang menyangkut audit Kementerian Kesehatan, alur kerja dokter, dan pendapatan rumah sakit lewat klaim. Di luar healthcare, mengerjakan project freelance untuk instansi pemerintah dan UMKM di Kalimantan.',
+      'Prinsip kerja: pahami masalah lapangan dulu, kirim solusi paling kecil yang menyelesaikan, perbaiki sebelum ada yang sadar rusak. Software yang nyaman dipakai lebih penting daripada arsitektur sempurna di atas kertas.',
     ],
     facts: {
       location: 'Lokasi',
@@ -34,10 +33,8 @@ const id = {
       yearsCodingValue: '2 tahun (sejak 2021)',
       stack: 'Stack utama',
       stackValue: 'Laravel · MySQL · JavaScript · React/Next',
-      learning: 'Sedang belajar',
-      learningValue: 'TypeScript, Go, .NET, Flutter',
       languages: 'Bahasa',
-      languagesValue: 'Indonesia (asli), Inggris (percakapan kerja)',
+      languagesValue: 'Indonesia & Inggris',
     },
   },
   work: {

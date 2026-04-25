@@ -2,13 +2,22 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-export function useInView({ threshold = 0.15, rootMargin = '0px 0px -10% 0px', once = true } = {}) {
+export function useInView({ threshold = 0, rootMargin = '0px', once = true } = {}) {
   const ref = useRef(null);
   const [inView, setInView] = useState(false);
 
   useEffect(() => {
     const node = ref.current;
-    if (!node || typeof IntersectionObserver === 'undefined') return;
+    if (!node) return;
+
+    // Reduced motion or no IntersectionObserver -> show immediately, skip animation
+    const reduceMotion =
+      typeof window !== 'undefined' &&
+      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion || typeof IntersectionObserver === 'undefined') {
+      setInView(true);
+      return;
+    }
 
     const observer = new IntersectionObserver(
       ([entry]) => {

@@ -18,10 +18,9 @@ const en = {
   about: {
     title: 'About',
     body: [
-      'I started programming in 2021, drawn by a simple observation: most of the work people complain about can be made faster, cleaner, or both with software. By 2024 I was full-time on Laravel, and now spend my days building systems for hospitals, government offices, and small businesses across Kalimantan.',
-      "My focus is healthcare technology. At RSU Nirwana I maintain electronic medical records, BPJS claims pipelines, and a public-facing hospital site I rebuilt with OCR-powered registration. The work is unforgiving — Ministry of Health audits, doctor workflows that can't break mid-shift, claim deadlines tied to hospital revenue — and that pressure has shaped how I write software: ship something that runs, document what you did, fix what breaks before anyone notices.",
-      'Outside healthcare, I take freelance work for café operators, certification offices, and asset management for forestry units. Same approach: understand the actual problem first, propose the smallest thing that solves it, ship in weeks not quarters.',
-      "Right now I'm sharpening TypeScript, eyeing Go and .NET for backend variety, and planning to extend into mobile with Flutter.",
+      'Fullstack web developer based in Banjarbaru. Healthcare technology is the main focus: electronic medical records, BPJS claims integration, and OCR-powered hospital registration pipelines.',
+      'Day-to-day at RSU Nirwana — systems tied to Ministry of Health audits, doctor workflows, and hospital revenue through claim submissions. Outside healthcare, freelance work for government offices and small businesses across Kalimantan.',
+      'Working principle: understand the actual problem first, ship the smallest thing that solves it, fix what breaks before anyone notices. Software that feels good to use matters more than perfect architecture on paper.',
     ],
     facts: {
       location: 'Location',
@@ -34,10 +33,8 @@ const en = {
       yearsCodingValue: '2 years (since 2021)',
       stack: 'Primary stack',
       stackValue: 'Laravel · MySQL · JavaScript · React/Next',
-      learning: 'Currently learning',
-      learningValue: 'TypeScript, Go, .NET, Flutter',
       languages: 'Languages',
-      languagesValue: 'Indonesian (native), English (working)',
+      languagesValue: 'Indonesian & English',
     },
   },
   work: {

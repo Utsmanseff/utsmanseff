@@ -10,7 +10,6 @@ const FACT_KEYS = [
   ['certification', 'certificationValue'],
   ['yearsCoding', 'yearsCodingValue'],
   ['stack', 'stackValue'],
-  ['learning', 'learningValue'],
   ['languages', 'languagesValue'],
 ];
 

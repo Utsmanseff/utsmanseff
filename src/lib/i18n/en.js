@@ -56,12 +56,9 @@ const en = {
     expand: 'Details',
   },
   skills: {
-    title: 'Skills & Toolbox',
-    daily: 'Daily (2+ years)',
-    comfortable: 'Comfortable',
-    exploring: 'Currently exploring',
-    bestAt: "What I'm best at",
-    bestAtValue: 'Problem-solving on legacy/vendor systems, integrating regulated APIs, shipping under deadline pressure.',
+    title: 'Stack',
+    stack: 'In daily use',
+    learning: 'Currently learning',
   },
   experience: {
     title: 'Experience',

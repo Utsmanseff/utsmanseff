@@ -25,7 +25,7 @@ export const projects = {
         id: 'OCR KTP otomatis mengisi formulir pendaftaran. Data sinkron langsung ke SIMRS internal — antrian loket berkurang signifikan.',
         en: 'Indonesian ID-card OCR auto-fills the form, with data syncing straight into the internal SIMRS — counter queues dropped significantly.',
       },
-      tech: ['Laravel', 'MySQL', 'Google Vision', 'REST API'],
+      tech: ['Laravel', 'Next.js', 'MySQL', 'Google Vision', 'REST API'],
       problem: {
         id: 'Pendaftaran online lama hanya mengamankan kuota; pasien tetap antri panjang di loket. Form panjang dan rawan typo, terutama untuk lansia. Resepsionis input ulang karena data web tidak masuk SIMRS.',
         en: 'The legacy pre-registration only secured a queue slot. Patients still queued at the counter, the long form was error-prone for elderly users, and receptionists re-entered data manually because the web flow never reached the internal SIMRS.',
@@ -133,7 +133,7 @@ export const projects = {
         id: 'Lapisan RME paralel di atas SIMRS vendor 1.168 tabel — UI yang akhirnya dokter mau pakai.',
         en: 'A parallel EMR layer on top of a 1,168-table vendor SIMRS — finally a UI doctors actually use.',
       },
-      tech: ['Laravel', 'MySQL', 'Livewire', 'Blade'],
+      tech: ['Laravel', 'MySQL', 'JavaScript', 'Blade'],
       problem: {
         id: 'Permenkes mewajibkan RME — ancamannya SIP dokter dicabut dan akreditasi turun. Modul RME vendor SIMRS tersedia tapi UI-nya canggung; dokter diam-diam kembali catat manual di kertas.',
         en: 'A Permenkes regulation mandated EMR adoption — non-compliance threatened doctors\' practice licenses and hospital accreditation. The vendor EMR module existed but the UI was awkward, so doctors quietly went back to paper.',
@@ -230,6 +230,8 @@ export const projects = {
   soon: [
     {
       id: 'ppdb-cbt',
+      year: '2026',
+      client: 'MTS WaliSongo Banjarbaru',
       title: {
         id: 'PPDB Online dengan Computer-Based Test',
         en: 'Online School Admissions with Computer-Based Test',

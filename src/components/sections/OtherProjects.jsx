@@ -141,7 +141,7 @@ export default function OtherProjects() {
           {/* +others summary row */}
           <li className="py-5 px-3 font-mono text-xs uppercase tracking-widest text-mute">
             <span className="text-amber">+</span>{' '}
-            {locale === 'id' ? 'dan banyak project lainnya' : 'and many more'}
+            {locale === 'id' ? 'dan project lainnya' : 'and more'}
           </li>
 
           {/* Coming-soon rows */}

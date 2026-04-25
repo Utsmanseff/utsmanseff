@@ -6,7 +6,7 @@ import { useLocale } from '@/lib/hooks/useLocale';
 import LangSwitcher from './LangSwitcher';
 import ThemeToggle from './ThemeToggle';
 
-const SECTIONS = ['about', 'work', 'skills', 'contact'];
+const SECTIONS = ['about', 'skills', 'experience', 'work', 'contact'];
 
 export default function Nav() {
   const { t } = useLocale();

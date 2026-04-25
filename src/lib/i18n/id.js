@@ -56,12 +56,9 @@ const id = {
     expand: 'Detail',
   },
   skills: {
-    title: 'Skill & Toolbox',
-    daily: 'Sehari-hari (2+ tahun)',
-    comfortable: 'Nyaman dipakai',
-    exploring: 'Sedang dieksplorasi',
-    bestAt: 'Yang paling saya kuasai',
-    bestAtValue: 'Problem-solving di sistem legacy/vendor, integrasi API teregulasi, ship di bawah tekanan deadline.',
+    title: 'Stack',
+    stack: 'Dipakai sehari-hari',
+    learning: 'Sedang dipelajari',
   },
   experience: {
     title: 'Pengalaman',

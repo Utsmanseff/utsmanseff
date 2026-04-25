@@ -26,39 +26,68 @@ export default function Hero() {
             {t('hero.bioTeaser')}
           </p>
           <div className="flex flex-wrap items-center gap-4 mt-10">
+            {/* Primary CTA: amber base, forest sweep on hover from left */}
             <a
               href="#work"
-              className="group inline-flex items-center gap-2 bg-amber text-cream px-5 py-3 text-sm font-semibold tracking-wide rounded-sm shadow-sm hover:shadow-lg hover:-translate-y-0.5 hover:bg-forest dark:hover:bg-cream dark:hover:text-forest transition-all duration-200 ease-out"
+              className="group relative overflow-hidden inline-flex items-center gap-2 bg-amber text-cream px-6 py-3 text-sm font-semibold tracking-wide rounded-sm shadow-sm transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-xl"
             >
-              <span>{t('hero.ctaWork')}</span>
-              <span className="transition-transform duration-200 ease-out group-hover:translate-x-1">→</span>
+              <span
+                aria-hidden
+                className="absolute inset-0 bg-forest dark:bg-cream origin-left scale-x-0 transition-transform duration-500 ease-out group-hover:scale-x-100"
+              />
+              <span className="relative z-10 dark:group-hover:text-forest transition-colors duration-300">
+                {t('hero.ctaWork')}
+              </span>
+              <span className="relative z-10 dark:group-hover:text-forest transition-[transform,color] duration-300 ease-out group-hover:translate-x-1">
+                →
+              </span>
             </a>
+
+            {/* Secondary CTA: outlined, fills forest on hover */}
             <a
               href={meta.cvFile}
               download
-              className="border border-forest dark:border-cream text-forest dark:text-cream px-5 py-3 text-sm font-semibold tracking-wide rounded-sm hover:-translate-y-0.5 hover:shadow-md hover:bg-forest hover:text-cream dark:hover:bg-cream dark:hover:text-forest transition-all duration-200 ease-out"
+              className="group relative overflow-hidden inline-flex items-center border border-forest dark:border-cream text-forest dark:text-cream px-6 py-3 text-sm font-semibold tracking-wide rounded-sm transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-lg"
             >
-              {t('hero.ctaCV')}
+              <span
+                aria-hidden
+                className="absolute inset-0 bg-forest dark:bg-cream origin-bottom scale-y-0 transition-transform duration-400 ease-out group-hover:scale-y-100"
+              />
+              <span className="relative z-10 group-hover:text-cream dark:group-hover:text-forest transition-colors duration-300">
+                {t('hero.ctaCV')}
+              </span>
             </a>
+
+            {/* Tertiary: animated underline */}
             <a
               href={`mailto:${meta.email}`}
-              className="text-sm text-amber underline decoration-amber/40 underline-offset-4 hover:decoration-amber hover:text-forest dark:hover:text-cream transition-all duration-200 ease-out"
+              className="group relative text-sm text-amber transition-colors duration-200 hover:text-forest dark:hover:text-cream"
             >
-              {t('hero.ctaEmail')}
+              <span>{t('hero.ctaEmail')}</span>
+              <span
+                aria-hidden
+                className="absolute left-0 -bottom-0.5 h-px w-full bg-current origin-left scale-x-100 transition-transform duration-300 ease-out group-hover:scale-x-0"
+              />
+              <span
+                aria-hidden
+                className="absolute left-0 -bottom-0.5 h-px w-full bg-current origin-right scale-x-0 transition-transform duration-300 delay-150 ease-out group-hover:scale-x-100 group-hover:delay-0"
+              />
             </a>
           </div>
         </div>
 
         <div className="md:col-span-5 order-1 md:order-2 flex justify-center md:justify-end">
-          <Image
-            src={meta.photo}
-            alt="Utsman"
-            width={520}
-            height={650}
-            priority
-            sizes="(min-width: 768px) 40vw, 224px"
-            className="rounded-lg w-56 md:w-full md:max-w-md aspect-[4/5] object-cover"
-          />
+          <div className="group overflow-hidden rounded-lg w-56 md:w-full md:max-w-md">
+            <Image
+              src={meta.photo}
+              alt="Utsman"
+              width={520}
+              height={650}
+              priority
+              sizes="(min-width: 768px) 40vw, 224px"
+              className="w-full aspect-[4/5] object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+            />
+          </div>
         </div>
       </div>
     </section>

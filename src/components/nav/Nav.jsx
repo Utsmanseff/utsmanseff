@@ -27,8 +27,12 @@ export default function Nav() {
       }`}
     >
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-        <a href="#top" className="font-display text-xl font-semibold text-forest dark:text-cream">
+        <a
+          href="#top"
+          className="group font-display text-xl font-semibold text-forest dark:text-cream transition-colors duration-200 hover:text-amber"
+        >
           Utsman
+          <span className="inline-block w-1 h-1 ml-0.5 rounded-full bg-amber align-baseline transition-transform duration-300 ease-out group-hover:scale-150" />
         </a>
 
         <div className="hidden md:flex items-center gap-8">

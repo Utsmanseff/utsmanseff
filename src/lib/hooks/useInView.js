@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-export function useInView({ threshold = 0, rootMargin = '0px', once = true } = {}) {
+export function useInView({ threshold = 0.1, rootMargin = '0px', once = false } = {}) {
   const ref = useRef(null);
   const [inView, setInView] = useState(false);
 
@@ -25,22 +25,27 @@ export function useInView({ threshold = 0, rootMargin = '0px', once = true } = {
       return () => cancelAnimationFrame(id);
     }
 
-    let raf = 0;
-    let fired = false;
-    const trigger = () => {
-      if (fired) return;
-      fired = true;
-      raf = requestAnimationFrame(() => setInView(true));
+    let raf1 = 0;
+    let raf2 = 0;
+
+    const trigger = (visible) => {
+      if (raf1) cancelAnimationFrame(raf1);
+      if (raf2) cancelAnimationFrame(raf2);
+      // Double rAF: ensures browser paints prior state before flipping,
+      // so CSS transitions reliably fire instead of getting batched away
+      // by React's concurrent commit phase.
+      raf1 = requestAnimationFrame(() => {
+        raf2 = requestAnimationFrame(() => setInView(visible));
+      });
     };
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          trigger();
+          trigger(true);
           if (once) observer.disconnect();
         } else if (!once) {
-          fired = false;
-          setInView(false);
+          trigger(false);
         }
       },
       { threshold, rootMargin }
@@ -48,12 +53,13 @@ export function useInView({ threshold = 0, rootMargin = '0px', once = true } = {
     observer.observe(node);
 
     // Safety net: if observer never fires (rare edge cases), force show after 1.5s
-    const fallback = setTimeout(trigger, 1500);
+    const fallback = setTimeout(() => trigger(true), 1500);
 
     return () => {
       observer.disconnect();
       clearTimeout(fallback);
-      if (raf) cancelAnimationFrame(raf);
+      if (raf1) cancelAnimationFrame(raf1);
+      if (raf2) cancelAnimationFrame(raf2);
     };
   }, [threshold, rootMargin, once]);
 

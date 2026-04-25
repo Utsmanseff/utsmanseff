@@ -1,21 +1,61 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #ffffff;
-  --color-foreground: #171717;
+  /* Color tokens — cream/forest/amber palette */
+  --color-cream: #F5F1E8;
+  --color-cream-deep: #EDE6D3;
+  --color-forest: #1F3A2E;
+  --color-forest-deep: #0F1F18;
+  --color-amber: #C97B3F;
+  --color-amber-soft: #E8B888;
+  --color-ink: #1A1A1A;
+  --color-mute: #6B6B5E;
+  --color-rule: #D9D0BC;
+
+  /* Surface tokens — semantic */
+  --color-bg: var(--color-cream);
+  --color-fg: var(--color-forest);
+
+  /* Typography */
+  --font-display: var(--font-display), Georgia, serif;
+  --font-body: var(--font-body), -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, monospace;
 }
 
 @variant dark (.dark &);
 
-@media (prefers-color-scheme: dark) {
-  @theme {
-    --color-background: #0a0a0a;
-    --color-foreground: #ededed;
-  }
+.dark {
+  --color-bg: var(--color-forest-deep);
+  --color-fg: var(--color-cream);
+  --color-rule: #2A4A3A;
+  --color-mute: #9A9A8A;
 }
 
-body {
-  background: var(--color-background);
-  color: var(--color-foreground);
-  font-family: Arial, Helvetica, sans-serif;
+html, body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Selection */
+::selection {
+  background: var(--color-amber);
+  color: var(--color-cream);
+}
+
+/* Focus ring */
+:focus-visible {
+  outline: 2px solid var(--color-amber);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

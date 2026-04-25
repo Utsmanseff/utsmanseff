@@ -23,22 +23,25 @@
 | 2 | i18n + hooks (config, dict, useLocale, useTheme, useInView) | T6-T8 | done |
 | 3 | Content data (projects, skills, experience, education, meta) | T9-T10 | done |
 | 4 | UI primitives (Providers, SectionTitle, Rule, Tag, FadeIn, ExternalLink, LangSwitcher, ThemeToggle) | T11-T13 | done |
-| 5 | Nav | T16 | pending |
-| 6 | Hero | T17 | pending |
-| 7 | About | T18 | pending |
-| 8 | SelectedWork (3 case studies) | T19 | pending |
-| 9 | OtherProjects | T20 | pending |
-| 10 | Skills | T21 | pending |
-| 11 | Experience | T22 | pending |
-| 12 | Education | T23 | pending |
-| 13 | Contact | T24 | pending |
-| 14 | Footer + page assembly | T25-T26 | pending |
-| 15 | SEO + OG image + favicon | T27-T28 | pending |
-| 16 | Performance + a11y + README + cleanup | T29-T31 | pending |
+| 5 | Nav + Hero | T14-T15 | done |
+| 6 | About | T16 | pending |
+| 7 | SelectedWork (3 case studies) | T17 | pending |
+| 8 | OtherProjects | T18 | pending |
+| 9 | Skills | T19 | pending |
+| 10 | Experience | T20 | pending |
+| 11 | Education | T21 | pending |
+| 12 | Contact | T22 | pending |
+| 13 | Footer | T23 | pending |
+| 14 | SEO + OG image + favicon | T24-T26 | pending |
+| 15 | Perf + a11y | T27-T29 | pending |
+| 16 | README + cleanup | T30-T31 | pending |
 
-## Commit Log (Phase 1-4)
+## Commit Log (Phase 1-5)
 
 ```
+f561356 feat(hero): add hero section with photo + amber offset, CTAs, locale-aware copy
+759c070 feat(nav): add Nav with scroll state and mobile overlay
+4576cfe docs: update PROGRESS — phase 4 (UI primitives) done
 1340211 feat(nav): add LangSwitcher and ThemeToggle
 4f21c8c feat(ui): add SectionTitle, Rule, Tag, FadeIn, ExternalLink primitives
 567da2c feat(layout): compose Theme + Locale providers in root layout
@@ -100,6 +103,12 @@ b544eaf docs: add portfolio redesign spec (editorial warm, bilingual)
 - `src/components/ui/ExternalLink.jsx` — amber underline `target="_blank" rel="noopener noreferrer"`
 - `src/components/nav/LangSwitcher.jsx` — id/en toggle, `aria-pressed`, `role="group"`
 - `src/components/nav/ThemeToggle.jsx` — Sun/Moon icon (lucide-react), call `useTheme().toggle`
+
+### Sections (Phase 5)
+- `src/components/nav/Nav.jsx` — fixed nav, scroll-state (transparent → cream/95 backdrop), desktop links + LangSwitcher + ThemeToggle, mobile overlay (Menu/X icon)
+- `src/components/sections/Hero.jsx` — 12-col grid, eyebrow + name (Fraunces 8vw clamp) + role + tagline (italic) + bioTeaser + CTAs (Lihat case study/Unduh CV/Email), photo `next/image` + amber offset
+- `src/app/page.js` — wired `<Nav /> + <main><Hero /></main>`
+- Build pass (`npm run build` ✓)
 
 ## Keputusan Teknis Penting
 

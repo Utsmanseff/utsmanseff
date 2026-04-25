@@ -49,17 +49,15 @@ export default function Hero() {
         </div>
 
         <div className="md:col-span-5 order-1 md:order-2">
-          <div className="relative inline-block p-2 border border-amber/60 rounded-lg">
-            <Image
-              src={meta.photo}
-              alt="Utsman"
-              width={520}
-              height={650}
-              priority
-              sizes="(min-width: 768px) 40vw, 80vw"
-              className="rounded-md w-full max-w-md aspect-[4/5] object-cover"
-            />
-          </div>
+          <Image
+            src={meta.photo}
+            alt="Utsman"
+            width={520}
+            height={650}
+            priority
+            sizes="(min-width: 768px) 40vw, 80vw"
+            className="rounded-lg w-full max-w-md aspect-[4/5] object-cover"
+          />
         </div>
       </div>
     </section>

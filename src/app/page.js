@@ -2,6 +2,7 @@
 
 import Nav from '@/components/nav/Nav';
 import Hero from '@/components/sections/Hero';
+import About from '@/components/sections/About';
 
 export default function Portfolio() {
   return (
@@ -9,6 +10,7 @@ export default function Portfolio() {
       <Nav />
       <main>
         <Hero />
+        <About />
       </main>
     </>
   );

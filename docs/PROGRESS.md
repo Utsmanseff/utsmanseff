@@ -27,7 +27,7 @@
 | 6 | About | T16 | done |
 | 7 | SelectedWork (3 case studies) | T17 | done |
 | 8 | OtherProjects | T18 | done |
-| 9 | Skills | T19 | pending |
+| 9 | Skills | T19 | done |
 | 10 | Experience | T20 | pending |
 | 11 | Education | T21 | pending |
 | 12 | Contact | T22 | pending |

@@ -81,7 +81,7 @@ const en = {
   },
   footer: {
     builtWith: 'Built with Next.js + Tailwind',
-    backToTop: 'back to top ↑',
+    backToTop: 'back to top',
   },
   ui: {
     toggleTheme: 'Toggle theme',

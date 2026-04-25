@@ -9,6 +9,7 @@ import Education from '@/components/sections/Education';
 import SelectedWork from '@/components/sections/SelectedWork';
 import OtherProjects from '@/components/sections/OtherProjects';
 import Contact from '@/components/sections/Contact';
+import Footer from '@/components/sections/Footer';
 
 export default function Portfolio() {
   return (
@@ -24,6 +25,7 @@ export default function Portfolio() {
         <OtherProjects />
         <Contact />
       </main>
+      <Footer />
     </>
   );
 }

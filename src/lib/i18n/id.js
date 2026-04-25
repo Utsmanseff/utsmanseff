@@ -81,7 +81,7 @@ const id = {
   },
   footer: {
     builtWith: 'Dibangun dengan Next.js + Tailwind',
-    backToTop: 'kembali ke atas ↑',
+    backToTop: 'kembali ke atas',
   },
   ui: {
     toggleTheme: 'Ganti tema',

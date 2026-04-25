@@ -18,7 +18,7 @@ export default function OtherProjects() {
       className="py-16 md:py-20 px-6 border-t border-rule"
     >
       <div className="max-w-6xl mx-auto">
-        <SectionTitle eyebrow={t('other.intro')}>{t('other.title')}</SectionTitle>
+        <SectionTitle>{t('other.title')}</SectionTitle>
 
         {/* Column header (desktop) */}
         <div className="hidden md:grid grid-cols-12 gap-4 px-3 pb-3 mb-1 border-b border-rule">
@@ -137,6 +137,12 @@ export default function OtherProjects() {
               </li>
             );
           })}
+
+          {/* +others summary row */}
+          <li className="py-5 px-3 font-mono text-xs uppercase tracking-widest text-mute">
+            <span className="text-amber">+</span>{' '}
+            {locale === 'id' ? 'dan banyak project lainnya' : 'and many more'}
+          </li>
 
           {/* Coming-soon rows */}
           {projects.soon.map((p) => (

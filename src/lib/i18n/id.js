@@ -52,7 +52,6 @@ const id = {
   },
   other: {
     title: 'Project Lainnya',
-    intro: 'Cuplikan saja — masih banyak project klien lain yang tidak dicantumkan.',
     soon: 'SEGERA',
     expand: 'Detail',
   },

@@ -52,7 +52,6 @@ const en = {
   },
   other: {
     title: 'Other Projects',
-    intro: 'A selection — many other client projects not listed.',
     soon: 'COMING SOON',
     expand: 'Details',
   },

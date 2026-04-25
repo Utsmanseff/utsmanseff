@@ -24,7 +24,7 @@
 | 3 | Content data (projects, skills, experience, education, meta) | T9-T10 | done |
 | 4 | UI primitives (Providers, SectionTitle, Rule, Tag, FadeIn, ExternalLink, LangSwitcher, ThemeToggle) | T11-T13 | done |
 | 5 | Nav + Hero | T14-T15 | done |
-| 6 | About | T16 | pending |
+| 6 | About | T16 | done |
 | 7 | SelectedWork (3 case studies) | T17 | pending |
 | 8 | OtherProjects | T18 | pending |
 | 9 | Skills | T19 | pending |
@@ -36,9 +36,13 @@
 | 15 | Perf + a11y | T27-T29 | pending |
 | 16 | README + cleanup | T30-T31 | pending |
 
-## Commit Log (Phase 1-5)
+## Commit Log (Phase 1-6)
 
 ```
+1c4f66f feat(about): add About section with drop-cap prose + facts panel
+74dde55 fix(hero): plain photo, no frame
+c0c908c fix(copy,hero): natural ID copy (UX-first tagline) + lighter photo frame
+540ca61 docs: update PROGRESS — phase 5 (Nav + Hero) done
 f561356 feat(hero): add hero section with photo + amber offset, CTAs, locale-aware copy
 759c070 feat(nav): add Nav with scroll state and mobile overlay
 4576cfe docs: update PROGRESS — phase 4 (UI primitives) done
@@ -109,6 +113,17 @@ b544eaf docs: add portfolio redesign spec (editorial warm, bilingual)
 - `src/components/sections/Hero.jsx` — 12-col grid, eyebrow + name (Fraunces 8vw clamp) + role + tagline (italic) + bioTeaser + CTAs (Lihat case study/Unduh CV/Email), photo `next/image` + amber offset
 - `src/app/page.js` — wired `<Nav /> + <main><Hero /></main>`
 - Build pass (`npm run build` ✓)
+
+### Sections (Phase 6)
+- `src/components/sections/About.jsx` — 12-col, drop-cap pertama (Fraunces 7xl amber float-left), 4 paragraf bilingual + facts panel kanan (`<dl>` border-l) 7 fakta (Lokasi/Pendidikan/Sertifikasi/Pengalaman/Stack/Sedang belajar/Bahasa)
+- Wire ke `src/app/page.js`
+
+### Copy Polish
+- ID tagline: "Memecahkan masalah nyata dengan software yang nyaman dipakai sehari-hari." (UX-first, no regulasi)
+- EN tagline: "Solving real problems with software that feels effortless to use."
+- ID: Selected Work → Project Pilihan, Other Projects → Project Lainnya, COMING SOON → SEGERA
+- ID: "(native)/(working)" → "(asli)/(percakapan kerja)"
+- Hero foto: polos rounded-lg, no offset/frame
 
 ## Keputusan Teknis Penting
 

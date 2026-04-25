@@ -25,7 +25,7 @@
 | 4 | UI primitives (Providers, SectionTitle, Rule, Tag, FadeIn, ExternalLink, LangSwitcher, ThemeToggle) | T11-T13 | done |
 | 5 | Nav + Hero | T14-T15 | done |
 | 6 | About | T16 | done |
-| 7 | SelectedWork (3 case studies) | T17 | pending |
+| 7 | SelectedWork (3 case studies) | T17 | done |
 | 8 | OtherProjects | T18 | pending |
 | 9 | Skills | T19 | pending |
 | 10 | Experience | T20 | pending |
@@ -36,9 +36,15 @@
 | 15 | Perf + a11y | T27-T29 | pending |
 | 16 | README + cleanup | T30-T31 | pending |
 
-## Commit Log (Phase 1-6)
+## Commit Log (Phase 1-7)
 
 ```
+810446b feat(work): add Selected Work with 3 healthtech case studies
+0d195b7 fix(motion,interactivity): real fade re-trigger + rich hover effects
+57ba496 fix(ui,motion): polish interactivity, fix mobile layouts, kill FadeIn dead-state
+522ff24 fix(about,hero,motion): rewrite copy, mobile photo, reliable FadeIn
+1970647 fix(about,motion): tighter ID copy, drop learning fact, fix FadeIn trigger
+efc0c85 docs: update PROGRESS — phase 6 (About) + copy polish
 1c4f66f feat(about): add About section with drop-cap prose + facts panel
 74dde55 fix(hero): plain photo, no frame
 c0c908c fix(copy,hero): natural ID copy (UX-first tagline) + lighter photo frame
@@ -115,8 +121,12 @@ b544eaf docs: add portfolio redesign spec (editorial warm, bilingual)
 - Build pass (`npm run build` ✓)
 
 ### Sections (Phase 6)
-- `src/components/sections/About.jsx` — 12-col, drop-cap pertama (Fraunces 7xl amber float-left), 4 paragraf bilingual + facts panel kanan (`<dl>` border-l) 7 fakta (Lokasi/Pendidikan/Sertifikasi/Pengalaman/Stack/Sedang belajar/Bahasa)
-- Wire ke `src/app/page.js`
+- `src/components/sections/About.jsx` — 12-col grid; 2 paragraf bilingual padat dengan `text-justify hyphens-auto` (kolom 8) + facts panel (kolom 4): mobile grid 2-col compact, desktop dl `border-l`. 6 facts (Lokasi/Pendidikan/Sertifikasi/Pengalaman/Stack/Bahasa)
+
+### Sections (Phase 7)
+- `src/components/sections/CaseStudy.jsx` — bilingual case study card. Eyebrow (client·year·status·sector) → judul (Fraunces 3xl-4xl) → summary → image (16/9, hover scale-1.03) → 3-col grid (Problem/Approach/Outcome amber labels) → bullets approach → italic "Yang sulit" (Fraunces) → tech tags (border-rule, hover amber) + visit link (↗ animated)
+- `src/components/sections/SelectedWork.jsx` — section wrapper bg cream-deep/40 (forest/30 dark), render `projects.featured` map dengan `<Rule />` separator. Wire ke `page.js`.
+- 3 case studies aktif: RSU Nirwana web (OCR), IDRG bridging, RME
 
 ### Copy Polish
 - ID tagline: "Memecahkan masalah nyata dengan software yang nyaman dipakai sehari-hari." (UX-first, no regulasi)

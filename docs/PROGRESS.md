@@ -34,7 +34,7 @@
 | 13 | Footer | T23 | done |
 | 14 | SEO + OG image + favicon | T24-T26 | done |
 | 15 | Perf + a11y | T27-T29 | done |
-| 16 | README + cleanup | T30-T31 | pending |
+| 16 | README + cleanup | T30-T31 | done |
 
 ## Commit Log (Phase 1-7)
 

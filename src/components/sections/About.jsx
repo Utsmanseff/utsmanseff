@@ -19,19 +19,19 @@ export default function About() {
 
   return (
     <section id="about" className="py-16 md:py-20 px-6 border-t border-rule">
-      <div className="max-w-6xl mx-auto">
+      <FadeIn className="max-w-6xl mx-auto">
         <SectionTitle>{t('about.title')}</SectionTitle>
 
         <div className="grid md:grid-cols-12 gap-10">
-          <FadeIn className="md:col-span-8">
+          <div className="md:col-span-8">
             <div className="text-lg leading-relaxed text-forest dark:text-cream space-y-6 text-justify hyphens-auto">
               {Array.isArray(body) && body.map((p, i) => (
                 <p key={i}>{p}</p>
               ))}
             </div>
-          </FadeIn>
+          </div>
 
-          <FadeIn delay={150} className="md:col-span-4">
+          <div className="md:col-span-4">
             <dl className="grid grid-cols-2 gap-x-6 gap-y-5 md:flex md:flex-col md:gap-0 md:space-y-5 md:border-l md:border-rule md:pl-8">
               {FACT_KEYS.map(([labelKey, valueKey]) => (
                 <div key={labelKey}>
@@ -44,9 +44,9 @@ export default function About() {
                 </div>
               ))}
             </dl>
-          </FadeIn>
+          </div>
         </div>
-      </div>
+      </FadeIn>
     </section>
   );
 }

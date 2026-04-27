@@ -19,14 +19,14 @@ export default function Experience() {
       id="experience"
       className="py-16 md:py-20 px-6 border-t border-rule"
     >
-      <div className="max-w-6xl mx-auto">
+      <FadeIn className="max-w-6xl mx-auto">
         <SectionTitle>{t('experience.title')}</SectionTitle>
 
         <ol className="divide-y divide-rule border-t border-b border-rule">
           {experience.map((e, i) => {
             const open = openIdx === i;
             return (
-              <FadeIn as="li" key={i} delay={Math.min(i * 90, 360)} y={14} duration={650} className="group">
+              <li key={i} className="group">
                 <button
                   type="button"
                   onClick={() => setOpenIdx(open ? -1 : i)}
@@ -98,11 +98,11 @@ export default function Experience() {
                     </div>
                   </div>
                 </div>
-              </FadeIn>
+              </li>
             );
           })}
         </ol>
-      </div>
+      </FadeIn>
     </section>
   );
 }

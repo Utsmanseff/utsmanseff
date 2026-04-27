@@ -94,11 +94,11 @@ export default function SelectedWork() {
       id="work"
       className="py-16 md:py-20 border-t border-rule bg-cream-deep/40 dark:bg-forest/30"
     >
-      <div className="max-w-6xl mx-auto px-6">
+      <FadeIn className="max-w-6xl mx-auto px-6">
         <SectionTitle eyebrow={t('work.title')} id="work-title">
           {t('work.title')}
         </SectionTitle>
-      </div>
+      </FadeIn>
 
       {/* Slider — full width container, card constrained inside */}
       <FadeIn delay={120} y={24}>

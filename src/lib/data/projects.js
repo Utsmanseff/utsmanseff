@@ -31,19 +31,19 @@ export const projects = {
         en: 'The legacy pre-registration only secured a queue slot. Patients still queued at the counter, the long form was error-prone for elderly users, and receptionists re-entered data manually because the web flow never reached the internal SIMRS.',
       },
       approach: {
-        id: 'Alur pendaftaran dirancang ulang dengan OCR KTP via Google Cloud Vision. Data sinkron langsung ke SIMRS, ditambah bukti pendaftaran QR untuk verifikasi loket.',
-        en: 'Rebuilt the flow around KTP OCR via Google Cloud Vision, with data syncing directly into SIMRS and a QR confirmation slip for fast counter verification.',
+        id: 'Alur pendaftaran dirancang ulang dengan OCR KTP via Google Cloud Vision. Data sinkron langsung ke SIMRS, ditambah bukti pendaftaran untuk verifikasi loket.',
+        en: 'Rebuilt the flow around KTP OCR via Google Cloud Vision, with data syncing directly into SIMRS and a confirmation slip for fast counter verification.',
         bullets: {
           id: [
             'OCR KTP isi otomatis nama, NIK, alamat',
             'Sinkronisasi data ke SIMRS internal',
-            'Bukti pendaftaran QR untuk loket',
+            'Bukti pendaftaran untuk loket',
             'Validasi server-side untuk konsistensi data',
           ],
           en: [
             'OCR auto-fills name, NIK, address',
             'Direct data sync into internal SIMRS',
-            'QR confirmation slip for counter verification',
+            'Confirmation slip for counter verification',
             'Server-side validation across the form',
           ],
         },
@@ -76,17 +76,17 @@ export const projects = {
         en: 'IDRG / INA-CBGs Bridging for BPJS Claims',
       },
       summary: {
-        id: 'Web service kustom dari nol untuk menyelamatkan akses bridging BPJS rumah sakit di bawah deadline Kemenkes.',
+        id: 'Web service kustom dari nol untuk mempertahankan akses bridging BPJS rumah sakit.',
         en: 'A custom integration service built from scratch to rescue the hospital\'s BPJS bridging access under a Ministry of Health deadline.',
       },
       tech: ['Laravel', 'REST API', 'MySQL', 'BPJS API', 'INA-CBGs'],
       problem: {
-        id: 'Surat edaran Kemenkes mewajibkan update IDRG dan integrasi diagnosa SIMRS ke SatuSehat. Bridging vendor SIMRS tidak lulus uji. Akses terancam diputus — klaim BPJS tidak bisa dikirim sama sekali.',
+        id: 'Surat edaran Kemenkes mewajibkan update IDRG dan integrasi diagnosa SIMRS ke SatuSehat. Bridging SIMRS Khanza pada saat itu tidak sesuai dengan komponen penilaian kemenkes. Akses bridging terancam diputus — klaim BPJS tidak bisa dikirim sama sekali.',
         en: 'A Ministry of Health circular required IDRG updates and SIMRS-to-SatuSehat diagnosis integration. The vendor bridging failed compliance, and access was about to be revoked — meaning the hospital could no longer submit BPJS claims at all.',
       },
       approach: {
-        id: 'Web service kustom dibangun dari nol langsung dari dokumentasi BPJS — bertindak sebagai mediator antara SIMRS dan endpoint BPJS, memaksakan skema yang tools vendor tidak bisa.',
-        en: 'A custom web service built from scratch directly against the BPJS documentation, acting as the mediator between SIMRS and BPJS endpoints and enforcing the schema the vendor tooling could not.',
+        id: 'Web service kustom dibangun dari nol langsung dari dokumentasi BPJS — bertindak sebagai mediator antara SIMRS dan endpoint BPJS.',
+        en: 'A custom web service built from scratch directly against the BPJS documentation, acting as the mediator between SIMRS and BPJS endpoints and enforcing the schema.',
         bullets: {
           id: [
             'Integrasi endpoint eligibility, klaim, status, IDRG grouping',
@@ -107,7 +107,7 @@ export const projects = {
         en: 'Passed Kemenkes compliance, restored bridging access, and claims now flow cleanly to both BPJS and the internal system.',
       },
       hard: {
-        id: 'Mengoordinasi banyak endpoint BPJS di bawah deadline regulator eksternal — tanpa margin untuk retry. Kalau bridging tetap diputus, RS tidak bisa kirim klaim sama sekali.',
+        id: 'Mengoordinasi banyak endpoint BPJS di bawah deadline regulatory. Kalau bridging tetap diputus, RS tidak bisa kirim klaim.',
         en: 'Coordinating many BPJS endpoints under an external regulator deadline with zero margin for retries — if bridging stayed revoked, the hospital simply could not submit claims.',
       },
     },
@@ -130,23 +130,23 @@ export const projects = {
         en: 'Electronic Medical Records (EMR)',
       },
       summary: {
-        id: 'Lapisan RME paralel di atas SIMRS vendor 1.168 tabel — UI yang akhirnya dokter mau pakai.',
+        id: 'Lapisan RME berbasis web — UI yang akhirnya dokter mau pakai.',
         en: 'A parallel EMR layer on top of a 1,168-table vendor SIMRS — finally a UI doctors actually use.',
       },
       tech: ['Laravel', 'MySQL', 'JavaScript', 'Blade'],
       problem: {
-        id: 'Permenkes mewajibkan RME — ancamannya SIP dokter dicabut dan akreditasi turun. Modul RME vendor SIMRS tersedia tapi UI-nya canggung; dokter diam-diam kembali catat manual di kertas.',
-        en: 'A Permenkes regulation mandated EMR adoption — non-compliance threatened doctors\' practice licenses and hospital accreditation. The vendor EMR module existed but the UI was awkward, so doctors quietly went back to paper.',
+        id: 'Permenkes mewajibkan implementasi RME demi kepatuhan akreditasi dan SIP. Namun, keterbatasan akses untuk memodifikasi antarmuka pada sistem vendor mengharuskan pengembangan solusi web eksternal yang lebih adaptif terhadap kebutuhan klinis.',
+        en: 'Permenkes mandates EMR implementation for accreditation and licensing compliance. However, restricted access to customize the vendor’s UI necessitated the development of a more adaptive, standalone web solution to meet clinical requirements.',
       },
       approach: {
-        id: 'Lapisan RME paralel dibangun dengan UI yang dibentuk dari kemauan dokter, di atas database SIMRS vendor yang sama. Tetap menulis ke tabel kanonik supaya laporan existing tidak rusak.',
+        id: 'Lapisan RME berbasis web dibangun dengan UI yang dibentuk dari kemauan dokter, di atas database SIMRS vendor yang sama. Tetap menulis ke database internal supaya laporan existing tidak rusak.',
         en: 'A parallel EMR layer built around what the doctors actually wanted, sitting on top of the same vendor SIMRS database. Everything still writes back to the canonical SIMRS tables so existing reports keep working.',
         bullets: {
           id: [
-            'Form SOAP cepat dengan template per spesialisasi',
+            'Form SOAP cepat',
             'Permintaan lab/radiologi sekali klik',
             'Resep dengan autocomplete obat dari master',
-            'Tetap menulis ke tabel kanonik SIMRS',
+            'Tetap menulis ke tabel SIMRS yang berjalan',
           ],
           en: [
             'Fast SOAP forms with per-specialty templates',
@@ -161,7 +161,7 @@ export const projects = {
         en: 'Doctors started using the EMR digitally. Hospital regulatory exposure dropped. Partial adoption — but real.',
       },
       hard: {
-        id: 'Database SIMRS punya 1.168 tabel tanpa dokumentasi. Memetakan tabel klinis, relasi, dan constraint adalah arkeologi data — bukan UI work.',
+        id: 'Database SIMRS memiliki 1.168 tabel tanpa dokumentasi yang memadai. Proses pemetaan data klinis, relasi, dan constraint merupakan upaya rekonstruksi struktur data yang kompleks, bukan sekadar penataan antarmuka (UI work).',
         en: 'The SIMRS database has 1,168 tables and no documentation. Mapping which tables owned which clinical data — and which constraints would break — was data archaeology, not UI work.',
       },
     },

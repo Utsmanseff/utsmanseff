@@ -8,9 +8,9 @@ import FadeIn from '@/components/ui/FadeIn';
 
 const EASE = 'cubic-bezier(0.16, 1, 0.3, 1)';
 
-function Card({ icon: Icon, label, items, render, delay = 0 }) {
+function Card({ icon: Icon, label, items, render }) {
   return (
-    <FadeIn delay={delay} y={20} duration={700}
+    <div
       className="group relative p-5 md:p-6 border border-rule rounded-md overflow-hidden transition-[transform,border-color,box-shadow] duration-500 hover:border-amber hover:-translate-y-1 hover:shadow-[0_18px_40px_-22px_rgba(201,123,63,0.45)]"
       style={{ transitionTimingFunction: EASE }}
     >
@@ -38,7 +38,7 @@ function Card({ icon: Icon, label, items, render, delay = 0 }) {
           <div key={i}>{render(it)}</div>
         ))}
       </div>
-    </FadeIn>
+    </div>
   );
 }
 
@@ -51,7 +51,7 @@ export default function Education() {
       id="education"
       className="py-16 md:py-20 px-6 border-t border-rule"
     >
-      <div className="max-w-6xl mx-auto">
+      <FadeIn className="max-w-6xl mx-auto">
         <SectionTitle>{t('education.title')}</SectionTitle>
 
         <div className="grid md:grid-cols-2 gap-4 md:gap-6">
@@ -59,7 +59,6 @@ export default function Education() {
             icon={GraduationCap}
             label={t('education.educationLabel')}
             items={education}
-            delay={0}
             render={(e) => (
               <>
                 <h3 className="font-display text-lg md:text-xl text-forest dark:text-cream leading-tight">
@@ -77,7 +76,6 @@ export default function Education() {
             icon={Award}
             label={t('education.certLabel')}
             items={certifications}
-            delay={120}
             render={(c) => (
               <>
                 <h3 className="font-display text-lg md:text-xl text-forest dark:text-cream leading-tight">
@@ -88,7 +86,7 @@ export default function Education() {
             )}
           />
         </div>
-      </div>
+      </FadeIn>
     </section>
   );
 }

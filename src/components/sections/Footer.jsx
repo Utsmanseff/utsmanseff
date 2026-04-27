@@ -11,7 +11,7 @@ export default function Footer() {
     <footer className="py-10 px-6 border-t border-rule">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-4 font-mono text-[10px] md:text-xs uppercase tracking-widest text-mute">
         <p>
-          {t('footer.builtWith')} <span className="text-rule mx-1">·</span> © {year} Utsman
+           © {year} Utsman
         </p>
         <div className="flex items-center gap-5">
           <LangSwitcher />

@@ -8,9 +8,8 @@ import FadeIn from '@/components/ui/FadeIn';
 
 const EASE = 'cubic-bezier(0.16, 1, 0.3, 1)';
 
-function ContactCard({ icon: Icon, label, value, href, ext = false, delay = 0 }) {
+function ContactCard({ icon: Icon, label, value, href, ext = false }) {
   return (
-    <FadeIn delay={delay} y={14} duration={650}>
     <a
       href={href}
       {...(ext ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
@@ -44,7 +43,6 @@ function ContactCard({ icon: Icon, label, value, href, ext = false, delay = 0 })
         />
       )}
     </a>
-    </FadeIn>
   );
 }
 
@@ -63,16 +61,16 @@ export default function Contact() {
       id="contact"
       className="py-16 md:py-20 px-6 border-t border-rule bg-cream-deep/40 dark:bg-forest/30"
     >
-      <div className="max-w-6xl mx-auto">
+      <FadeIn className="max-w-6xl mx-auto">
         <SectionTitle eyebrow={t('contact.intro')}>{t('contact.title')}</SectionTitle>
 
         <div className="grid sm:grid-cols-2 gap-3 md:gap-4 max-w-3xl">
-          {items.map((it, i) => (
-            <ContactCard key={it.label} {...it} delay={i * 90} />
+          {items.map((it) => (
+            <ContactCard key={it.label} {...it} />
           ))}
         </div>
 
-        <FadeIn delay={items.length * 90 + 60} className="mt-6 flex flex-wrap items-center gap-4 max-w-3xl">
+        <div className="mt-6 flex flex-wrap items-center gap-4 max-w-3xl">
           <div className="flex items-center gap-2 text-sm text-mute">
             <MapPin size={14} className="text-amber" />
             <span>{meta.location[locale]}</span>
@@ -95,8 +93,8 @@ export default function Contact() {
               {t('contact.downloadCV')}
             </span>
           </a>
-        </FadeIn>
-      </div>
+        </div>
+      </FadeIn>
     </section>
   );
 }

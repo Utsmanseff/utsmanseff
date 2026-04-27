@@ -18,7 +18,7 @@ export default function OtherProjects() {
       id="other"
       className="py-16 md:py-20 px-6 border-t border-rule"
     >
-      <div className="max-w-6xl mx-auto">
+      <FadeIn className="max-w-6xl mx-auto">
         <SectionTitle>{t('other.title')}</SectionTitle>
 
         {/* Column header (desktop) */}
@@ -176,7 +176,7 @@ export default function OtherProjects() {
             </FadeIn>
           ))}
         </ul>
-      </div>
+      </FadeIn>
     </section>
   );
 }

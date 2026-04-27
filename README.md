@@ -1,128 +1,18 @@
-# Utsman — Portfolio
+# 💫 About Me:
+Fullstack Web Developer based in Banjarbaru, South Kalimantan. I work at RSU Nirwana Banjarbaru, where I build and maintain web-based systems that support daily hospital operations — from clinical workflows to government compliance integrations. I enjoy solving problems that actually matter to the people using the software, especially when the constraints are tight and the stakes are real. Currently expanding into TypeScript, Go, and Flutter. Open to collaborating on meaningful web projects.
 
-Personal portfolio site. Editorial Warm direction (cream + forest + amber palette), bilingual ID/EN, healthcare-tech focus.
 
-Live: [utsman.dev](https://utsman.dev) (placeholder until domain wired)
+## 🌐 Socials:
+[![Instagram](https://img.shields.io/badge/Instagram-%23E4405F.svg?logo=Instagram&logoColor=white)](https://instagram.com/utsmnseff) [![Mastodon](https://img.shields.io/badge/-MASTODON-%232B90D9?logo=mastodon&logoColor=white)](https://mastodon.social/@Utsman) [![email](https://img.shields.io/badge/Email-D14836?logo=gmail&logoColor=white)](mailto:seffutsmannnn@gmail.com) 
 
-## Stack
+# 💻 Tech Stack:
+![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white) ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white) ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E) ![PHP](https://img.shields.io/badge/php-%23777BB4.svg?style=for-the-badge&logo=php&logoColor=white) ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white) ![Cloudflare](https://img.shields.io/badge/Cloudflare-F38020?style=for-the-badge&logo=Cloudflare&logoColor=white) ![Vercel](https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white) ![Alpine.js](https://img.shields.io/badge/alpinejs-white.svg?style=for-the-badge&logo=alpinedotjs&logoColor=%238BC0D0) ![Bootstrap](https://img.shields.io/badge/bootstrap-%238511FA.svg?style=for-the-badge&logo=bootstrap&logoColor=white) ![Chart.js](https://img.shields.io/badge/chart.js-F5788D.svg?style=for-the-badge&logo=chart.js&logoColor=white) ![Filament](https://img.shields.io/badge/Filament-FFAA00?style=for-the-badge&logoColor=%23000000) ![jQuery](https://img.shields.io/badge/jquery-%230769AD.svg?style=for-the-badge&logo=jquery&logoColor=white) ![Laravel](https://img.shields.io/badge/laravel-%23FF2D20.svg?style=for-the-badge&logo=laravel&logoColor=white) ![Livewire](https://img.shields.io/badge/livewire-%234e56a6.svg?style=for-the-badge&logo=livewire&logoColor=white) ![NPM](https://img.shields.io/badge/NPM-%23CB3837.svg?style=for-the-badge&logo=npm&logoColor=white) ![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white) ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white) ![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white) ![Apache](https://img.shields.io/badge/apache-%23D42029.svg?style=for-the-badge&logo=apache&logoColor=white) ![Nginx](https://img.shields.io/badge/nginx-%23009639.svg?style=for-the-badge&logo=nginx&logoColor=white) ![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white) ![MySQL](https://img.shields.io/badge/mysql-4479A1.svg?style=for-the-badge&logo=mysql&logoColor=white) ![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white) ![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white) ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
+# 📊 GitHub Stats:
+![](https://github-readme-stats.shion.dev/api?username=utsmanseff&theme=nightowl&hide_border=false&include_all_commits=true&count_private=true)<br/>
+![](https://streak-stats.demolab.com/?user=utsmanseff&theme=nightowl&hide_border=false)<br/>
+![](https://github-readme-stats.shion.dev/api/top-langs/?username=utsmanseff&theme=nightowl&hide_border=false&include_all_commits=true&count_private=true&layout=compact)
 
-- **Next.js 16** (App Router, Turbopack, static prerender)
-- **React 19** (concurrent renderer)
-- **Tailwind CSS 4** (`@theme` design tokens, dark variant)
-- **Vitest + Testing Library + happy-dom** (hooks + i18n contract tests)
-- **next/font** (Fraunces · Inter · JetBrains Mono via `next/font/google`)
-- **lucide-react + react-icons/si** (UI + brand icons)
+---
+[![](https://komarev.com/ghpvc/?username=utsmanseff&icon=0&color=0)](https://visitcount.itsvg.in)
 
-## Run
-
-```bash
-npm install
-npm run dev          # http://localhost:3000
-npm test             # run tests
-npm run lint         # eslint
-npm run build        # production build
-npm start            # serve production build
-```
-
-## Editing content
-
-| What | Where |
-|------|-------|
-| Bio paragraphs, facts panel | `src/lib/i18n/{id,en}.js` → `about` |
-| Featured case studies (full) | `src/lib/data/projects.js` → `projects.featured` |
-| Other projects (compact list) | `src/lib/data/projects.js` → `projects.other` |
-| Coming-soon projects | `src/lib/data/projects.js` → `projects.soon` |
-| Skill chips + brand icons | `src/lib/data/skills.js` (icon names from `react-icons/si`) |
-| Experience timeline | `src/lib/data/experience.js` |
-| Education + certs | `src/lib/data/education.js` |
-| Contact info, socials | `src/lib/data/meta.js` |
-| UI strings (nav, CTAs, labels) | `src/lib/i18n/{id,en}.js` |
-| Default locale | `src/lib/i18n/config.js` → `DEFAULT_LOCALE` |
-| CV file | drop `Utsman-CV.pdf` in `public/` |
-| Photos | `public/assets/img/` |
-
-## Adding a featured case study
-
-Append to `projects.featured` in `src/lib/data/projects.js`:
-
-```js
-{
-  id: 'unique-slug',
-  client: 'Client Name',
-  year: '2026',
-  status: 'live',           // or 'internal'
-  site: 'https://...',      // or null
-  sector: { id: 'Healthcare', en: 'Healthcare' },
-  image: '/assets/img/foo.png',
-  shortName: { id: 'Foo', en: 'Foo' },
-  title:    { id: '...', en: '...' },
-  summary:  { id: '...', en: '...' },
-  tech: ['Laravel', 'MySQL', ...],
-  problem:  { id: '...', en: '...' },
-  approach: {
-    id: '...', en: '...',
-    bullets: { id: ['...'], en: ['...'] },
-  },
-  outcome:  { id: '...', en: '...' },
-  hard:     { id: '...', en: '...' },
-}
-```
-
-The slider auto-renders the new entry; modal pulls all detail fields.
-
-## Architecture
-
-```
-src/
-├── app/
-│   ├── layout.js              # fonts, metadata, JSON-LD, providers
-│   ├── page.js                # section composition
-│   ├── globals.css            # @theme tokens, skip-link, reduced-motion
-│   ├── opengraph-image.jsx    # 1200x630 dynamic OG (next/og)
-│   └── icon.jsx               # 64x64 favicon (next/og)
-├── components/
-│   ├── Providers.jsx          # Theme + Locale composition
-│   ├── JsonLd.jsx             # Schema.org Person
-│   ├── nav/                   # Nav, LangSwitcher, ThemeToggle
-│   ├── sections/              # Hero, About, Skills, Experience,
-│   │                          # Education, SelectedWork, CaseStudyModal,
-│   │                          # OtherProjects, Contact, Footer
-│   └── ui/                    # SectionTitle, Rule, Tag, FadeIn, ExternalLink
-└── lib/
-    ├── data/                  # Bilingual content datasets
-    ├── hooks/                 # useLocale, useTheme, useInView (+ tests)
-    └── i18n/                  # Dictionaries + config + dictionary contract test
-```
-
-## Design tokens
-
-Defined in `src/app/globals.css` via Tailwind 4 `@theme`:
-
-| Token | Value | Use |
-|-------|-------|-----|
-| `--color-cream` | `#F5F1E8` | Primary background (light) |
-| `--color-cream-deep` | `#EDE6D3` | Section bg variant |
-| `--color-forest` | `#1F3A2E` | Primary text + accents |
-| `--color-forest-deep` | `#0F1F18` | Background (dark) |
-| `--color-amber` | `#C97B3F` | Accent + CTA |
-| `--color-mute` | `#6B6B5E` | Secondary text |
-| `--color-rule` | `#D9D0BC` | Borders, dividers |
-| `--font-display` | Fraunces | Headlines |
-| `--font-body` | Inter | Body |
-| `--font-mono` | JetBrains Mono | Eyebrows, labels |
-
-Dark mode flips `--color-bg`, `--color-fg`, `--color-rule`, `--color-mute`. Toggle via `<html class="dark">`.
-
-## i18n contract
-
-`src/lib/i18n/__tests__/dictionary.test.js` enforces both locales share the same top-level keys. Adding a key to `id.js` requires adding it to `en.js` (and vice versa) or the test fails.
-
-## Bilingual project copy
-
-Every project field that varies by language uses `{ id: '...', en: '...' }`. Components use `useLocale().locale` to pick the right value.
-
-Always-string fields (e.g. `tech`, `client`, `year`): no language wrapper.
-
-## Cross-machine resume
-
-State persists in `docs/PROGRESS.md` (committed). New session reads PROGRESS to find next pending phase + current commit log.
+<!-- Proudly created with GPRM ( https://gprm.itsvg.in ) -->

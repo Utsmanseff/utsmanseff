@@ -14,6 +14,7 @@ import Footer from '@/components/sections/Footer';
 export default function Portfolio() {
   return (
     <>
+      <a href="#about" className="skip-link">Skip to content</a>
       <Nav />
       <main>
         <Hero />

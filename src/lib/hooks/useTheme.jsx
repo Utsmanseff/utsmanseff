@@ -24,6 +24,9 @@ export function ThemeProvider({ children }) {
         initial = 'dark';
       }
     } catch (_) {}
+    // Hydration: read storage/media query for initial theme.
+    // setState in effect is intentional (SSR defaults to light, client may differ).
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setTheme(initial);
     applyTheme(initial);
   }, []);

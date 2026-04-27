@@ -39,6 +39,9 @@ export function LocaleProvider({ children }) {
     } catch (_) {
       // SSR / no window
     }
+    // Hydration: read URL/localStorage/navigator to resolve initial locale.
+    // setState in effect is intentional (SSR uses DEFAULT_LOCALE, client may differ).
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLocaleState(initial);
     setHydrated(true);
   }, []);

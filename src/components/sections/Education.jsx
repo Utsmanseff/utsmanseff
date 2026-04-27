@@ -4,25 +4,41 @@ import { GraduationCap, Award } from 'lucide-react';
 import { useLocale } from '@/lib/hooks/useLocale';
 import { education, certifications } from '@/lib/data/education';
 import SectionTitle from '@/components/ui/SectionTitle';
+import FadeIn from '@/components/ui/FadeIn';
 
-function Card({ icon: Icon, label, items, render }) {
+const EASE = 'cubic-bezier(0.16, 1, 0.3, 1)';
+
+function Card({ icon: Icon, label, items, render, delay = 0 }) {
   return (
-    <div className="group relative p-5 md:p-6 border border-rule rounded-md transition-all duration-300 hover:border-amber hover:-translate-y-0.5">
-      <div className="flex items-center gap-2 mb-4">
+    <FadeIn delay={delay} y={20} duration={700}
+      className="group relative p-5 md:p-6 border border-rule rounded-md overflow-hidden transition-[transform,border-color,box-shadow] duration-500 hover:border-amber hover:-translate-y-1 hover:shadow-[0_18px_40px_-22px_rgba(201,123,63,0.45)]"
+      style={{ transitionTimingFunction: EASE }}
+    >
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 bg-gradient-to-br from-amber/0 via-amber/0 to-amber/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+      />
+      <span
+        aria-hidden
+        className="pointer-events-none absolute left-0 top-0 h-full w-px bg-amber origin-top scale-y-0 group-hover:scale-y-100 transition-transform duration-500"
+        style={{ transitionTimingFunction: EASE }}
+      />
+      <div className="relative flex items-center gap-2 mb-4">
         <Icon
           size={14}
-          className="text-amber transition-transform duration-300 group-hover:scale-110"
+          className="text-amber transition-transform duration-500 group-hover:scale-110 group-hover:rotate-[-4deg]"
+          style={{ transitionTimingFunction: EASE }}
         />
         <p className="font-mono text-[10px] uppercase tracking-widest text-amber">
           {label}
         </p>
       </div>
-      <div className="space-y-4">
+      <div className="relative space-y-4">
         {items.map((it, i) => (
           <div key={i}>{render(it)}</div>
         ))}
       </div>
-    </div>
+    </FadeIn>
   );
 }
 
@@ -43,6 +59,7 @@ export default function Education() {
             icon={GraduationCap}
             label={t('education.educationLabel')}
             items={education}
+            delay={0}
             render={(e) => (
               <>
                 <h3 className="font-display text-lg md:text-xl text-forest dark:text-cream leading-tight">
@@ -60,6 +77,7 @@ export default function Education() {
             icon={Award}
             label={t('education.certLabel')}
             items={certifications}
+            delay={120}
             render={(c) => (
               <>
                 <h3 className="font-display text-lg md:text-xl text-forest dark:text-cream leading-tight">

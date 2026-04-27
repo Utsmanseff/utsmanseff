@@ -5,6 +5,7 @@ import { ChevronDown } from 'lucide-react';
 import { useLocale } from '@/lib/hooks/useLocale';
 import { experience } from '@/lib/data/experience';
 import SectionTitle from '@/components/ui/SectionTitle';
+import FadeIn from '@/components/ui/FadeIn';
 
 const EASE = 'cubic-bezier(0.16, 1, 0.3, 1)';
 
@@ -25,7 +26,7 @@ export default function Experience() {
           {experience.map((e, i) => {
             const open = openIdx === i;
             return (
-              <li key={i} className="group">
+              <FadeIn as="li" key={i} delay={Math.min(i * 90, 360)} y={14} duration={650} className="group">
                 <button
                   type="button"
                   onClick={() => setOpenIdx(open ? -1 : i)}
@@ -97,7 +98,7 @@ export default function Experience() {
                     </div>
                   </div>
                 </div>
-              </li>
+              </FadeIn>
             );
           })}
         </ol>

@@ -6,6 +6,7 @@ import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-react';
 import { useLocale } from '@/lib/hooks/useLocale';
 import { projects } from '@/lib/data/projects';
 import SectionTitle from '@/components/ui/SectionTitle';
+import FadeIn from '@/components/ui/FadeIn';
 import CaseStudyModal from './CaseStudyModal';
 
 const EASE = 'cubic-bezier(0.16, 1, 0.3, 1)';
@@ -100,6 +101,7 @@ export default function SelectedWork() {
       </div>
 
       {/* Slider — full width container, card constrained inside */}
+      <FadeIn delay={120} y={24}>
       <div
         ref={trackRef}
         className="overflow-hidden touch-pan-y select-none"
@@ -132,9 +134,10 @@ export default function SelectedWork() {
           ))}
         </div>
       </div>
+      </FadeIn>
 
       {/* Controls */}
-      <div className="max-w-6xl mx-auto px-6 mt-12 flex items-center justify-between gap-6">
+      <FadeIn delay={200} className="max-w-6xl mx-auto px-6 mt-12 flex items-center justify-between gap-6">
         <div className="flex items-center gap-2">
           <button
             type="button"
@@ -191,7 +194,7 @@ export default function SelectedWork() {
           <span className="mx-1.5 text-rule">/</span>
           <span>{String(total).padStart(2, '0')}</span>
         </div>
-      </div>
+      </FadeIn>
 
       <CaseStudyModal
         project={project}
@@ -266,7 +269,8 @@ function Card({ project, isActive, t, localized, onOpen }) {
           {project.tech.map((tech) => (
             <span
               key={tech}
-              className="font-mono text-[10px] uppercase tracking-widest text-mute border border-rule px-2 py-1 rounded-sm transition-colors duration-200 hover:border-amber hover:text-amber"
+              className="font-mono text-[10px] uppercase tracking-widest text-mute border border-rule px-2 py-1 rounded-sm transition-[color,border-color,transform] duration-300 hover:border-amber hover:text-amber hover:-translate-y-0.5"
+              style={{ transitionTimingFunction: EASE }}
             >
               {tech}
             </span>

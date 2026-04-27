@@ -5,6 +5,7 @@ import { ChevronDown } from 'lucide-react';
 import { useLocale } from '@/lib/hooks/useLocale';
 import { projects } from '@/lib/data/projects';
 import SectionTitle from '@/components/ui/SectionTitle';
+import FadeIn from '@/components/ui/FadeIn';
 
 const EASE = 'cubic-bezier(0.16, 1, 0.3, 1)';
 
@@ -35,10 +36,10 @@ export default function OtherProjects() {
         </div>
 
         <ul className="divide-y divide-rule border-b border-rule">
-          {projects.other.map((p) => {
+          {projects.other.map((p, idx) => {
             const open = openId === p.id;
             return (
-              <li key={p.id} className="group">
+              <FadeIn as="li" key={p.id} delay={Math.min(idx * 70, 280)} y={12} duration={600} className="group">
                 <button
                   type="button"
                   onClick={() => setOpenId(open ? null : p.id)}
@@ -134,7 +135,7 @@ export default function OtherProjects() {
                     </div>
                   </div>
                 </div>
-              </li>
+              </FadeIn>
             );
           })}
 
@@ -145,10 +146,13 @@ export default function OtherProjects() {
           </li>
 
           {/* Coming-soon rows */}
-          {projects.soon.map((p) => (
-            <li
+          {projects.soon.map((p, i) => (
+            <FadeIn as="li"
               key={p.id}
-              className="grid grid-cols-12 gap-4 items-baseline py-5 px-3 opacity-60 hover:opacity-90 transition-opacity duration-200"
+              delay={Math.min(i * 60, 240)}
+              y={10}
+              duration={600}
+              className="grid grid-cols-12 gap-4 items-baseline py-5 px-3 opacity-60 hover:opacity-90 transition-opacity duration-300"
             >
               <span className="col-span-2 md:col-span-1 font-mono text-[10px] uppercase tracking-widest text-amber">
                 {t('other.soon')}
@@ -169,7 +173,7 @@ export default function OtherProjects() {
               <span className="col-span-3 md:col-span-1 flex justify-end text-mute font-mono text-sm">
                 ⋯
               </span>
-            </li>
+            </FadeIn>
           ))}
         </ul>
       </div>

@@ -4,38 +4,47 @@ import { Mail, Phone, Github, Instagram, MapPin, Download, ArrowUpRight } from '
 import { useLocale } from '@/lib/hooks/useLocale';
 import { meta } from '@/lib/data/meta';
 import SectionTitle from '@/components/ui/SectionTitle';
+import FadeIn from '@/components/ui/FadeIn';
 
 const EASE = 'cubic-bezier(0.16, 1, 0.3, 1)';
 
-function ContactCard({ icon: Icon, label, value, href, ext = false }) {
+function ContactCard({ icon: Icon, label, value, href, ext = false, delay = 0 }) {
   return (
+    <FadeIn delay={delay} y={14} duration={650}>
     <a
       href={href}
       {...(ext ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-      className="group relative flex items-center gap-4 p-4 md:p-5 border border-rule rounded-md transition-all duration-300 hover:border-amber hover:-translate-y-0.5"
+      className="group relative flex items-center gap-4 p-4 md:p-5 border border-rule rounded-md overflow-hidden transition-[transform,border-color,box-shadow] duration-500 hover:border-amber hover:-translate-y-1 hover:shadow-[0_18px_40px_-22px_rgba(201,123,63,0.45)]"
       style={{ transitionTimingFunction: EASE }}
     >
       <span
         aria-hidden
-        className="shrink-0 inline-flex items-center justify-center w-10 h-10 rounded-full border border-rule text-mute transition-colors duration-300 group-hover:border-amber group-hover:text-amber"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-br from-amber/0 to-amber/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+      />
+      <span
+        aria-hidden
+        className="relative shrink-0 inline-flex items-center justify-center w-10 h-10 rounded-full border border-rule text-mute transition-[border-color,color,transform] duration-500 group-hover:border-amber group-hover:text-amber group-hover:rotate-[-6deg]"
+        style={{ transitionTimingFunction: EASE }}
       >
         <Icon size={16} />
       </span>
-      <div className="min-w-0 flex-1">
+      <div className="relative min-w-0 flex-1">
         <p className="font-mono text-[10px] uppercase tracking-widest text-mute">
           {label}
         </p>
-        <p className="text-sm md:text-base text-forest dark:text-cream truncate group-hover:text-amber transition-colors duration-200">
+        <p className="text-sm md:text-base text-forest dark:text-cream truncate group-hover:text-amber transition-colors duration-300">
           {value}
         </p>
       </div>
       {ext && (
         <ArrowUpRight
           size={14}
-          className="shrink-0 text-mute transition-all duration-300 ease-out group-hover:text-amber group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+          className="relative shrink-0 text-mute transition-[transform,color] duration-500 group-hover:text-amber group-hover:translate-x-1 group-hover:-translate-y-1"
+          style={{ transitionTimingFunction: EASE }}
         />
       )}
     </a>
+    </FadeIn>
   );
 }
 
@@ -58,12 +67,12 @@ export default function Contact() {
         <SectionTitle eyebrow={t('contact.intro')}>{t('contact.title')}</SectionTitle>
 
         <div className="grid sm:grid-cols-2 gap-3 md:gap-4 max-w-3xl">
-          {items.map((it) => (
-            <ContactCard key={it.label} {...it} />
+          {items.map((it, i) => (
+            <ContactCard key={it.label} {...it} delay={i * 90} />
           ))}
         </div>
 
-        <div className="mt-6 flex flex-wrap items-center gap-4 max-w-3xl">
+        <FadeIn delay={items.length * 90 + 60} className="mt-6 flex flex-wrap items-center gap-4 max-w-3xl">
           <div className="flex items-center gap-2 text-sm text-mute">
             <MapPin size={14} className="text-amber" />
             <span>{meta.location[locale]}</span>
@@ -86,7 +95,7 @@ export default function Contact() {
               {t('contact.downloadCV')}
             </span>
           </a>
-        </div>
+        </FadeIn>
       </div>
     </section>
   );

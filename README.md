@@ -2,7 +2,7 @@
 
 Personal portfolio site. Editorial Warm direction (cream + forest + amber palette), bilingual ID/EN, healthcare-tech focus.
 
-Live: [utsman.dev](https://utsmanseff-vercel.app) (placeholder until domain wired)
+Live: [utsman.dev](https://utsman.dev) (placeholder until domain wired)
 
 ## Stack
 

@@ -11,8 +11,8 @@ export const projects = {
       status: 'live',
       site: 'https://rsunirwana.id',
       sector: { id: 'Healthcare', en: 'Healthcare' },
-      image: '/assets/img/rme.png',
-      screenshots: ['/assets/img/rme.png'],
+      image: '/assets/img/pendaftaran.png',
+      screenshots: ['/assets/img/pendaftaran.png'],
       shortName: {
         id: 'Pendaftaran OCR',
         en: 'OCR Registration',
@@ -119,8 +119,8 @@ export const projects = {
       status: 'internal',
       site: null,
       sector: { id: 'Healthcare', en: 'Healthcare' },
-      image: '/assets/img/rme.jpg',
-      screenshots: ['/assets/img/rme.jpg'],
+      image: '/assets/img/rme1.png',
+      screenshots: ['/assets/img/rme1.png'],
       shortName: {
         id: 'RME',
         en: 'EMR',

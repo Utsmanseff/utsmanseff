@@ -109,13 +109,14 @@ export default function CaseStudyModal({ project, open, onClose }) {
             </p>
 
             {/* Image */}
-            <div className="mt-8 relative aspect-[16/9] bg-cream-deep dark:bg-forest rounded-md overflow-hidden border border-rule">
+            <div className="mt-8 bg-cream-deep dark:bg-forest rounded-md overflow-hidden border border-rule">
               <Image
                 src={project.image}
                 alt={localized(project.title)}
-                fill
+                width={1600}
+                height={900}
                 sizes="(min-width: 768px) 80vw, 100vw"
-                className="object-cover"
+                className="w-full h-auto object-contain"
               />
             </div>
 

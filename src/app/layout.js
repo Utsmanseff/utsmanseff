@@ -26,7 +26,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata = {
-  metadataBase: new URL("https://utsman.dev"),
+  metadataBase: new URL("https://utsmanseff.vercel.app"),
   title: {
     default: "Utsman — Fullstack Web Developer",
     template: "%s — Utsman",

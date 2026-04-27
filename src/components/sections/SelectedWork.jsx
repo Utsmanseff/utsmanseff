@@ -217,20 +217,20 @@ function Card({ project, isActive, t, localized, onOpen }) {
       aria-hidden={!isActive}
     >
       {/* Image */}
-      <div className="md:col-span-7">
+      <div className="md:col-span-8">
         <button
           type="button"
           onClick={onOpen}
           aria-label={`${t('work.detail')}: ${localized(project.title)}`}
           tabIndex={isActive ? 0 : -1}
-          className="group block w-full text-left rounded-md overflow-hidden border border-rule bg-cream-deep dark:bg-forest relative aspect-[16/10]"
+          className="group block w-full text-left rounded-md overflow-hidden border border-rule bg-cream-deep dark:bg-forest relative aspect-[21/9]"
         >
           <Image
             src={project.image}
             alt={localized(project.title)}
             fill
             sizes="(min-width: 768px) 60vw, 100vw"
-            className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.04]"
+            className="object-cover object-top transition-transform duration-[1200ms] ease-out group-hover:scale-[1.04]"
             draggable={false}
           />
           <div
@@ -249,7 +249,7 @@ function Card({ project, isActive, t, localized, onOpen }) {
       </div>
 
       {/* Info */}
-      <div className="md:col-span-5">
+      <div className="md:col-span-4">
         <p className="font-mono text-[10px] md:text-xs uppercase tracking-widest text-mute mb-3">
           {project.client} · {project.year} ·{' '}
           <span className="text-amber">

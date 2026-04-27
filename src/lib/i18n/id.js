@@ -29,7 +29,7 @@ const id = {
       certification: 'Sertifikasi',
       certificationValue: 'BNSP Object Programmer',
       yearsCoding: 'Pengalaman',
-      yearsCodingValue: '2 tahun (sejak 2021)',
+      yearsCodingValue: '2 tahun (sejak 2024)',
       stack: 'Stack utama',
       stackValue: 'Laravel · MySQL · JavaScript · React/Next',
       languages: 'Bahasa',

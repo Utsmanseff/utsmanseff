@@ -1,32 +1,16 @@
 "use client";
 
-import Nav from '@/components/nav/Nav';
-import Hero from '@/components/sections/Hero';
-import About from '@/components/sections/About';
-import Skills from '@/components/sections/Skills';
-import Experience from '@/components/sections/Experience';
-import Education from '@/components/sections/Education';
-import SelectedWork from '@/components/sections/SelectedWork';
-import OtherProjects from '@/components/sections/OtherProjects';
-import Contact from '@/components/sections/Contact';
-import Footer from '@/components/sections/Footer';
+import { projects } from '@/lib/data/projects';
+import { useLocale } from '@/lib/hooks/useLocale';
+import { useMediaQuery } from '@/lib/hooks/useMediaQuery';
+import Canvas from '@/components/canvas/Canvas';
+import MobileList from '@/components/canvas/MobileList';
 
-export default function Portfolio() {
-  return (
-    <>
-      <a href="#about" className="skip-link">Skip to content</a>
-      <Nav />
-      <main>
-        <Hero />
-        <About />
-        <Skills />
-        <Experience />
-        <Education />
-        <SelectedWork />
-        <OtherProjects />
-        <Contact />
-      </main>
-      <Footer />
-    </>
-  );
+export default function Home() {
+  const { locale } = useLocale();
+  const isNarrow = useMediaQuery('(max-width: 767px)');
+
+  return isNarrow
+    ? <MobileList projects={projects} locale={locale} />
+    : <Canvas projects={projects} locale={locale} />;
 }

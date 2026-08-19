@@ -1,48 +1,47 @@
 @import "tailwindcss";
 
 @theme {
-  /* Color tokens — cream/forest/amber palette */
-  --color-cream: #F5F1E8;
-  --color-cream-deep: #EDE6D3;
-  --color-forest: #1F3A2E;
-  --color-forest-deep: #0F1F18;
-  --color-amber: #C97B3F;
-  --color-amber-soft: #E8B888;
+  /* Reading layer — cream paper */
+  --color-paper: #F2EDE3;
+  --color-paper-deep: #E7E0D0;
   --color-ink: #1A1A1A;
   --color-mute: #6B6B5E;
   --color-rule: #D9D0BC;
 
-  /* Surface tokens — semantic */
-  --color-bg: var(--color-cream);
-  --color-fg: var(--color-forest);
+  /* Exploring layer — warm charcoal canvas */
+  --color-ground: #161A1D;
+  --color-ground-soft: #1F2529;
+  --color-ground-ink: #E8E0D0;
+  --color-ground-mute: #7A8580;
+  --color-ground-rule: #2E3539;
 
-  /* Typography */
+  /* Shared accent, the thread between both layers */
+  --color-amber: #C97B3F;
+  --color-amber-soft: #E8B888;
+
   --font-display: var(--font-display), Georgia, serif;
   --font-body: var(--font-body), -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: var(--font-mono), ui-monospace, monospace;
 }
 
-@variant dark (.dark &);
-
-.dark {
-  --color-bg: var(--color-forest-deep);
-  --color-fg: var(--color-cream);
-  --color-rule: #2A4A3A;
-  --color-mute: #9A9A8A;
-}
-
 html, body {
-  background: var(--color-bg);
-  color: var(--color-fg);
+  background: var(--color-paper);
+  color: var(--color-ink);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* The canvas route paints its own ground; body must not show through. */
+body:has(.canvas-root) {
+  background: var(--color-ground);
+  overscroll-behavior: none;
+}
+
 /* Selection */
 ::selection {
   background: var(--color-amber);
-  color: var(--color-cream);
+  color: var(--color-paper);
 }
 
 /* Focus ring */
@@ -58,7 +57,7 @@ html, body {
   left: -9999px;
   top: 0;
   background: var(--color-amber);
-  color: var(--color-cream);
+  color: var(--color-paper);
   padding: 0.75rem 1rem;
   z-index: 200;
   font-weight: 600;
@@ -68,4 +67,12 @@ html, body {
 .skip-link:focus {
   left: 1rem;
   top: 1rem;
+}
+
+/* Transitions are decoration; dragging is not. Keep the canvas usable. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
 }

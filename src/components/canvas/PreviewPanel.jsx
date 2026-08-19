@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import AccessBadge from '@/components/work/AccessBadge';
@@ -11,7 +11,28 @@ const COPY = {
   close: { id: 'Tutup panel', en: 'Close panel' },
 };
 
+const FADE_MS = 700;
+
 export default function PreviewPanel({ project, locale, onClose }) {
+  // The panel has to stay mounted to fade. `rendered` outlives `project` by one
+  // fade so closing eases out too; `shown` drives the opacity either way.
+  const [rendered, setRendered] = useState(project);
+  const [shown, setShown] = useState(false);
+
+  useEffect(() => {
+    if (project) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setRendered(project);
+      // One frame at opacity 0 first, or the browser has nothing to animate from.
+      const frame = requestAnimationFrame(() => setShown(true));
+      return () => cancelAnimationFrame(frame);
+    }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setShown(false);
+    const timer = setTimeout(() => setRendered(null), FADE_MS);
+    return () => clearTimeout(timer);
+  }, [project]);
+
   useEffect(() => {
     if (!project) return;
     const onKey = (e) => {
@@ -21,7 +42,7 @@ export default function PreviewPanel({ project, locale, onClose }) {
     return () => window.removeEventListener('keydown', onKey);
   }, [project, onClose]);
 
-  if (!project) return null;
+  if (!rendered) return null;
 
   return (
     <aside
@@ -29,7 +50,12 @@ export default function PreviewPanel({ project, locale, onClose }) {
       className="absolute right-0 top-0 bottom-0 w-full sm:w-[55%] max-w-xl z-20
                  bg-ground-soft/95 backdrop-blur text-ground-ink border-l border-ground-rule
                  p-6 overflow-y-auto"
-      style={{ transition: 'opacity 700ms cubic-bezier(0.22, 1, 0.36, 1)' }}
+      style={{
+        opacity: shown ? 1 : 0,
+        // Only while fading out — a closing panel must not swallow canvas clicks.
+        pointerEvents: project ? 'auto' : 'none',
+        transition: `opacity ${FADE_MS}ms cubic-bezier(0.22, 1, 0.36, 1)`,
+      }}
     >
       <button
         type="button"
@@ -42,16 +68,16 @@ export default function PreviewPanel({ project, locale, onClose }) {
       </button>
 
       <div className="font-mono text-[10px] uppercase tracking-wider text-ground-mute">
-        {project.client} · {project.year}
+        {rendered.client} · {rendered.year}
       </div>
-      <h2 className="font-display text-2xl mt-2 mb-3">{project.title[locale]}</h2>
+      <h2 className="font-display text-2xl mt-2 mb-3">{rendered.title[locale]}</h2>
       <div className="mb-4">
-        <AccessBadge access={project.access} locale={locale} tone="ground" />
+        <AccessBadge access={rendered.access} locale={locale} tone="ground" />
       </div>
 
-      {project.image && (
+      {rendered.image && (
         <Image
-          src={project.image}
+          src={rendered.image}
           alt=""
           width={800}
           height={450}
@@ -59,21 +85,21 @@ export default function PreviewPanel({ project, locale, onClose }) {
         />
       )}
 
-      <p className="text-sm leading-relaxed text-ground-ink/85">{project.context[locale]}</p>
+      <p className="text-sm leading-relaxed text-ground-ink/85">{rendered.context[locale]}</p>
 
       <div className="flex flex-wrap gap-3 mt-6">
-        {project.tier === 'full' && (
+        {rendered.tier === 'full' && (
           <Link
-            href={`/kerja/${project.slug}`}
+            href={`/kerja/${rendered.slug}`}
             className="font-mono text-xs border border-amber text-amber px-3 py-2 rounded-sm
                        hover:bg-amber hover:text-ground transition-colors duration-500"
           >
             {COPY.open[locale]}
           </Link>
         )}
-        {project.access === 'public' && project.site && (
+        {rendered.access === 'public' && rendered.site && (
           <a
-            href={project.site}
+            href={rendered.site}
             target="_blank"
             rel="noopener noreferrer"
             className="font-mono text-xs border border-ground-rule px-3 py-2 rounded-sm

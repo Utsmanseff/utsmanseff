@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import PreviewPanel from '@/components/canvas/PreviewPanel';
 
@@ -58,5 +58,24 @@ describe('PreviewPanel', () => {
     render(<PreviewPanel project={full} locale="id" onClose={onClose} />);
     await userEvent.keyboard('{Escape}');
     expect(onClose).toHaveBeenCalled();
+  });
+
+  it('fades in rather than appearing at full opacity', async () => {
+    const { container } = render(<PreviewPanel project={full} locale="id" onClose={() => {}} />);
+    const panel = container.querySelector('[data-panel]');
+    // Must start transparent, or the browser has no opacity delta to animate.
+    expect(panel.style.opacity).toBe('0');
+    await waitFor(() => expect(panel.style.opacity).toBe('1'));
+  });
+
+  it('keeps the panel mounted while it fades back out', async () => {
+    const { container, rerender } = render(
+      <PreviewPanel project={full} locale="id" onClose={() => {}} />
+    );
+    await waitFor(() => expect(container.querySelector('[data-panel]').style.opacity).toBe('1'));
+    rerender(<PreviewPanel project={null} locale="id" onClose={() => {}} />);
+    const panel = container.querySelector('[data-panel]');
+    expect(panel).not.toBeNull();
+    expect(panel.style.opacity).toBe('0');
   });
 });

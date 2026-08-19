@@ -27,7 +27,6 @@ export default function PreviewPanel({ project, locale, onClose }) {
       const frame = requestAnimationFrame(() => setShown(true));
       return () => cancelAnimationFrame(frame);
     }
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setShown(false);
     const timer = setTimeout(() => setRendered(null), FADE_MS);
     return () => clearTimeout(timer);

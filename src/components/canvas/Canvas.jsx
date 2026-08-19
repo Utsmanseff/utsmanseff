@@ -26,7 +26,12 @@ export default function Canvas({ projects, locale }) {
   // Eased only for programmatic moves; dragging must track the finger exactly.
   const [eased, setEased] = useState(false);
 
-  const drag = useRef({ active: false, travel: 0, lastX: 0, lastY: 0 });
+  // `suppressClick` is set when a pointer gesture turns out to be a drag, so the
+  // click the browser synthesises afterwards does not open a panel. It is a flag
+  // rather than a reading of `travel`, because keyboard activation fires a click
+  // with no pointer gesture at all — judging it by the last drag's distance made
+  // Enter on a focused node do nothing after any pan.
+  const drag = useRef({ active: false, travel: 0, lastX: 0, lastY: 0, suppressClick: false });
 
   const fit = useCallback(() => {
     const box = surfaceRef.current?.getBoundingClientRect();
@@ -36,10 +41,16 @@ export default function Canvas({ projects, locale }) {
     setTimeout(() => setEased(false), 950);
   }, [projects]);
 
-  useEffect(() => { fit(); }, [fit]);
+  useEffect(() => {
+    // The opening framing needs the surface's measured size, so it can only be
+    // computed after mount. Mount-only on purpose: re-fitting whenever `projects`
+    // changes identity would yank a visitor's own pan back mid-exploration.
+    fit();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onPointerDown = (e) => {
-    drag.current = { active: true, travel: 0, lastX: e.clientX, lastY: e.clientY };
+    drag.current = { active: true, travel: 0, lastX: e.clientX, lastY: e.clientY, suppressClick: false };
     surfaceRef.current?.setPointerCapture?.(e.pointerId);
   };
 
@@ -56,6 +67,7 @@ export default function Canvas({ projects, locale }) {
 
   const onPointerUp = (e) => {
     drag.current.active = false;
+    drag.current.suppressClick = !isClick(drag.current.travel);
     surfaceRef.current?.releasePointerCapture?.(e.pointerId);
   };
 
@@ -66,10 +78,17 @@ export default function Canvas({ projects, locale }) {
     setViewport((v) => zoomAt(v, e.deltaY < 0 ? 1.08 : 1 / 1.08, anchor));
   };
 
-  // A node click that arrives after real dragging is a drag, not a click.
+  // A node click that arrives right after a drag is the tail of that drag.
   const open = (slug) => {
-    if (!isClick(drag.current.travel)) return;
+    if (drag.current.suppressClick) return;
     setOpenSlug(slug);
+  };
+
+  // Every click bubbles here, including the one on empty ground that ends a pan.
+  // Clearing on the way out means the flag is spent by whatever click follows the
+  // gesture, and never lingers to swallow an unrelated activation later.
+  const onClickCapture = () => {
+    drag.current.suppressClick = false;
   };
 
   const detail = detailLevel(viewport.zoom);
@@ -85,6 +104,7 @@ export default function Canvas({ projects, locale }) {
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
         onWheel={onWheel}
+        onClick={onClickCapture}
         className="absolute inset-0 cursor-grab active:cursor-grabbing touch-none"
         style={{
           backgroundImage:

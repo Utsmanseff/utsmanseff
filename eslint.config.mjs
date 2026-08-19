@@ -10,6 +10,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Agent worktrees are full repo copies, node_modules included — linting them
+    // makes `next lint` appear to hang.
+    ".claude/**",
   ]),
 ]);
 

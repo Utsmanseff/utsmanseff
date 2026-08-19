@@ -83,4 +83,15 @@ describe('Canvas', () => {
     renderCanvas();
     expect(screen.getByText('Utsman')).toBeInTheDocument();
   });
+
+  it('still opens a node activated by keyboard after the canvas was panned', () => {
+    renderCanvas();
+    const surface = screen.getByTestId('canvas-surface');
+    drag(surface, { x: 100, y: 100 }, { x: 300, y: 260 });
+    // The browser fires a click on the ground where the pan ended.
+    fireEvent.click(surface);
+    // Enter on a focused node arrives as a click with no pointer gesture at all.
+    fireEvent.click(screen.getByRole('button', { name: /Satu/ }));
+    expect(screen.getByText('Konteks satu.')).toBeInTheDocument();
+  });
 });

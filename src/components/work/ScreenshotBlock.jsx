@@ -22,7 +22,6 @@ export default function ScreenshotBlock({ src, alt, locale }) {
       width={1600}
       height={900}
       className="w-full h-auto rounded border border-rule"
-      priority
     />
   );
 }

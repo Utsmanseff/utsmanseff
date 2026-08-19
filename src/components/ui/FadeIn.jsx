@@ -20,6 +20,10 @@ export default function FadeIn({
   return (
     <Tag
       ref={ref}
+      // Without JavaScript the observer never fires and opacity stays 0 — the
+      // page would be blank to a human while still readable to a crawler. The
+      // noscript rule in the root layout keys off this attribute.
+      data-fade=""
       className={className}
       style={{
         opacity: inView ? 1 : 0,

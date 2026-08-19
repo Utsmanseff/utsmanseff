@@ -71,6 +71,9 @@ export default function RootLayout({ children }) {
       <body
         className={`${fraunces.variable} ${inter.variable} ${jetbrainsMono.variable} antialiased font-body`}
       >
+        <noscript>
+          <style>{`[data-fade]{opacity:1 !important;transform:none !important}`}</style>
+        </noscript>
         <JsonLd />
         <Providers>{children}</Providers>
       </body>

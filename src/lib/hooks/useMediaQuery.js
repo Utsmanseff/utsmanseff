@@ -1,19 +1,25 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useCallback, useSyncExternalStore } from 'react';
 
-// Starts false on the server and on first client render, so both agree;
-// the real value lands after mount.
+// Read during render, not in an effect. An effect runs *after* paint, so a phone
+// visitor was guaranteed one frame of the desktop canvas — mounted, measured and
+// framed — before it was thrown away and replaced by the list.
 export function useMediaQuery(query) {
-  const [matches, setMatches] = useState(false);
+  const subscribe = useCallback(
+    (onChange) => {
+      const mql = window.matchMedia(query);
+      mql.addEventListener('change', onChange);
+      return () => mql.removeEventListener('change', onChange);
+    },
+    [query]
+  );
 
-  useEffect(() => {
-    const mql = window.matchMedia(query);
-    const update = () => setMatches(mql.matches);
-    update();
-    mql.addEventListener('change', update);
-    return () => mql.removeEventListener('change', update);
-  }, [query]);
+  const getSnapshot = useCallback(() => window.matchMedia(query).matches, [query]);
 
-  return matches;
+  // The server has no viewport. It renders the wide layout; the client corrects
+  // it while hydrating, before the browser paints.
+  const getServerSnapshot = () => false;
+
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }

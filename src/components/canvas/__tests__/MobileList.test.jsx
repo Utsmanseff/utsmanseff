@@ -35,4 +35,11 @@ describe('MobileList', () => {
     render(<MobileList projects={projects} locale="id" />);
     expect(screen.queryByRole('link', { name: /Dua/ })).not.toBeInTheDocument();
   });
+
+  it('names the card link by its title alone, not the whole card', () => {
+    render(<MobileList projects={projects} locale="id" />);
+    // Exact match: an unlabelled wrapping link would be named
+    // "RSU Nirwana · 2025 Satu Konteks satu. Publik — bisa dijelajahi".
+    expect(screen.getByRole('link', { name: 'Satu' })).toBeInTheDocument();
+  });
 });

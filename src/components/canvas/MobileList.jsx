@@ -26,7 +26,13 @@ function Card({ project, locale }) {
   return (
     <FadeIn className="border border-rule rounded p-4 bg-paper">
       {project.tier === 'full' ? (
-        <Link href={`/kerja/${project.slug}`} className="block">
+        // Without a label the link's accessible name becomes the whole card —
+        // client, year, title, context and access status read out as one string.
+        <Link
+          href={`/kerja/${project.slug}`}
+          className="block"
+          aria-label={project.title[locale]}
+        >
           {body}
         </Link>
       ) : (

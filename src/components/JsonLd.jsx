@@ -7,9 +7,8 @@ export default function JsonLd() {
     name: 'Utsman',
     jobTitle: 'Fullstack Web Developer',
     email: meta.email,
-    url: 'https://utsman.dev',
+    url: meta.siteUrl,
     sameAs: [meta.github, meta.instagram],
-    worksFor: { '@type': 'Organization', name: 'RSU Nirwana' },
     knowsAbout: [
       'Healthcare technology',
       'Electronic Medical Records',

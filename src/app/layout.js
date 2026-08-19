@@ -2,6 +2,7 @@ import { Fraunces, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/Providers";
 import JsonLd from "@/components/JsonLd";
+import { meta } from "@/lib/data/meta";
 
 const fraunces = Fraunces({
   variable: "--font-display",
@@ -26,7 +27,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata = {
-  metadataBase: new URL("https://utsmanseff.vercel.app"),
+  metadataBase: new URL(meta.siteUrl),
   title: {
     default: "Utsman — Fullstack Web Developer",
     template: "%s — Utsman",

@@ -44,6 +44,9 @@ export function zoomAt(viewport, factor, anchor) {
 }
 
 // Frame every node with `padding` px of breathing room on all sides.
+// The padding is a soft guarantee: it holds only while the required zoom
+// survives the [MIN_ZOOM, MAX_ZOOM] clamp. Content too large to fit at
+// MIN_ZOOM will still overflow — bounding the zoom range wins over fitting.
 export function fitToNodes(nodes, size, padding = 60) {
   if (nodes.length === 0) {
     return { x: size.width / 2, y: size.height / 2, zoom: 1 };

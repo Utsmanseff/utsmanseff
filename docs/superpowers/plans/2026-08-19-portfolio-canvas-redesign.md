@@ -705,7 +705,7 @@ export function isClick(travel) {
 - [ ] **Step 4: Run the test and watch it pass**
 
 Run: `npx vitest run src/lib/canvas/__tests__/viewport.test.js`
-Expected: PASS, 13 tests.
+Expected: PASS, 15 tests.
 
 - [ ] **Step 5: Commit**
 

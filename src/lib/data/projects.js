@@ -59,7 +59,9 @@ export const projects = [
     access: 'internal',
     site: null,
     position: { x: 760, y: 250 },
-    related: ['rme'],
+    // No line to `rme`: RSU already links to both, and a straight IDRG-RME
+    // line passes through the RSU node, reading as a relation that isn't there.
+    related: [],
     image: '/assets/img/eklaim.png',
     tech: ['Laravel', 'MySQL', 'REST API', 'SOAP'],
     shortName: { id: 'IDRG Bridging', en: 'IDRG Bridging' },

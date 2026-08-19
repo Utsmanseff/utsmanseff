@@ -744,6 +744,9 @@ In `src/app/globals.css`, replace the `@theme { … }` block, the `@variant dark
   /* Shared accent, the thread between both layers */
   --color-amber: #C97B3F;
   --color-amber-soft: #E8B888;
+  /* Amber is only 2.82:1 on paper — this darker one carries text and
+     focus rings on the reading layer, where there is no other mode. */
+  --color-amber-ink: #9C5A28;
 
   --font-display: var(--font-display), Georgia, serif;
   --font-body: var(--font-body), -apple-system, BlinkMacSystemFont, sans-serif;
@@ -798,6 +801,10 @@ Expected: only hits inside files scheduled for deletion in Task 11. Note them; d
 git add src/app/globals.css
 git commit -m "feat(theme): split tokens into paper and ground layers, drop dark toggle"
 ```
+
+---
+
+**Amber has two values.** `--color-amber` (#C97B3F) is 5.33:1 on the canvas ground and is used there. On paper it is only 2.82:1, so every amber that touches the reading layer — text, borders, focus rings, button fills behind paper-coloured text — uses `--color-amber-ink` (#9C5A28), which measures 4.61:1. Never use plain `amber` utilities on a paper background.
 
 ---
 
@@ -1926,7 +1933,7 @@ export default function PaperHeader({ locale }) {
     <header className="flex items-center justify-between py-6">
       <Link
         href="/"
-        className="font-mono text-[11px] text-mute hover:text-amber transition-colors duration-500"
+        className="font-mono text-[11px] text-mute hover:text-amber-ink transition-colors duration-500"
       >
         ← {BACK[locale]}
       </Link>
@@ -1955,7 +1962,7 @@ export default function WorkFooterNav({ prev, next, locale }) {
             <span className="font-mono text-[10px] uppercase tracking-wider text-mute">
               {COPY.prev[locale]}
             </span>
-            <span className="block font-display text-lg group-hover:text-amber transition-colors duration-500">
+            <span className="block font-display text-lg group-hover:text-amber-ink transition-colors duration-500">
               {prev.shortName[locale]}
             </span>
           </Link>
@@ -1967,7 +1974,7 @@ export default function WorkFooterNav({ prev, next, locale }) {
             <span className="font-mono text-[10px] uppercase tracking-wider text-mute">
               {COPY.next[locale]}
             </span>
-            <span className="block font-display text-lg group-hover:text-amber transition-colors duration-500">
+            <span className="block font-display text-lg group-hover:text-amber-ink transition-colors duration-500">
               {next.shortName[locale]}
             </span>
           </Link>
@@ -2028,7 +2035,7 @@ export default function ProjectView({ project, prev, next }) {
         <ScreenshotBlock src={project.image} alt={project.title[locale]} locale={locale} />
 
         {/* 4 — what I built */}
-        <h2 className="font-mono text-[11px] uppercase tracking-wider text-amber mt-14 mb-4">
+        <h2 className="font-mono text-[11px] uppercase tracking-wider text-amber-ink mt-14 mb-4">
           {COPY.built[locale]}
         </h2>
         <ul className="flex flex-col gap-2">
@@ -2040,13 +2047,13 @@ export default function ProjectView({ project, prev, next }) {
         </ul>
 
         {/* 5 — the hard part */}
-        <h2 className="font-mono text-[11px] uppercase tracking-wider text-amber mt-14 mb-4">
+        <h2 className="font-mono text-[11px] uppercase tracking-wider text-amber-ink mt-14 mb-4">
           {COPY.hard[locale]}
         </h2>
         <p className="font-display text-lg leading-relaxed italic">{project.hard[locale]}</p>
 
         {/* 6 — stack */}
-        <h2 className="font-mono text-[11px] uppercase tracking-wider text-amber mt-14 mb-4">
+        <h2 className="font-mono text-[11px] uppercase tracking-wider text-amber-ink mt-14 mb-4">
           {COPY.stack[locale]}
         </h2>
         <div className="flex flex-wrap gap-2">
@@ -2061,8 +2068,8 @@ export default function ProjectView({ project, prev, next }) {
             href={project.site}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block font-mono text-xs border border-amber text-amber px-4 py-2
-                       rounded-sm mt-12 hover:bg-amber hover:text-paper transition-colors duration-500"
+            className="inline-block font-mono text-xs border border-amber-ink text-amber-ink px-4 py-2
+                       rounded-sm mt-12 hover:bg-amber-ink hover:text-paper transition-colors duration-500"
           >
             {COPY.visit[locale]}
           </a>
@@ -2073,7 +2080,7 @@ export default function ProjectView({ project, prev, next }) {
         <Link
           href="/"
           className="inline-block font-mono text-[11px] text-mute mt-10
-                     hover:text-amber transition-colors duration-500"
+                     hover:text-amber-ink transition-colors duration-500"
         >
           ← {COPY.back[locale]}
         </Link>
@@ -2194,7 +2201,7 @@ export default function ContactPage() {
                   href={r.href}
                   target={r.href.startsWith('http') ? '_blank' : undefined}
                   rel={r.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                  className="text-sm hover:text-amber transition-colors duration-500"
+                  className="text-sm hover:text-amber-ink transition-colors duration-500"
                 >
                   {r.value}
                 </a>
@@ -2205,8 +2212,8 @@ export default function ContactPage() {
 
         <a
           href={meta.cvFile}
-          className="inline-block font-mono text-xs border border-amber text-amber px-4 py-2
-                     rounded-sm mt-10 hover:bg-amber hover:text-paper transition-colors duration-500"
+          className="inline-block font-mono text-xs border border-amber-ink text-amber-ink px-4 py-2
+                     rounded-sm mt-10 hover:bg-amber-ink hover:text-paper transition-colors duration-500"
         >
           {COPY.cv[locale]}
         </a>

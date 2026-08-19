@@ -18,6 +18,9 @@
   /* Shared accent, the thread between both layers */
   --color-amber: #C97B3F;
   --color-amber-soft: #E8B888;
+  /* Amber is only 2.82:1 on paper — this darker one carries text and
+     focus rings on the reading layer, where there is no other mode. */
+  --color-amber-ink: #9C5A28;
 
   --font-display: var(--font-display), Georgia, serif;
   --font-body: var(--font-body), -apple-system, BlinkMacSystemFont, sans-serif;
@@ -40,13 +43,13 @@ body:has(.canvas-root) {
 
 /* Selection */
 ::selection {
-  background: var(--color-amber);
+  background: var(--color-amber-ink);
   color: var(--color-paper);
 }
 
 /* Focus ring */
 :focus-visible {
-  outline: 2px solid var(--color-amber);
+  outline: 2px solid var(--color-amber-ink);
   outline-offset: 2px;
   border-radius: 2px;
 }
@@ -56,7 +59,7 @@ body:has(.canvas-root) {
   position: absolute;
   left: -9999px;
   top: 0;
-  background: var(--color-amber);
+  background: var(--color-amber-ink);
   color: var(--color-paper);
   padding: 0.75rem 1rem;
   z-index: 200;

@@ -8,7 +8,7 @@ function TestConsumer() {
   return (
     <div>
       <span data-testid="locale">{locale}</span>
-      <span data-testid="title">{t('about.title')}</span>
+      <span data-testid="title">{t('nav.about')}</span>
       <button onClick={() => setLocale('en')}>EN</button>
       <button onClick={() => setLocale('id')}>ID</button>
     </div>

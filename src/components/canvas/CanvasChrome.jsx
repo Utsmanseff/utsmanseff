@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import LangSwitcher from '@/components/nav/LangSwitcher';
+import TechLegend from './TechLegend';
 
 const COPY = {
   fit: { id: 'Tampilkan semua', en: 'Show everything' },
@@ -26,7 +27,9 @@ const FADE_MS = 700;
 // `inert` does the rest: it takes the switcher, the
 // contact link and the fit button out of the tab order too, so keyboard focus
 // cannot land on something nobody can see.
-export default function CanvasChrome({ locale, onFit, hidden = false }) {
+export default function CanvasChrome({
+  locale, onFit, hidden = false, tech = [], activeTech = null, onPickTech,
+}) {
   const veil = {
     opacity: hidden ? 0 : 1,
     pointerEvents: hidden ? 'none' : undefined,
@@ -39,7 +42,7 @@ export default function CanvasChrome({ locale, onFit, hidden = false }) {
         <button
           type="button"
           onClick={onFit}
-          className="font-mono text-[11px] border border-ground-rule text-ground-ink px-3 py-1.5 rounded-sm bg-ground/70 backdrop-blur hover:border-amber transition-colors duration-500"
+          className="font-pixel text-[15px] leading-none border border-ground-rule text-ground-ink px-3 py-1.5 rounded-sm bg-ground/70 backdrop-blur hover:border-amber transition-colors duration-500"
         >
           {COPY.fit[locale]}
         </button>
@@ -49,14 +52,18 @@ export default function CanvasChrome({ locale, onFit, hidden = false }) {
         <LangSwitcher tone="ground" />
         <Link
           href="/kontak"
-          className="font-mono text-[11px] text-ground-mute hover:text-amber transition-colors duration-500"
+          className="font-pixel text-[15px] leading-none text-ground-mute hover:text-amber transition-colors duration-500"
         >
           {COPY.contact[locale]}
         </Link>
       </div>
 
+      <div style={veil}>
+        <TechLegend items={tech} active={activeTech} onPick={onPickTech} locale={locale} />
+      </div>
+
       <p
-        className="fixed inset-x-0 bottom-5 z-30 mx-auto w-max max-w-[92vw] rounded-full border border-ground-rule bg-ground/80 px-4 py-2 text-center font-mono text-xs text-ground-ink/90 backdrop-blur pointer-events-none"
+        className="fixed inset-x-0 bottom-5 z-30 mx-auto w-max max-w-[92vw] rounded-full border border-ground-rule bg-ground/80 px-4 py-2 text-center font-pixel text-[15px] text-ground-ink/90 backdrop-blur pointer-events-none"
         style={veil}
       >
         {COPY.hint[locale]}

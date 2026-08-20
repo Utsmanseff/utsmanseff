@@ -281,6 +281,8 @@ export const projects = [
 ];
 
 export const fullProjects = projects.filter((p) => p.tier === 'full');
+// What sits behind the canvas's "other work" node.
+export const briefProjects = projects.filter((p) => p.tier === 'brief');
 
 export function bySlug(slug) {
   return projects.find((p) => p.slug === slug);

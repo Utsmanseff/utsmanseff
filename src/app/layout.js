@@ -1,4 +1,4 @@
-import { Fraunces, Inter, JetBrains_Mono } from "next/font/google";
+import { Fraunces, Inter, JetBrains_Mono, Jersey_15 } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/Providers";
 import JsonLd from "@/components/JsonLd";
@@ -21,6 +21,17 @@ const inter = Inter({
 
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono",
+  subsets: ["latin"],
+  weight: ["400"],
+  display: "swap",
+});
+
+// Canvas display face. Arcade-condensed bitmap: it carries the map's character
+// and fits long Indonesian labels inside a node, which the 8x8 console faces
+// cannot. Deliberately confined to the canvas layer — no pixel face survives a
+// case study paragraph, so the reading pages keep the serif.
+const jersey = Jersey_15({
+  variable: "--font-pixel",
   subsets: ["latin"],
   weight: ["400"],
   display: "swap",
@@ -72,7 +83,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="id" suppressHydrationWarning>
       <body
-        className={`${fraunces.variable} ${inter.variable} ${jetbrainsMono.variable} antialiased font-body`}
+        className={`${fraunces.variable} ${inter.variable} ${jetbrainsMono.variable} ${jersey.variable} antialiased font-body`}
       >
         <noscript>
           <style>{`[data-fade]{opacity:1 !important;transform:none !important}`}</style>

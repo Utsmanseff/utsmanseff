@@ -25,6 +25,9 @@
   --font-display: var(--font-display), Georgia, serif;
   --font-body: var(--font-body), -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: var(--font-mono), ui-monospace, monospace;
+  /* Canvas only. The fallback is a monospace on purpose: if the pixel face
+     fails to load, labels should stay narrow rather than reflow the nodes. */
+  --font-pixel: var(--font-pixel), ui-monospace, monospace;
 }
 
 html, body {

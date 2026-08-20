@@ -41,9 +41,27 @@ function renderCanvas() {
 }
 
 describe('Canvas', () => {
-  it('renders a node for every project', () => {
+  it('gives a node to the projects with a page, and one door to the rest', () => {
+    // Eight near-identical circles read as filler. Only full-tier projects earn
+    // a node; the smaller work sits behind the "other work" node.
     renderCanvas();
     expect(screen.getByRole('button', { name: /Satu/ })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /^Dua/ })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Project lain/ })).toBeInTheDocument();
+  });
+
+  it('says how many projects are behind the door before it is opened', () => {
+    renderCanvas();
+    expect(screen.getByRole('button', { name: /Project lain/ })).toHaveTextContent('1 project');
+  });
+
+  it('opens the smaller work through the group node, and offers the way back', () => {
+    renderCanvas();
+    fireEvent.click(screen.getByRole('button', { name: /Project lain/ }));
+    const item = screen.getByRole('button', { name: /Dua/ });
+    fireEvent.click(item);
+    expect(screen.getByText('Konteks dua.')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /← Project lain/ }));
     expect(screen.getByRole('button', { name: /Dua/ })).toBeInTheDocument();
   });
 
@@ -122,5 +140,27 @@ describe('Canvas', () => {
     // looked identical to the clickable ones while doing nothing when clicked.
     renderCanvas();
     expect(screen.getByText(/Membangun sistem rumah sakit/)).toBeInTheDocument();
+  });
+
+  it('dims the work that does not use the technology picked in the legend', () => {
+    // The legend replaces the old icon grid: it has to change what the map
+    // shows, not just list names next to it.
+    renderCanvas();
+    fireEvent.click(screen.getByRole('button', { name: /^Laravel/ }));
+    expect(screen.getByRole('button', { name: /Satu/ })).toHaveStyle({ opacity: '1' });
+    expect(screen.getByRole('button', { name: /Project lain/ })).toHaveStyle({ opacity: '0.22' });
+  });
+
+  it('lets the filter go, so the map comes back whole', () => {
+    renderCanvas();
+    const laravel = screen.getByRole('button', { name: /^Laravel/ });
+    fireEvent.click(laravel);
+    fireEvent.click(laravel);
+    expect(screen.getByRole('button', { name: /Project lain/ })).toHaveStyle({ opacity: '1' });
+  });
+
+  it('counts the legend from the projects themselves', () => {
+    renderCanvas();
+    expect(screen.getByRole('button', { name: /^Laravel/ })).toHaveTextContent('1');
   });
 });

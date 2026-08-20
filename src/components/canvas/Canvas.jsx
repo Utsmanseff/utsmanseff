@@ -4,25 +4,37 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   panBy, zoomAt, fitToNodes, detailLevel, isClick,
 } from '@/lib/canvas/viewport';
-import { CENTER_NODE, NODE_RADIUS, WORLD } from '@/lib/data/canvas';
+import { primaryTech, usesTech } from '@/lib/canvas/tech';
+import { CENTER_NODE, NODE_RADIUS, OTHERS_NODE, WORLD } from '@/lib/data/canvas';
 import Node from './Node';
+import GroupNode from './GroupNode';
 import Edges from './Edges';
 import PreviewPanel from './PreviewPanel';
 import CanvasChrome from './CanvasChrome';
 
 const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
 
-function fitTargets(projects) {
+function fitTargets(mapped, hasOthers) {
   return [
     { position: CENTER_NODE.position, radius: NODE_RADIUS.center },
-    ...projects.map((p) => ({ position: p.position, radius: NODE_RADIUS[p.tier] })),
+    ...mapped.map((p) => ({ position: p.position, radius: NODE_RADIUS[p.tier] })),
+    ...(hasOthers ? [{ position: OTHERS_NODE.position, radius: NODE_RADIUS.group }] : []),
   ];
 }
 
 export default function Canvas({ projects, locale }) {
+  // Only the projects with a page of their own get a node. The rest sit behind
+  // one "other work" node, so the map has four things to say instead of eight
+  // near-identical circles.
+  const mapped = projects.filter((p) => p.tier === 'full');
+  const others = projects.filter((p) => p.tier !== 'full');
+
   const surfaceRef = useRef(null);
   const [viewport, setViewport] = useState({ x: 0, y: 0, zoom: 1 });
   const [openSlug, setOpenSlug] = useState(null);
+  // The stack legend's selection. Null means no filter, which is the only state
+  // that leaves the map at full strength.
+  const [activeTech, setActiveTech] = useState(null);
   // Eased only for programmatic moves; dragging must track the finger exactly.
   const [eased, setEased] = useState(false);
 
@@ -50,7 +62,12 @@ export default function Canvas({ projects, locale }) {
     const box = surfaceRef.current?.getBoundingClientRect();
     if (!box) return;
     easeBriefly();
-    setViewport(fitToNodes(fitTargets(projects), { width: box.width, height: box.height }, 80));
+    setViewport(fitToNodes(
+      fitTargets(mapped, others.length > 0),
+      { width: box.width, height: box.height },
+      80,
+    ));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projects, easeBriefly]);
 
   useEffect(() => {
@@ -140,8 +157,28 @@ export default function Canvas({ projects, locale }) {
     drag.current.suppressClick = false;
   };
 
+  const tech = primaryTech(projects);
+  // The group node stands for several projects, so it survives a filter if any
+  // of the work behind it uses the technology.
+  const groupUsesTech = others.some((p) => usesTech(p, activeTech));
+  const dimmedSlugs = new Set(
+    activeTech
+      ? [
+        ...mapped.filter((p) => !usesTech(p, activeTech)).map((p) => p.slug),
+        ...(groupUsesTech ? [] : [OTHERS_NODE.slug]),
+      ]
+      : [],
+  );
+
   const detail = detailLevel(viewport.zoom);
   const openProject = projects.find((p) => p.slug === openSlug) ?? null;
+  const groupOpen = openSlug === OTHERS_NODE.slug;
+  const panelOpen = Boolean(openProject) || groupOpen;
+  // A brief project can only have been reached through the group node, so the
+  // panel offers the way back rather than dumping the visitor on the canvas.
+  const backToGroup = openProject && openProject.tier !== 'full'
+    ? () => setOpenSlug(OTHERS_NODE.slug)
+    : null;
 
   return (
     <div
@@ -182,7 +219,12 @@ export default function Canvas({ projects, locale }) {
             transition: eased ? `transform 900ms ${EASE}` : 'none',
           }}
         >
-          <Edges projects={projects} centre={CENTER_NODE} />
+          <Edges
+            projects={mapped}
+            centre={CENTER_NODE}
+            extras={others.length > 0 ? [OTHERS_NODE] : []}
+            dimmed={dimmedSlugs}
+          />
 
           <div
             className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full border border-amber/60 bg-ground-soft flex flex-col items-center justify-center text-center px-4 cursor-default select-none"
@@ -193,7 +235,7 @@ export default function Canvas({ projects, locale }) {
               height: NODE_RADIUS.center * 2,
             }}
           >
-            <span className="font-display text-lg text-ground-ink">{CENTER_NODE.name}</span>
+            <span className="font-pixel text-2xl leading-none text-ground-ink">{CENTER_NODE.name}</span>
             <span className="font-mono text-[9px] text-ground-mute">
               {CENTER_NODE.role[locale]}
             </span>
@@ -214,22 +256,48 @@ export default function Canvas({ projects, locale }) {
             {CENTER_NODE.blurb[locale]}
           </p>
 
-          {projects.map((p) => (
+          {mapped.map((p) => (
             <Node
               key={p.slug}
               project={p}
               locale={locale}
               detail={detail}
               selected={p.slug === openSlug}
+              dimmed={dimmedSlugs.has(p.slug)}
               onOpen={open}
               onFocus={centreOn}
             />
           ))}
+
+          {others.length > 0 && (
+            <GroupNode
+              locale={locale}
+              count={others.length}
+              selected={groupOpen}
+              dimmed={dimmedSlugs.has(OTHERS_NODE.slug)}
+              onOpen={setOpenSlug}
+              onFocus={centreOn}
+            />
+          )}
         </div>
       </div>
 
-      <CanvasChrome locale={locale} onFit={fit} hidden={Boolean(openProject)} />
-      <PreviewPanel project={openProject} locale={locale} onClose={() => setOpenSlug(null)} />
+      <CanvasChrome
+        locale={locale}
+        onFit={fit}
+        hidden={panelOpen}
+        tech={tech}
+        activeTech={activeTech}
+        onPickTech={setActiveTech}
+      />
+      <PreviewPanel
+        project={openProject}
+        group={groupOpen ? others : null}
+        locale={locale}
+        onOpenOther={setOpenSlug}
+        onBack={backToGroup}
+        onClose={() => setOpenSlug(null)}
+      />
     </div>
   );
 }

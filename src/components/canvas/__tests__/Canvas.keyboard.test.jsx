@@ -41,7 +41,7 @@ describe('Canvas keyboard access', () => {
     fireEvent.pointerMove(surface, { clientX: 600, clientY: 500, pointerId: 1 });
     fireEvent.pointerUp(surface, { clientX: 600, clientY: 500, pointerId: 1 });
     const dragged = world.style.transform;
-    fireEvent.focus(screen.getByRole('button', { name: /Dua/ }));
+    fireEvent.focus(screen.getByRole('button', { name: /Project lain/ }));
     expect(world.style.transform).not.toBe(dragged);
   });
 
@@ -62,7 +62,7 @@ describe('Canvas keyboard access', () => {
   it('does not recentre when focus comes from a mouse click', () => {
     renderCanvas();
     const world = screen.getByTestId('canvas-world');
-    const node = screen.getByRole('button', { name: /Dua/ });
+    const node = screen.getByRole('button', { name: /Project lain/ });
     const before = world.style.transform;
     // A click fires pointerdown, then focus, then pointerup — the map must not
     // slide out from under someone who clicked a node they could already see.

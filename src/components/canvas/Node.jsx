@@ -4,7 +4,7 @@ import { NODE_RADIUS } from '@/lib/data/canvas';
 
 // One node on the canvas. Position is applied by the parent's world transform,
 // so this component only knows about its own size and contents.
-export default function Node({ project, locale, detail, selected, onOpen, onFocus }) {
+export default function Node({ project, locale, detail, selected, dimmed, onOpen, onFocus }) {
   const radius = NODE_RADIUS[project.tier];
   const near = detail === 'near';
 
@@ -21,9 +21,14 @@ export default function Node({ project, locale, detail, selected, onOpen, onFocu
         width: radius * 2,
         height: radius * 2,
         borderColor: selected ? 'var(--color-amber)' : undefined,
+        // Filtered out by the stack legend. Dimmed, never hidden: the shape of
+        // the map has to stay recognisable while you read it through a filter.
+        opacity: dimmed ? 0.22 : 1,
       }}
     >
-      <span className="font-mono text-[11px] leading-tight px-2">
+      {/* Pixel face for the name only. The captions under it stay mono:
+          pixel on pixel at 9px turns a node into a wall. */}
+      <span className="font-pixel text-[16px] leading-none px-2">
         {project.shortName[locale]}
       </span>
       {near && (

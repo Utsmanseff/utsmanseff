@@ -3,7 +3,22 @@
 
 export const WORLD = { width: 1600, height: 1000 };
 
-export const NODE_RADIUS = { center: 78, full: 58, brief: 42 };
+export const NODE_RADIUS = { center: 78, full: 58, brief: 42, group: 50 };
+
+// The map carries the four projects that earned a page, plus one node standing
+// for the smaller internal builds. Eight near-identical circles read as filler;
+// four with weight, and one door to the rest, reads as a shape. The small work
+// is not hidden — it lives behind this node, and on phones it is still listed
+// in full.
+export const OTHERS_NODE = {
+  slug: '__others',
+  position: { x: 1150, y: 520 },
+  name: { id: 'Project lain', en: 'Other work' },
+  note: {
+    id: 'Sistem internal untuk instansi pemerintah dan satu RME rumah sakit. Lingkupnya kecil, tidak ada halaman khusus.',
+    en: 'Internal systems for public-sector bodies, plus a hospital EMR. Small in scope, no page of their own.',
+  },
+};
 
 export const CENTER_NODE = {
   slug: '__me',

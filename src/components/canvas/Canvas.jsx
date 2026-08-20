@@ -33,13 +33,25 @@ export default function Canvas({ projects, locale }) {
   // Enter on a focused node do nothing after any pan.
   const drag = useRef({ active: false, travel: 0, lastX: 0, lastY: 0, suppressClick: false });
 
+  // One timer for every self-driven move. Each move used to schedule its own,
+  // so tabbing through nodes quickly let an earlier timer switch easing off
+  // while a later pan was still running, snapping it to a stop.
+  const easeTimer = useRef(null);
+
+  const easeBriefly = useCallback(() => {
+    setEased(true);
+    clearTimeout(easeTimer.current);
+    easeTimer.current = setTimeout(() => setEased(false), 950);
+  }, []);
+
+  useEffect(() => () => clearTimeout(easeTimer.current), []);
+
   const fit = useCallback(() => {
     const box = surfaceRef.current?.getBoundingClientRect();
     if (!box) return;
-    setEased(true);
+    easeBriefly();
     setViewport(fitToNodes(fitTargets(projects), { width: box.width, height: box.height }, 80));
-    setTimeout(() => setEased(false), 950);
-  }, [projects]);
+  }, [projects, easeBriefly]);
 
   useEffect(() => {
     // The opening framing needs the surface's measured size, so it can only be
@@ -50,17 +62,22 @@ export default function Canvas({ projects, locale }) {
   }, []);
 
   // Tabbing to a node that sits off-screen would look like nothing happened.
+  // A mouse click focuses the button too, though, and someone who just clicked a
+  // node they can already see does not want the map sliding out from under them —
+  // worse, it can slide the node under the panel that is opening over it. A
+  // pointer is still down when focus fires from a click, which is what tells the
+  // two apart.
   const centreOn = useCallback((project) => {
+    if (drag.current.active) return;
     const box = surfaceRef.current?.getBoundingClientRect();
     if (!box) return;
-    setEased(true);
+    easeBriefly();
     setViewport((v) => ({
       zoom: v.zoom,
       x: box.width / 2 - project.position.x * v.zoom,
       y: box.height / 2 - project.position.y * v.zoom,
     }));
-    setTimeout(() => setEased(false), 950);
-  }, []);
+  }, [easeBriefly]);
 
   const onPointerDown = (e) => {
     drag.current = { active: true, travel: 0, lastX: e.clientX, lastY: e.clientY, suppressClick: false };

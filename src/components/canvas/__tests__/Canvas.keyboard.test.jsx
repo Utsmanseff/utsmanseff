@@ -58,4 +58,18 @@ describe('Canvas keyboard access', () => {
       expect(screen.queryByText('Konteks satu.')).not.toBeInTheDocument()
     );
   });
+
+  it('does not recentre when focus comes from a mouse click', () => {
+    renderCanvas();
+    const world = screen.getByTestId('canvas-world');
+    const node = screen.getByRole('button', { name: /Dua/ });
+    const before = world.style.transform;
+    // A click fires pointerdown, then focus, then pointerup — the map must not
+    // slide out from under someone who clicked a node they could already see.
+    fireEvent.pointerDown(node, { clientX: 500, clientY: 400, pointerId: 1 });
+    fireEvent.focus(node);
+    expect(world.style.transform).toBe(before);
+    fireEvent.pointerUp(node, { clientX: 500, clientY: 400, pointerId: 1 });
+    expect(world.style.transform).toBe(before);
+  });
 });

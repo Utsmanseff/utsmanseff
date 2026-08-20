@@ -70,8 +70,33 @@ Sampai masuk, `image: null` dan halaman menampilkan status kosong yang dirancang
 
 Sembilan simpul bisa terasa sepele, bukan seperti peta. Penawarnya: garis hubungan yang bermakna, label informatif, detail bertambah saat zoom. Kalau gagal — Task 15 memang menanyakan ini terus terang — kanvas dibuang dan daftar berkelompok dipakai di semua lebar. Halaman bacanya tetap hidup, jadi mundur berarti kehilangan satu komponen, bukan proyeknya.
 
+
+## Antrean berikutnya (dari sesi 2026-08-20, urut prioritas)
+
+### 1. Bug: chrome menindih panel
+`PreviewPanel` memakai `z-20`, `CanvasChrome` `z-30`. Akibatnya panduan bawah, LangSwitcher, dan tautan Kontak berdiri di atas panel, dan tombol tutup panel tertimpa switcher bahasa. Perbaikan: naikkan panel di atas chrome, atau sembunyikan/redupkan chrome selama panel terbuka. Sudah diverifikasi di browser oleh pemilik.
+
+### 2. Keputusan: semua project di kanvas, atau hanya unggulan?
+Sekarang kedelapan project tampil sebagai simpul; hanya empat ber-`tier: 'full'` yang punya halaman. Pemilik mempertanyakan apakah semuanya perlu tampil. Pilihan: (a) tetap semua, tapi bedakan tier lebih tegas; (b) kanvas hanya untuk unggulan, sisanya jadi daftar kecil di pinggir; (c) simpul kecil digabung jadi satu simpul "project lain".
+
+### 3. Tech stack harus kembali
+Grid ikon skill dibuang di Task 12 dengan alasan mengulang CV. Pemilik menilai stack tetap penting. Jangan kembalikan sebagai grid ikon — itu ciri template yang justru mau dihindari. Opsi: legenda/filter di kanvas (klik "Laravel" → simpul lain meredup), atau satu baris padat di `/kontak`. `skills.js` sudah dihapus; datanya bisa diturunkan dari `project.tech`.
+
+### 4. Masih terasa AI-generated, terutama petanya
+Keluhan pemilik: peta dan tipografinya terasa umum. Font sekarang Fraunces + Inter + JetBrains Mono — kombinasi yang sangat sering dipakai. Pemilik tertarik font bergaya game klasik (era Mario/NES, bitmap/pixel).
+Catatan sebelum eksekusi: font piksel hampir selalu gagal untuk teks panjang. Arah yang masuk akal — pakai muka display bergaya piksel/bitmap **hanya di lapis kanvas** (label simpul, chrome, judul), dan pertahankan serif yang terbaca di halaman baca. Perhatikan lisensi (banyak font NES-alike tidak bebas komersial) dan hinting pada ukuran kecil. Perlu dibandingkan berdampingan sebelum dipilih.
+
+### 5. Pertanyaan terbuka: apakah ada konsep yang lebih baik?
+Pemilik menanyakan ini setelah kanvas akhirnya bisa dipakai. Belum dijawab. Jalan mundur yang sudah disepakati sejak awal tetap berlaku: daftar berkelompok di semua lebar, halaman baca tetap hidup.
+
+## Pelajaran yang mahal (jangan diulang)
+
+- **Klik sintetis membohongi.** `fireEvent.click` dan `.click()` melewati urutan pointer. Bug `setPointerCapture` membuat setiap klik simpul mendarat di latar kanvas, dan 86 test tetap hijau. Uji syarat penyebabnya, bukan sekadar "klik berhasil".
+- **Verifikasi lewat browser harus dicek kerangka koordinatnya.** Alat klik sempat memakai ukuran jendela lama, jadi klik meleset 1,74× dan menghasilkan "bukti" palsu.
+- **Riwayat konsol bukan keadaan sekarang.** Hydration error yang sudah diperbaiki masih terbaca di tab lama; buktikan dengan tab baru.
+
 ## Cara lanjut
 
 1. `git checkout portfolio-canvas-redesign`
-2. `npm test` — harus 79 hijau
+2. `npm test` — harus 89 hijau
 3. Buka rencana, kerjakan Task 15 (dilihat langsung, bukan diuji otomatis)

@@ -14,7 +14,7 @@ export default function Node({ project, locale, detail, selected, onOpen, onFocu
       onClick={() => onOpen(project.slug)}
       onFocus={() => onFocus?.(project)}
       aria-pressed={selected}
-      className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center gap-0.5 rounded-full text-center border border-ground-rule bg-ground-soft/70 text-ground-ink transition-[background-color,border-color,opacity] duration-500 ease-out hover:bg-ground-soft hover:border-amber/60 focus-visible:outline-2 focus-visible:outline-amber"
+      className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center gap-0.5 cursor-pointer rounded-full text-center border border-ground-rule bg-ground-soft/70 text-ground-ink transition-[background-color,border-color,opacity] duration-500 ease-out hover:bg-ground-soft hover:border-amber focus-visible:outline-2 focus-visible:outline-amber"
       style={{
         left: project.position.x,
         top: project.position.y,

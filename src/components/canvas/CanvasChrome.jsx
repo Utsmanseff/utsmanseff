@@ -6,7 +6,12 @@ import LangSwitcher from '@/components/nav/LangSwitcher';
 const COPY = {
   fit: { id: 'Tampilkan semua', en: 'Show everything' },
   contact: { id: 'Kontak', en: 'Contact' },
-  hint: { id: 'seret untuk menggeser · gulir untuk zoom', en: 'drag to pan · scroll to zoom' },
+  // Leads with the action that matters. The old copy named only panning and
+  // zooming, so nothing on the canvas ever told a visitor to open anything.
+  hint: {
+    id: 'Klik simpul untuk membuka project · seret untuk menggeser · gulir untuk zoom',
+    en: 'Click a node to open a project · drag to pan · scroll to zoom',
+  },
 };
 
 export default function CanvasChrome({ locale, onFit }) {
@@ -32,7 +37,7 @@ export default function CanvasChrome({ locale, onFit }) {
         </Link>
       </div>
 
-      <p className="absolute right-4 bottom-4 z-30 font-mono text-[10px] text-ground-mute pointer-events-none">
+      <p className="absolute inset-x-0 bottom-5 z-30 mx-auto w-max max-w-[92vw] rounded-full border border-ground-rule bg-ground/80 px-4 py-2 text-center font-mono text-xs text-ground-ink/90 backdrop-blur pointer-events-none">
         {COPY.hint[locale]}
       </p>
     </>

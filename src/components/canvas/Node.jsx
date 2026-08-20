@@ -4,7 +4,7 @@ import { NODE_RADIUS } from '@/lib/data/canvas';
 
 // One node on the canvas. Position is applied by the parent's world transform,
 // so this component only knows about its own size and contents.
-export default function Node({ project, locale, detail, selected, onOpen }) {
+export default function Node({ project, locale, detail, selected, onOpen, onFocus }) {
   const radius = NODE_RADIUS[project.tier];
   const near = detail === 'near';
 
@@ -12,6 +12,7 @@ export default function Node({ project, locale, detail, selected, onOpen }) {
     <button
       type="button"
       onClick={() => onOpen(project.slug)}
+      onFocus={() => onFocus?.(project)}
       aria-pressed={selected}
       className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center
                  justify-center gap-0.5 rounded-full text-center

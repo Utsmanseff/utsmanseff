@@ -49,6 +49,19 @@ export default function Canvas({ projects, locale }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Tabbing to a node that sits off-screen would look like nothing happened.
+  const centreOn = useCallback((project) => {
+    const box = surfaceRef.current?.getBoundingClientRect();
+    if (!box) return;
+    setEased(true);
+    setViewport((v) => ({
+      zoom: v.zoom,
+      x: box.width / 2 - project.position.x * v.zoom,
+      y: box.height / 2 - project.position.y * v.zoom,
+    }));
+    setTimeout(() => setEased(false), 950);
+  }, []);
+
   const onPointerDown = (e) => {
     drag.current = { active: true, travel: 0, lastX: e.clientX, lastY: e.clientY, suppressClick: false };
     surfaceRef.current?.setPointerCapture?.(e.pointerId);
@@ -149,6 +162,7 @@ export default function Canvas({ projects, locale }) {
               detail={detail}
               selected={p.slug === openSlug}
               onOpen={open}
+              onFocus={centreOn}
             />
           ))}
         </div>

@@ -33,24 +33,26 @@ export const metadata = {
     template: "%s — Utsman",
   },
   description:
-    "Fullstack web developer berbasis di Banjarbaru. Fokus teknologi kesehatan: RME, integrasi BPJS, dan pendaftaran OCR rumah sakit.",
+    "Peta project Utsman, fullstack web developer di Banjarbaru: sistem rumah sakit dan instansi publik di Kalimantan Selatan — pendaftaran OCR, bridging IDRG/INA-CBGs untuk klaim BPJS, HRIS, dan penerimaan siswa berbasis CBT.",
   keywords: [
     "Utsman",
     "Fullstack Web Developer",
     "Laravel",
     "Next.js",
-    "Healthcare technology",
-    "RME",
-    "BPJS bridging",
-    "OCR",
+    "Sistem rumah sakit",
+    "Bridging BPJS",
+    "INA-CBGs",
+    "HRIS",
+    "OCR KTP",
     "Banjarbaru",
+    "Kalimantan Selatan",
   ],
   authors: [{ name: "Utsman" }],
   creator: "Utsman",
   openGraph: {
     title: "Utsman — Fullstack Web Developer",
     description:
-      "Solving real problems with software that feels effortless to use. Healthtech focus: EMR, BPJS bridging, OCR.",
+      "Peta project: sistem rumah sakit dan instansi publik di Kalimantan Selatan. Pendaftaran OCR, bridging BPJS, HRIS, penerimaan siswa CBT.",
     url: "/",
     siteName: "Utsman",
     locale: "id_ID",
@@ -61,7 +63,7 @@ export const metadata = {
     card: "summary_large_image",
     title: "Utsman — Fullstack Web Developer",
     description:
-      "Solving real problems with software that feels effortless to use.",
+      "Peta project: sistem rumah sakit dan instansi publik di Kalimantan Selatan.",
   },
   robots: { index: true, follow: true },
 };

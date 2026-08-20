@@ -2,15 +2,15 @@
 
 > Dibaca di awal sesi baru. Menggantikan catatan redesign lama (9 section scroll), yang sudah tidak berlaku.
 
-## Yang sedang dikerjakan
+## Bentuk sekarang
 
-Refactor total: porto jadi **dua lapis**.
+Porto berdiri di **dua lapis**.
 
-- `/` — kanvas gelap yang digeser. Project jadi simpul, ukuran = bobot, garis = hubungan nyata.
-- `/kerja/[slug]` — halaman kertas krem untuk dibaca, dibagikan, dan dibaca Google.
-- `/kontak` — halaman pendek.
+- `/` — kanvas gelap yang digeser. Setiap project jadi simpul; garis antar simpul menandai hubungan nyata, bukan hiasan. Di bawah 768px kanvas diganti daftar vertikal yang dikelompokkan per klaster klien.
+- `/kerja/[slug]` — halaman kertas krem untuk dibaca dan dibagikan. Dibuat statis dari project ber-`tier: 'full'`, dengan anatomi tujuh blok yang tetap.
+- `/kontak` — kontak singkat plus unduh CV.
 
-Riwayat kerja, pendidikan, dan grid ikon skill **dibuang** — sudah ada di CV, dan di Indonesia HRD membaca CV sementara tim teknis yang membuka porto.
+Riwayat kerja, pendidikan, dan grid ikon skill **dibuang**, bukan disembunyikan — sudah ada di CV, dan di Indonesia HRD membaca CV sementara tim teknis yang membuka porto. Porto ini ditulis untuk yang kedua.
 
 **Branch:** `portfolio-canvas-redesign` (bercabang dari `main`, belum di-merge)
 
@@ -19,39 +19,45 @@ Riwayat kerja, pendidikan, dan grid ikon skill **dibuang** — sudah ada di CV, 
 - Rencana: `docs/superpowers/plans/2026-08-19-portfolio-canvas-redesign.md` (15 task)
 - Copy HRIS & PSB dari sumber: `docs/superpowers/notes/2026-08-19-project-copy.md`
 
+## Di mana isinya
+
+| Apa | Di mana |
+|-----|---------|
+| Semua project (datar, satu sumber untuk kanvas dan halaman baca) | `src/lib/data/projects.js` |
+| Kontak, socials, `siteUrl` kanonik, berkas CV | `src/lib/data/meta.js` |
+| Token warna paper + ground + dua amber | `src/app/globals.css` (`@theme`) |
+| Kanvas, simpul, garis, panel, daftar mobile | `src/components/canvas/` |
+| Halaman baca dan bagian-bagiannya | `src/components/work/` |
+| Metadata akar, JSON-LD, font | `src/app/layout.js`, `src/components/JsonLd.jsx` |
+| Kartu OG 1200x630 | `src/app/opengraph-image.jsx` |
+
+Field project yang berbeda per bahasa selalu berbentuk `{ id: '...', en: '...' }`. Field yang selalu string (`tech`, `client`, `year`, `slug`) tidak dibungkus.
+
+`tier` menentukan bentuk: `full` dapat simpul besar dan halaman `/kerja/[slug]`; `brief` hanya simpul kecil dan panel pratinjau. `access` (`public` / `internal` / `none`) menentukan badge yang ditulis terang-terangan, bukan disamarkan.
+
+## Yang dihapus
+
+Sembilan komponen section lama, `CaseStudyModal`, `Nav` lama, tombol tema gelap/terang, serta `experience.js`, `education.js`, dan `skills.js`. Kamus `src/lib/i18n/{id,en}.js` dipangkas tinggal grup `nav` dan `ui`. Token `cream`/`forest` diganti `paper`/`ground`.
+
 ## Status task
 
-| Task | Isi | Status |
-|------|-----|--------|
-| 1 | Kumpulkan copy HRIS + PSB dari user | selesai |
-| 2 | Dataset project (flat, posisi kanvas, tier, akses) | selesai |
-| 3 | Matematika viewport (pan/zoom/fit) | selesai |
-| 4 | Token warna paper + ground | selesai |
-| 5 | Komponen Node | selesai |
-| 6 | Komponen Edges | selesai |
-| 7 | PreviewPanel + AccessBadge | selesai |
-| 8 | Canvas + CanvasChrome | selesai |
-| 9 | MobileList + rute `/` | **berikutnya** |
-| 10 | Halaman `/kerja/[slug]` | belum |
-| 11 | Halaman `/kontak` | belum |
-| 12 | Hapus komponen lama (build hijau lagi di sini) | belum |
-| 13 | Simpul terfokus masuk layar (keyboard) | belum |
-| 14 | Metadata, OG image, README | belum |
-| 15 | Lihat dengan mata sendiri | belum |
+Task 1–14 dari rencana selesai. Yang tersisa hanya **Task 15: lihat dengan mata sendiri** — `npm run dev`, lalu jalankan daftar periksa di akhir rencana: seret 1:1, zoom yang menahan titik di bawah kursor, detail muncul saat zoom masuk, "Tampilkan semua", panel yang memudar bukan menyentak, Tab lewat semua simpul, lebar di bawah 768px, dan membuka `/kerja/rsu-nirwana-web` langsung tanpa tahu-menahu soal kanvas.
 
 ## Keadaan sekarang
 
-- **64 test hijau, lint bersih.**
-- **`npm run build` sengaja masih patah.** `SelectedWork.jsx` dan `OtherProjects.jsx` membaca bentuk data lama. Task 12 menghapusnya. Jangan diperbaiki sepotong-sepotong.
-- **`npm run dev` akan terlihat berantakan.** Token `cream`/`forest` sudah tidak ada tapi komponen lama masih memakainya. Normal sampai Task 12.
+- **79 test hijau.**
+- `npx eslint src --max-warnings=0` bersih. (Pakai perintah ini, bukan `npm run lint`.)
+- `npm run build` sukses; empat halaman `/kerja/*` ikut terbentuk statis.
 
 ## Keputusan yang mahal kalau dilupakan
 
 - **Amber ada dua.** `--color-amber` (#C97B3F) hanya untuk kanvas gelap (5.33:1). Di atas kertas ia cuma 2.82:1 — gagal WCAG AA. Semua amber yang menyentuh lapisan baca pakai `--color-amber-ink` (#9C5A28, 4.61:1).
 - **Kontrak gerak terbelah.** Seret dan zoom mengikuti jari 1:1 tanpa easing. Yang bergerak sendiri (panel, pindah halaman) memudar 700ms `cubic-bezier(0.22, 1, 0.36, 1)`.
-- **Tidak ada angka dampak.** Klaim dibuang, bukan dikarang. Screenshot dan URL live yang jadi bukti; status akses ditulis terang.
+- **Tidak ada angka dampak.** Klaim tanpa sumber dibuang, bukan dikarang atau diperhalus. Screenshot dan URL live yang jadi bukti; status akses ditulis terang.
 - **HRIS tidak punya payroll/keuangan.** Jangan pernah disebut.
 - **Vitest & ESLint mengecualikan `.claude/**`.** Worktree di situ salinan penuh repo — sempat membuat vitest menghitung test basi dan membuat lint seperti menggantung.
+- **`meta.siteUrl` satu-satunya sumber URL kanonik.** `metadataBase`, JSON-LD, dan kartu OG semuanya membacanya. Jangan menulis domain di tempat lain; `utsman.dev` masih placeholder dan tidak melayani situs ini.
+- **Template judul ada di akar.** `layout.js` memasang `title.template` `"%s — Utsman"`. Judul per halaman tidak boleh menambahkan "— Utsman" sendiri.
 
 ## Masih kurang dari user
 
@@ -67,5 +73,5 @@ Sembilan simpul bisa terasa sepele, bukan seperti peta. Penawarnya: garis hubung
 ## Cara lanjut
 
 1. `git checkout portfolio-canvas-redesign`
-2. `npm test` — harus 64 hijau
-3. Buka rencana, cari Task 9, kerjakan dari sana
+2. `npm test` — harus 79 hijau
+3. Buka rencana, kerjakan Task 15 (dilihat langsung, bukan diuji otomatis)

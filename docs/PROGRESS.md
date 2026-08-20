@@ -6,11 +6,11 @@
 
 Porto berdiri di **dua lapis**.
 
-- `/` — kanvas gelap yang digeser. Setiap project jadi simpul; garis antar simpul menandai hubungan nyata, bukan hiasan. Di bawah 768px kanvas diganti daftar vertikal yang dikelompokkan per klaster klien.
+- `/` — kanvas gelap yang digeser. Hanya project ber-`tier: 'full'` yang jadi simpul; empat project kecil berdiri di balik satu simpul "Project lain" bergaris putus-putus. Garis antar simpul menandai hubungan nyata, bukan hiasan. Di bawah 768px kanvas diganti daftar vertikal yang dikelompokkan per klaster klien.
 - `/kerja/[slug]` — halaman kertas krem untuk dibaca dan dibagikan. Dibuat statis dari project ber-`tier: 'full'`, dengan anatomi tujuh blok yang tetap.
 - `/kontak` — kontak singkat plus unduh CV.
 
-Riwayat kerja, pendidikan, dan grid ikon skill **dibuang**, bukan disembunyikan — sudah ada di CV, dan di Indonesia HRD membaca CV sementara tim teknis yang membuka porto. Porto ini ditulis untuk yang kedua.
+Stack kembali sebagai **legenda/filter di kanvas** (kiri bawah): tiap baris dihitung dari `project.tech`, klik satu nama meredupkan simpul dan garis yang tidak memakainya. Riwayat kerja, pendidikan, dan grid ikon skill **dibuang**, bukan disembunyikan — sudah ada di CV, dan di Indonesia HRD membaca CV sementara tim teknis yang membuka porto. Porto ini ditulis untuk yang kedua.
 
 **Branch:** `portfolio-canvas-redesign` (bercabang dari `main`, belum di-merge)
 
@@ -26,26 +26,35 @@ Riwayat kerja, pendidikan, dan grid ikon skill **dibuang**, bukan disembunyikan 
 | Semua project (datar, satu sumber untuk kanvas dan halaman baca) | `src/lib/data/projects.js` |
 | Kontak, socials, `siteUrl` kanonik, berkas CV | `src/lib/data/meta.js` |
 | Token warna paper + ground + dua amber | `src/app/globals.css` (`@theme`) |
-| Kanvas, simpul, garis, panel, daftar mobile | `src/components/canvas/` |
+| Kanvas, simpul, garis, panel, legenda stack, daftar mobile | `src/components/canvas/` |
+| Simpul "Project lain" (posisi, nama, catatan) | `OTHERS_NODE` di `src/lib/data/canvas.js` |
+| Turunan stack dari `project.tech` | `src/lib/canvas/tech.js` |
 | Halaman baca dan bagian-bagiannya | `src/components/work/` |
 | Metadata akar, JSON-LD, font | `src/app/layout.js`, `src/components/JsonLd.jsx` |
 | Kartu OG 1200x630 | `src/app/opengraph-image.jsx` |
 
 Field project yang berbeda per bahasa selalu berbentuk `{ id: '...', en: '...' }`. Field yang selalu string (`tech`, `client`, `year`, `slug`) tidak dibungkus.
 
-`tier` menentukan bentuk: `full` dapat simpul besar dan halaman `/kerja/[slug]`; `brief` hanya simpul kecil dan panel pratinjau. `access` (`public` / `internal` / `none`) menentukan badge yang ditulis terang-terangan, bukan disamarkan.
+`tier` menentukan bentuk: `full` dapat simpul di kanvas dan halaman `/kerja/[slug]`; `brief` tidak punya simpul sendiri — ia berada di balik simpul "Project lain" dan hanya punya panel pratinjau (di mobile tetap muncul sebagai kartu). `access` (`public` / `internal` / `none`) menentukan badge yang ditulis terang-terangan, bukan disamarkan.
 
 ## Yang dihapus
 
 Sembilan komponen section lama, `CaseStudyModal`, `Nav` lama, tombol tema gelap/terang, serta `experience.js`, `education.js`, dan `skills.js`. Kamus `src/lib/i18n/{id,en}.js` dipangkas tinggal grup `nav` dan `ui`. Token `cream`/`forest` diganti `paper`/`ground`.
 
+## Antrean 2026-08-20: selesai
+
+1. **Bug chrome menindih panel — selesai.** Panel naik ke `z-40`; chrome memudar dan jadi `inert` selama panel terbuka. Verifikasi browser menemukan sebab kedua: `.canvas-root` yang `overflow-hidden` tetap bisa digulir oleh browser saat fokus pindah ke simpul (dunia yang ditransform menyumbang ~45px overflow), dan semua yang `absolute` di dalamnya ikut naik — tombol tutup mendarat di y=-28. Chrome dan panel sekarang `fixed` ke viewport, dan kotak kanvas menolak scroll.
+2. **Kurasi kanvas — selesai.** Empat simpul project + satu simpul "Project lain" berisi empat build kecil. Panelnya berupa daftar; membuka satu menampilkan pratinjaunya dengan tautan kembali. Daftar mobile tetap menampilkan kedelapan.
+3. **Stack — selesai.** Legenda filter di kiri bawah, diturunkan dari `project.tech` lewat `primaryTech()` (teknologi yang cuma dipakai sekali tidak masuk legenda). Klik = simpul & garis yang tidak memakainya turun ke opacity 0.22.
+4. **Tipografi — selesai untuk lapis kanvas.** Jersey 15 (OFL) untuk nama simpul, label tengah, dan chrome. Caption tetap mono, halaman baca tetap serif. Perbandingan enam muka piksel: artifact "Pixel Type on the Canvas".
+
 ## Status task
 
-Task 1–14 dari rencana selesai. Yang tersisa hanya **Task 15: lihat dengan mata sendiri** — `npm run dev`, lalu jalankan daftar periksa di akhir rencana: seret 1:1, zoom yang menahan titik di bawah kursor, detail muncul saat zoom masuk, "Tampilkan semua", panel yang memudar bukan menyentak, Tab lewat semua simpul, lebar di bawah 768px, dan membuka `/kerja/rsu-nirwana-web` langsung tanpa tahu-menahu soal kanvas.
+Task 1–14 dari rencana selesai, ditambah keempat antrean di atas. Yang tersisa tetap **Task 15: lihat dengan mata sendiri** — `npm run dev`, lalu daftar periksa di akhir rencana: seret 1:1, zoom yang menahan titik di bawah kursor, detail muncul saat zoom masuk, "Tampilkan semua", panel yang memudar bukan menyentak, Tab lewat semua simpul dan legenda stack, lebar di bawah 768px, dan membuka `/kerja/rsu-nirwana-web` langsung tanpa tahu-menahu soal kanvas.
 
 ## Keadaan sekarang
 
-- **79 test hijau.**
+- **103 test hijau.**
 - `npx eslint src --max-warnings=0` bersih. (Pakai perintah ini, bukan `npm run lint`.)
 - `npm run build` sukses; empat halaman `/kerja/*` ikut terbentuk statis.
 
@@ -68,29 +77,24 @@ Sampai masuk, `image: null` dan halaman menampilkan status kosong yang dirancang
 
 ## Risiko yang diakui sejak awal
 
-Sembilan simpul bisa terasa sepele, bukan seperti peta. Penawarnya: garis hubungan yang bermakna, label informatif, detail bertambah saat zoom. Kalau gagal — Task 15 memang menanyakan ini terus terang — kanvas dibuang dan daftar berkelompok dipakai di semua lebar. Halaman bacanya tetap hidup, jadi mundur berarti kehilangan satu komponen, bukan proyeknya.
+Sembilan simpul bisa terasa sepele, bukan seperti peta. Sejak 2026-08-20 petanya tinggal lima simpul (empat project + satu pintu), dengan legenda stack sebagai alasan kedua untuk memakainya. Penawar lain tetap: garis hubungan yang bermakna, label informatif, detail bertambah saat zoom. Kalau tetap gagal — Task 15 memang menanyakan ini terus terang — kanvas dibuang dan daftar berkelompok dipakai di semua lebar. Halaman bacanya tetap hidup, jadi mundur berarti kehilangan satu komponen, bukan proyeknya.
 
 
 ## Antrean berikutnya (dari sesi 2026-08-20, urut prioritas)
 
-### 1. Bug: chrome menindih panel
-`PreviewPanel` memakai `z-20`, `CanvasChrome` `z-30`. Akibatnya panduan bawah, LangSwitcher, dan tautan Kontak berdiri di atas panel, dan tombol tutup panel tertimpa switcher bahasa. Perbaikan: naikkan panel di atas chrome, atau sembunyikan/redupkan chrome selama panel terbuka. Sudah diverifikasi di browser oleh pemilik.
+### 1. Lihat dengan mata sendiri (belum bisa dilakukan sesi ini)
+Alat browser sesi 2026-08-20 tidak menampilkan panel Browser, jadi tidak ada frame yang dikomposit: screenshot gagal dan `requestAnimationFrame` beku, sehingga semua fade tidak bisa dinilai. Yang sudah terbukti hanya perilaku: klik pointer sungguhan, hit-test, dan geometri. **Yang masih harus dilihat mata:** ukuran Jersey 15 di simpul kecil dan di bar panduan, keterbacaan legenda stack di atas latar titik-titik, dan apakah fade chrome saat panel terbuka terasa halus.
 
-### 2. Keputusan: semua project di kanvas, atau hanya unggulan?
-Sekarang kedelapan project tampil sebagai simpul; hanya empat ber-`tier: 'full'` yang punya halaman. Pemilik mempertanyakan apakah semuanya perlu tampil. Pilihan: (a) tetap semua, tapi bedakan tier lebih tegas; (b) kanvas hanya untuk unggulan, sisanya jadi daftar kecil di pinggir; (c) simpul kecil digabung jadi satu simpul "project lain".
+### 2. Tipografi halaman baca
+Lapis kanvas sudah punya wajah; halaman kertas masih Fraunces + Inter. Kalau porto masih terasa umum setelah perubahan ini, di situ sisanya.
 
-### 3. Tech stack harus kembali
-Grid ikon skill dibuang di Task 12 dengan alasan mengulang CV. Pemilik menilai stack tetap penting. Jangan kembalikan sebagai grid ikon — itu ciri template yang justru mau dihindari. Opsi: legenda/filter di kanvas (klik "Laravel" → simpul lain meredup), atau satu baris padat di `/kontak`. `skills.js` sudah dihapus; datanya bisa diturunkan dari `project.tech`.
-
-### 4. Masih terasa AI-generated, terutama petanya
-Keluhan pemilik: peta dan tipografinya terasa umum. Font sekarang Fraunces + Inter + JetBrains Mono — kombinasi yang sangat sering dipakai. Pemilik tertarik font bergaya game klasik (era Mario/NES, bitmap/pixel).
-Catatan sebelum eksekusi: font piksel hampir selalu gagal untuk teks panjang. Arah yang masuk akal — pakai muka display bergaya piksel/bitmap **hanya di lapis kanvas** (label simpul, chrome, judul), dan pertahankan serif yang terbaca di halaman baca. Perhatikan lisensi (banyak font NES-alike tidak bebas komersial) dan hinting pada ukuran kecil. Perlu dibandingkan berdampingan sebelum dipilih.
-
-### 5. Pertanyaan terbuka: apakah ada konsep yang lebih baik?
-Pemilik menanyakan ini setelah kanvas akhirnya bisa dipakai. Belum dijawab. Jalan mundur yang sudah disepakati sejak awal tetap berlaku: daftar berkelompok di semua lebar, halaman baca tetap hidup.
+### 3. Pertanyaan terbuka: apakah ada konsep yang lebih baik?
+Belum dijawab. Peta sekarang lima simpul, bukan sembilan, jadi risiko "sembilan lingkaran terasa sepele" berkurang — tapi belum hilang. Jalan mundur yang disepakati tetap berlaku: daftar berkelompok di semua lebar, halaman baca tetap hidup.
 
 ## Pelajaran yang mahal (jangan diulang)
 
+- **`overflow-hidden` tidak menghentikan browser.** Kotak yang isinya melebihi batas tetap bisa digulir secara programatik, dan fokus yang pindah ke elemen di luar layar memicunya. Apa pun yang harus tetap di tempat (chrome, panel) dipasang `fixed` ke viewport, bukan `absolute` di dalam kotak itu.
+- **Tab yang tidak dikomposit membekukan rAF.** Di panel browser yang tidak ditampilkan, `requestAnimationFrame` tidak jalan, event `scroll` tidak terkirim, dan transisi tidak maju — `getComputedStyle` akan melaporkan nilai awal. Baca `element.style` untuk menilai keadaan yang dituju, dan jangan simpulkan soal animasi dari tab semacam itu.
 - **Klik sintetis membohongi.** `fireEvent.click` dan `.click()` melewati urutan pointer. Bug `setPointerCapture` membuat setiap klik simpul mendarat di latar kanvas, dan 86 test tetap hijau. Uji syarat penyebabnya, bukan sekadar "klik berhasil".
 - **Verifikasi lewat browser harus dicek kerangka koordinatnya.** Alat klik sempat memakai ukuran jendela lama, jadi klik meleset 1,74× dan menghasilkan "bukti" palsu.
 - **Riwayat konsol bukan keadaan sekarang.** Hydration error yang sudah diperbaiki masih terbaca di tab lama; buktikan dengan tab baru.
@@ -98,5 +102,5 @@ Pemilik menanyakan ini setelah kanvas akhirnya bisa dipakai. Belum dijawab. Jala
 ## Cara lanjut
 
 1. `git checkout portfolio-canvas-redesign`
-2. `npm test` — harus 89 hijau
+2. `npm test` — harus 103 hijau
 3. Buka rencana, kerjakan Task 15 (dilihat langsung, bukan diuji otomatis)

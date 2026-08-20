@@ -25,7 +25,7 @@ export default function CanvasChrome({ locale, onFit }) {
       </div>
 
       <div className="absolute right-4 top-4 z-30 flex items-center gap-4">
-        <LangSwitcher />
+        <LangSwitcher tone="ground" />
         <Link
           href="/kontak"
           className="font-mono text-[11px] text-ground-mute hover:text-amber transition-colors duration-500"

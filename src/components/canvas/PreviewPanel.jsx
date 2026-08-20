@@ -46,7 +46,7 @@ export default function PreviewPanel({ project, locale, onClose }) {
   return (
     <aside
       data-panel
-      className="absolute right-0 top-0 bottom-0 w-full sm:w-[55%] max-w-xl z-20 bg-ground-soft/95 backdrop-blur text-ground-ink border-l border-ground-rule p-6 overflow-y-auto"
+      className="fixed right-0 top-0 bottom-0 w-full sm:w-[55%] max-w-xl z-40 bg-ground-soft/95 backdrop-blur text-ground-ink border-l border-ground-rule p-6 overflow-y-auto"
       style={{
         opacity: shown ? 1 : 0,
         // Only while fading out — a closing panel must not swallow canvas clicks.

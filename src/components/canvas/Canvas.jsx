@@ -144,7 +144,18 @@ export default function Canvas({ projects, locale }) {
   const openProject = projects.find((p) => p.slug === openSlug) ?? null;
 
   return (
-    <div className="canvas-root relative w-full h-[100dvh] overflow-hidden bg-ground">
+    <div
+      className="canvas-root relative w-full h-[100dvh] overflow-hidden bg-ground"
+      /* `overflow-hidden` stops a visitor scrolling, not the browser. Focusing a
+         node it considers off-screen scrolls this box anyway, and since the
+         chrome and the preview panel are its children, the whole layer slid up
+         with it — the panel's close button ended above the viewport, out of
+         reach. Nothing here is meant to scroll, so refuse the scroll outright. */
+      onScroll={(e) => {
+        e.currentTarget.scrollTop = 0;
+        e.currentTarget.scrollLeft = 0;
+      }}
+    >
       <div
         ref={surfaceRef}
         data-testid="canvas-surface"
@@ -217,7 +228,7 @@ export default function Canvas({ projects, locale }) {
         </div>
       </div>
 
-      <CanvasChrome locale={locale} onFit={fit} />
+      <CanvasChrome locale={locale} onFit={fit} hidden={Boolean(openProject)} />
       <PreviewPanel project={openProject} locale={locale} onClose={() => setOpenSlug(null)} />
     </div>
   );

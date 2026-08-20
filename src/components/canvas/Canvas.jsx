@@ -155,9 +155,7 @@ export default function Canvas({ projects, locale }) {
           <Edges projects={projects} centre={CENTER_NODE} />
 
           <div
-            className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full
-                       border border-amber/60 bg-ground-soft flex flex-col items-center
-                       justify-center text-center px-4"
+            className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full border border-amber/60 bg-ground-soft flex flex-col items-center justify-center text-center px-4"
             style={{
               left: CENTER_NODE.position.x,
               top: CENTER_NODE.position.y,

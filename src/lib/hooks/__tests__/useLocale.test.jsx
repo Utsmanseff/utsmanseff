@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { render, screen, act } from '@testing-library/react';
+import { render, screen, act, waitFor } from '@testing-library/react';
 import { LocaleProvider, useLocale } from '../useLocale';
 import { STORAGE_KEY } from '@/lib/i18n/config';
 
@@ -52,5 +52,18 @@ describe('useLocale', () => {
   it('t() returns key when path missing', () => {
     render(<LocaleProvider><MissingConsumer /></LocaleProvider>);
     expect(screen.getByTestId('missing').textContent).toBe('does.not.exist');
+  });
+
+  it('puts the resolved locale on the document, not just in React', async () => {
+    // navigator decides the initial value here, so nothing calls setLocale —
+    // this used to leave <html lang="id"> sitting on English content.
+    document.documentElement.lang = 'id';
+    Object.defineProperty(window.navigator, 'language', { value: 'en-US', configurable: true });
+    render(
+      <LocaleProvider>
+        <TestConsumer />
+      </LocaleProvider>
+    );
+    await waitFor(() => expect(document.documentElement.lang).toBe('en'));
   });
 });

@@ -46,6 +46,14 @@ export function LocaleProvider({ children }) {
     setHydrated(true);
   }, []);
 
+  // The resolved locale has to reach the document, not just React. Setting it
+  // only inside setLocale left <html lang="id"> on English content whenever the
+  // browser's own language decided the initial value — wrong for screen readers
+  // and wrong for crawlers.
+  useEffect(() => {
+    document.documentElement.lang = locale;
+  }, [locale]);
+
   const setLocale = useCallback((next) => {
     if (!LOCALES.includes(next)) return;
     setLocaleState(next);

@@ -46,9 +46,7 @@ export default function PreviewPanel({ project, locale, onClose }) {
   return (
     <aside
       data-panel
-      className="absolute right-0 top-0 bottom-0 w-full sm:w-[55%] max-w-xl z-20
-                 bg-ground-soft/95 backdrop-blur text-ground-ink border-l border-ground-rule
-                 p-6 overflow-y-auto"
+      className="absolute right-0 top-0 bottom-0 w-full sm:w-[55%] max-w-xl z-20 bg-ground-soft/95 backdrop-blur text-ground-ink border-l border-ground-rule p-6 overflow-y-auto"
       style={{
         opacity: shown ? 1 : 0,
         // Only while fading out — a closing panel must not swallow canvas clicks.
@@ -60,8 +58,7 @@ export default function PreviewPanel({ project, locale, onClose }) {
         type="button"
         onClick={onClose}
         aria-label={COPY.close[locale]}
-        className="absolute right-4 top-4 text-ground-mute hover:text-ground-ink
-                   transition-colors duration-500 text-xl leading-none"
+        className="absolute right-4 top-4 text-ground-mute hover:text-ground-ink transition-colors duration-500 text-xl leading-none"
       >
         ×
       </button>
@@ -90,8 +87,7 @@ export default function PreviewPanel({ project, locale, onClose }) {
         {rendered.tier === 'full' && (
           <Link
             href={`/kerja/${rendered.slug}`}
-            className="font-mono text-xs border border-amber text-amber px-3 py-2 rounded-sm
-                       hover:bg-amber hover:text-ground transition-colors duration-500"
+            className="font-mono text-xs border border-amber text-amber px-3 py-2 rounded-sm hover:bg-amber hover:text-ground transition-colors duration-500"
           >
             {COPY.open[locale]}
           </Link>
@@ -101,8 +97,7 @@ export default function PreviewPanel({ project, locale, onClose }) {
             href={rendered.site}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-mono text-xs border border-ground-rule px-3 py-2 rounded-sm
-                       hover:border-amber transition-colors duration-500"
+            className="font-mono text-xs border border-ground-rule px-3 py-2 rounded-sm hover:border-amber transition-colors duration-500"
           >
             {COPY.visit[locale]}
           </a>

@@ -53,8 +53,7 @@ export default function ContactView() {
         <a
           href={meta.cvFile}
           download
-          className="inline-block font-mono text-xs border border-amber-ink text-amber-ink px-4 py-2
-                     rounded-sm mt-10 hover:bg-amber-ink hover:text-paper transition-colors duration-500"
+          className="inline-block font-mono text-xs border border-amber-ink text-amber-ink px-4 py-2 rounded-sm mt-10 hover:bg-amber-ink hover:text-paper transition-colors duration-500"
         >
           {COPY.cv[locale]}
         </a>

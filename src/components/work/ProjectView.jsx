@@ -76,8 +76,7 @@ export default function ProjectView({ project, prev, next }) {
             href={project.site}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block font-mono text-xs border border-amber-ink text-amber-ink px-4 py-2
-                       rounded-sm mt-12 hover:bg-amber-ink hover:text-paper transition-colors duration-500"
+            className="inline-block font-mono text-xs border border-amber-ink text-amber-ink px-4 py-2 rounded-sm mt-12 hover:bg-amber-ink hover:text-paper transition-colors duration-500"
           >
             {COPY.visit[locale]}
           </a>
@@ -87,8 +86,7 @@ export default function ProjectView({ project, prev, next }) {
 
         <Link
           href="/"
-          className="inline-block font-mono text-[11px] text-mute mt-10
-                     hover:text-amber-ink transition-colors duration-500"
+          className="inline-block font-mono text-[11px] text-mute mt-10 hover:text-amber-ink transition-colors duration-500"
         >
           ← {COPY.back[locale]}
         </Link>

@@ -16,9 +16,7 @@ export default function CanvasChrome({ locale, onFit }) {
         <button
           type="button"
           onClick={onFit}
-          className="font-mono text-[11px] border border-ground-rule text-ground-ink
-                     px-3 py-1.5 rounded-sm bg-ground/70 backdrop-blur
-                     hover:border-amber transition-colors duration-500"
+          className="font-mono text-[11px] border border-ground-rule text-ground-ink px-3 py-1.5 rounded-sm bg-ground/70 backdrop-blur hover:border-amber transition-colors duration-500"
         >
           {COPY.fit[locale]}
         </button>

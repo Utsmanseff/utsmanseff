@@ -79,9 +79,19 @@ export default function Canvas({ projects, locale }) {
     }));
   }, [easeBriefly]);
 
+  // Capture is deliberately NOT taken here. Capturing on pointerdown retargets
+  // the pointerup to the surface, so the browser resolves the click against the
+  // surface instead of the node — every node click landed on the background and
+  // nothing opened. Capture waits until the gesture is actually a drag.
   const onPointerDown = (e) => {
-    drag.current = { active: true, travel: 0, lastX: e.clientX, lastY: e.clientY, suppressClick: false };
-    surfaceRef.current?.setPointerCapture?.(e.pointerId);
+    drag.current = {
+      active: true,
+      travel: 0,
+      lastX: e.clientX,
+      lastY: e.clientY,
+      suppressClick: false,
+      captured: false,
+    };
   };
 
   const onPointerMove = (e) => {
@@ -92,13 +102,22 @@ export default function Canvas({ projects, locale }) {
     d.lastX = e.clientX;
     d.lastY = e.clientY;
     d.travel += Math.abs(dx) + Math.abs(dy);
+    // Past the threshold this is a pan, not a click, so hold the pointer to keep
+    // receiving moves if it leaves the surface.
+    if (!d.captured && !isClick(d.travel)) {
+      surfaceRef.current?.setPointerCapture?.(e.pointerId);
+      d.captured = true;
+    }
     setViewport((v) => panBy(v, dx, dy));
   };
 
   const onPointerUp = (e) => {
     drag.current.active = false;
     drag.current.suppressClick = !isClick(drag.current.travel);
-    surfaceRef.current?.releasePointerCapture?.(e.pointerId);
+    if (drag.current.captured) {
+      surfaceRef.current?.releasePointerCapture?.(e.pointerId);
+      drag.current.captured = false;
+    }
   };
 
   const onWheel = (e) => {
@@ -155,7 +174,7 @@ export default function Canvas({ projects, locale }) {
           <Edges projects={projects} centre={CENTER_NODE} />
 
           <div
-            className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full border border-amber/60 bg-ground-soft flex flex-col items-center justify-center text-center px-4"
+            className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full border border-amber/60 bg-ground-soft flex flex-col items-center justify-center text-center px-4 cursor-default select-none"
             style={{
               left: CENTER_NODE.position.x,
               top: CENTER_NODE.position.y,
@@ -168,6 +187,21 @@ export default function Canvas({ projects, locale }) {
               {CENTER_NODE.role[locale]}
             </span>
           </div>
+
+          {/* The centre is a label, not a target — it is the first circle anyone
+              reaches for, and a dead click there reads as a broken page. Saying
+              who this is out loud also puts the blurb somewhere other than the
+              phone list, which was the only place it appeared. */}
+          <p
+            className="absolute -translate-x-1/2 text-center text-[11px] leading-relaxed text-ground-mute pointer-events-none"
+            style={{
+              left: CENTER_NODE.position.x,
+              top: CENTER_NODE.position.y + NODE_RADIUS.center + 16,
+              width: 340,
+            }}
+          >
+            {CENTER_NODE.blurb[locale]}
+          </p>
 
           {projects.map((p) => (
             <Node

@@ -94,4 +94,33 @@ describe('Canvas', () => {
     fireEvent.click(screen.getByRole('button', { name: /Satu/ }));
     expect(screen.getByText('Konteks satu.')).toBeInTheDocument();
   });
+
+  it('does not capture the pointer before the gesture becomes a drag', () => {
+    // Capturing on pointerdown retargets the pointerup to the surface, so the
+    // browser resolves the click against the surface and the node never gets it.
+    // Real clicks did nothing while every synthetic test click passed.
+    renderCanvas();
+    const surface = screen.getByTestId('canvas-surface');
+    Element.prototype.setPointerCapture.mockClear();
+    fireEvent.pointerDown(surface, { clientX: 100, clientY: 100, pointerId: 1 });
+    expect(Element.prototype.setPointerCapture).not.toHaveBeenCalled();
+    fireEvent.pointerMove(surface, { clientX: 102, clientY: 101, pointerId: 1 });
+    expect(Element.prototype.setPointerCapture).not.toHaveBeenCalled();
+  });
+
+  it('captures the pointer once the gesture is a real drag', () => {
+    renderCanvas();
+    const surface = screen.getByTestId('canvas-surface');
+    Element.prototype.setPointerCapture.mockClear();
+    fireEvent.pointerDown(surface, { clientX: 100, clientY: 100, pointerId: 1 });
+    fireEvent.pointerMove(surface, { clientX: 260, clientY: 180, pointerId: 1 });
+    expect(Element.prototype.setPointerCapture).toHaveBeenCalled();
+  });
+
+  it('says who this is on the canvas, not only in the phone list', () => {
+    // The blurb existed but rendered nowhere on desktop, and the centre circle
+    // looked identical to the clickable ones while doing nothing when clicked.
+    renderCanvas();
+    expect(screen.getByText(/Membangun sistem rumah sakit/)).toBeInTheDocument();
+  });
 });

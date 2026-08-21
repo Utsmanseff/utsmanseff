@@ -22,12 +22,13 @@ export function techIndex(projects) {
   );
 }
 
-// One technology used once, on a project nobody can open, is noise on the map.
-// Everything used more than once stays; the rest is reachable in the panels.
-export function primaryTech(projects, min = 2) {
-  const all = techIndex(projects);
-  const kept = all.filter((t) => t.count >= min);
-  return kept.length > 0 ? kept : all;
+// Everything, including the technologies used exactly once. Hiding the
+// one-offs was backwards: Laravel and MySQL are the baseline every Indonesian
+// web developer shares, while Google Vision, MediaPipe, SOAP and Fonnte are the
+// only entries that say something specific about this work. The count stays
+// beside each name so the baseline still reads as the baseline.
+export function primaryTech(projects, min = 1) {
+  return techIndex(projects).filter((t) => t.count >= min);
 }
 
 export function usesTech(project, name) {

@@ -26,12 +26,16 @@ describe('techIndex', () => {
 });
 
 describe('primaryTech', () => {
-  it('drops the one-offs, which are noise on a legend', () => {
-    expect(primaryTech(sample).map((t) => t.name)).toEqual(['Laravel']);
+  it('keeps the one-offs, because they are the part that is specific', () => {
+    // Laravel is the baseline; the technology used once is the differentiator.
+    expect(primaryTech(sample).map((t) => t.name)).toEqual(['Laravel', 'MySQL', 'Next.js']);
   });
 
-  it('falls back to everything rather than showing an empty legend', () => {
-    expect(primaryTech([{ slug: 'a', tech: ['Cobol'] }]).map((t) => t.name)).toEqual(['Cobol']);
+  it('lists the rare integrations of the real portfolio', () => {
+    const names = primaryTech(projects).map((t) => t.name);
+    for (const rare of ['Google Vision', 'MediaPipe', 'SOAP', 'Fonnte', 'Next.js']) {
+      expect(names).toContain(rare);
+    }
   });
 
   it('reads the real portfolio without inventing anything', () => {

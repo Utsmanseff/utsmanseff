@@ -86,4 +86,15 @@ describe('projects dataset', () => {
     }
   });
 
+  it('gives every project a filter-safe client key', () => {
+    for (const p of projects) {
+      expect(p.clientKey, p.slug).toMatch(/^[a-z0-9-]+$/);
+    }
+  });
+
+  it('uses one key per client, not one per project', () => {
+    const nirwana = projects.filter((p) => p.client === 'RSU Nirwana');
+    expect(new Set(nirwana.map((p) => p.clientKey)).size).toBe(1);
+  });
+
 });

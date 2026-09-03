@@ -17,6 +17,7 @@ export const projects = [
   {
     slug: 'rsu-nirwana-web',
     client: 'RSU Nirwana',
+    clientKey: 'rsu-nirwana',
     year: '2025',
     role: { id: 'Pengembang tunggal', en: 'Sole developer' },
     cluster: 'nirwana',
@@ -58,6 +59,7 @@ export const projects = [
   {
     slug: 'idrg-bridging',
     client: 'RSU Nirwana',
+    clientKey: 'rsu-nirwana',
     year: '2025',
     role: { id: 'Pengembang tunggal', en: 'Sole developer' },
     cluster: 'nirwana',
@@ -101,6 +103,7 @@ export const projects = [
   {
     slug: 'hris-nirwana',
     client: 'RSU Nirwana',
+    clientKey: 'rsu-nirwana',
     year: '2026',
     role: { id: 'Pengembang tunggal', en: 'Sole developer' },
     cluster: 'nirwana',
@@ -152,6 +155,7 @@ export const projects = [
   {
     slug: 'rme',
     client: 'RSU Nirwana',
+    clientKey: 'rsu-nirwana',
     year: '2025',
     role: { id: 'Pengembang tunggal', en: 'Sole developer' },
     cluster: 'nirwana',
@@ -199,6 +203,7 @@ export const projects = [
   {
     slug: 'sigap-bpn',
     client: 'BPN',
+    clientKey: 'bpn',
     year: '2024',
     role: { id: 'Pengembang tunggal', en: 'Sole developer' },
     cluster: 'gov',
@@ -227,6 +232,7 @@ export const projects = [
   {
     slug: 'aset-kphl',
     client: 'KPHL',
+    clientKey: 'kphl',
     year: '2024',
     role: { id: 'Pengembang tunggal', en: 'Sole developer' },
     cluster: 'gov',
@@ -252,6 +258,7 @@ export const projects = [
   {
     slug: 'sertifikasi-benih',
     client: 'Dinas Pertanian',
+    clientKey: 'dinas-pertanian',
     year: '2024',
     role: { id: 'Pengembang tunggal', en: 'Sole developer' },
     cluster: 'gov',
@@ -277,6 +284,7 @@ export const projects = [
   {
     slug: 'psb-walisongo',
     client: 'MTs WaliSongo Banjarbaru',
+    clientKey: 'mts-walisongo',
     year: '2026',
     role: { id: 'Pengembang tunggal', en: 'Sole developer' },
     cluster: 'edu',

@@ -118,8 +118,8 @@ diturunkan dari `context`/`hard` yang sudah ada.
 
 Yang sudah ada dan tidak perlu ditulis ulang:
 
-- `context` — Permenkes mewajibkan RME untuk akreditasi; antarmuka vendor tidak
-  bisa diubah, jadi lapisan web terpisah di atas database SIMRS yang sama.
+- `context` — Permenkes mewajibkan RME untuk akreditasi. (Versi lamanya menyebut
+  "sistem vendor"; sudah ditulis ulang setelah koreksi Khanza.)
 - `hard` — 1.168 tabel tanpa dokumentasi yang memadai; memetakan data klinis
   beserta relasi dan constraint-nya lebih mirip rekonstruksi skema.
 - `image` — `/assets/img/rme1.png` sudah ada di repo.

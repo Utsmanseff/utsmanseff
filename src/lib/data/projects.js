@@ -45,8 +45,8 @@ export const projects = [
       ],
     },
     hard: {
-      id: 'Akurasi OCR harus dijaga di foto KTP dengan pencahayaan dan sudut yang sangat beragam, sementara dua skema data milik pihak berbeda harus diselaraskan tanpa merusak ekspektasi vendor SIMRS.',
-      en: 'Holding OCR accuracy across wildly inconsistent KTP photos, while aligning two separately-owned data schemas without breaking the vendor SIMRS contract.',
+      id: 'Akurasi OCR harus dijaga di foto KTP dengan pencahayaan dan sudut yang sangat beragam, sementara dua skema data milik pihak berbeda harus diselaraskan tanpa merusak apa yang sudah diharapkan SIMRS yang berjalan.',
+      en: 'Holding OCR accuracy across wildly inconsistent KTP photos, while aligning two separately-owned data schemas without breaking what the running SIMRS already expects.',
     },
   },
   {
@@ -149,7 +149,10 @@ export const projects = [
     year: '2025',
     role: { id: 'Pengembang tunggal', en: 'Sole developer' },
     cluster: 'nirwana',
-    tier: 'brief',
+    // Promoted from 'brief' on 2026-09-03. Its hard part — a 1,168-table schema
+    // with no usable documentation — is the strongest technical evidence here,
+    // and as a summary-only entry it never surfaced anywhere.
+    tier: 'full',
     access: 'internal',
     site: null,
     position: { x: 400, y: 480 },
@@ -159,10 +162,35 @@ export const projects = [
     shortName: { id: 'RME', en: 'EMR' },
     title: { id: 'Rekam Medis Elektronik', en: 'Electronic Medical Records' },
     context: {
-      id: 'Permenkes mewajibkan RME untuk akreditasi. Antarmuka sistem vendor tidak bisa dimodifikasi, jadi lapisan web terpisah dibangun di atas database SIMRS yang sama — tetap menulis ke sana supaya laporan yang ada tidak rusak.',
-      en: "Ministry regulation made EMR mandatory for accreditation. The vendor system's interface could not be modified, so a separate web layer was built on top of the same SIMRS database, still writing back into it so existing reports kept working.",
+      id: 'Permenkes mewajibkan rekam medis elektronik untuk akreditasi. Rumah sakit memakai SIMRS Khanza — SIMRS open source yang dipakai apa adanya — dan antarmukanya dibiarkan utuh. RME ini berdiri sebagai lapisan web terpisah di atas database yang sama dan menulis ke tabel yang sama, supaya alur kerja dan laporan yang sudah berjalan tidak rusak. Pemakainya dokter dan perawat asisten dokter. Cakupannya rawat jalan, rawat inap, dan IGD; yang berjalan sampai sekarang rawat jalan dan rawat inap.',
+      en: 'Ministry regulation made electronic medical records mandatory for accreditation. The hospital runs SIMRS Khanza — an open-source SIMRS used as it comes — and its interface was left untouched. This EMR stands as a separate web layer over the same database, writing into the same tables so the existing workflows and reports keep working. Its users are doctors and the nurses assisting them. It covers outpatient, inpatient and emergency; outpatient and inpatient are what run today.',
     },
-    built: { id: [], en: [] },
+    built: {
+      id: [
+        'Pencatatan SOAP untuk rawat jalan dan rawat inap',
+        'Tanda-tanda vital',
+        'Penegakan diagnosa dengan kode ICD',
+        'Permintaan pemeriksaan laboratorium',
+        'Permintaan pemeriksaan radiologi',
+        'Permintaan resep',
+        'Resume medis',
+      ],
+      en: [
+        'SOAP notes for outpatient and inpatient care',
+        'Vital signs',
+        'Diagnosis with ICD coding',
+        'Laboratory test requests',
+        'Radiology examination requests',
+        'Prescription requests',
+        'Discharge summaries',
+      ],
+    },
+    // Deliberate boundary, stated so the claim stays exact: this layer raises
+    // the requests, it does not record their outcomes.
+    notMine: {
+      id: 'Hasil laboratorium, hasil radiologi, dan pemberian obat tetap diinput di SIMRS Khanza.',
+      en: 'Laboratory results, radiology results and drug administration are still entered in SIMRS Khanza.',
+    },
     hard: {
       id: 'Database SIMRS punya 1.168 tabel tanpa dokumentasi yang memadai, sehingga memetakan data klinis beserta relasi dan constraint-nya lebih mirip rekonstruksi struktur data daripada pekerjaan antarmuka.',
       en: 'The SIMRS database had 1,168 tables with no usable documentation, so mapping the clinical data with its relations and constraints was closer to reconstructing a schema than to interface work.',

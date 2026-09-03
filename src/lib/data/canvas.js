@@ -26,7 +26,7 @@ export const CENTER_NODE = {
   name: 'Utsman',
   role: { id: 'Fullstack Developer', en: 'Fullstack Developer' },
   blurb: {
-    id: 'Membangun sistem rumah sakit dan pemerintahan di Kalimantan Selatan. Empat tahun terakhir sebagian besar di ruang klinis: pendaftaran, klaim, rekam medis.',
-    en: 'I build hospital and public-sector systems in South Kalimantan. Most of the last four years has been clinical: registration, claims, medical records.',
+    id: 'Membangun sistem rumah sakit dan pemerintahan di Kalimantan Selatan. Tiga tahun terakhir sebagian besar di ruang klinis: pendaftaran, klaim, rekam medis.',
+    en: 'I build hospital and public-sector systems in South Kalimantan. Most of the last three years has been clinical: registration, claims, medical records.',
   },
 };

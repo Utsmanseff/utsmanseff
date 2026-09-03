@@ -36,29 +36,33 @@ klien, dan HRIS sendiri berisi sembilan modul. Peta juga tidak mengukur
 
 ## 2. Headline — arah "batasan orang lain"
 
-Belum final. Tiga varian untuk dipilih dan dipotong nanti.
+Belum final. Varian di bawah sudah diperbaiki setelah jawaban 2026-09-03: kata
+**vendor dibuang** (Khanza open source, bukan produk vendor) dan angkanya jadi
+**tiga tahun** (freelance sejak akhir 2023).
 
-**A.** Empat tahun menulis perangkat lunak di dalam batasan orang lain: SIMRS
-vendor, endpoint BPJS, aturan Kemenkes.
+**A.** Tiga tahun menulis perangkat lunak di dalam batasan yang sudah berdiri
+lebih dulu: SIMRS yang tidak saya tulis, endpoint BPJS, aturan Kemenkes.
 
-**B.** Sebagian besar pekerjaan ini terjadi di dalam sistem milik orang lain —
-SIMRS yang tidak bisa diubah, endpoint BPJS, dan tenggat dari Kemenkes.
+**B.** Pekerjaan ini hampir seluruhnya berdampingan dengan sistem yang sudah
+jalan dan tidak boleh berhenti — salah satunya berisi 1.168 tabel.
 
-**C.** Perangkat lunak untuk ruang klinis, ditulis di dalam batasan yang tidak
-saya pilih sendiri.
+**C.** Perangkat lunak untuk ruang klinis, ditulis di sekitar sistem yang tidak
+boleh mati: SIMRS rumah sakit, klaim BPJS, tenggat Kemenkes.
 
 Catatan pemeriksaan fakta:
 
-- "Empat tahun" sudah dipakai di blurb yang ada sekarang dan datang dari Utsman
-  sendiri. Project yang ditampilkan menjangkau 2024–2026 (tiga tahun kalender);
-  kalau angka empat dipertahankan, ia merujuk lama bekerja, bukan rentang
-  project di peta. **[PERLU JAWABAN]** — pertahankan "empat tahun", atau ganti
-  ke rentang yang terbukti di peta?
-- "SIMRS vendor" terbukti: RME (antarmuka vendor tidak bisa dimodifikasi) dan
-  IDRG (bridging bawaan SIMRS Khanza tidak memenuhi penilaian).
+- "Tiga tahun" — Utsman mulai freelance akhir 2023; project di peta menjangkau
+  2024–2026. Dua-duanya cocok dengan angka tiga. Blurb lama yang menyebut empat
+  tahun sudah diperbaiki di `canvas.js`.
+- "SIMRS yang tidak saya tulis" terbukti: RME (Khanza dibiarkan utuh, lapisan
+  web berdiri di atas database yang sama) dan IDRG (bridging bawaan Khanza tidak
+  memenuhi komponen penilaian).
 - "Endpoint BPJS" terbukti: IDRG.
 - "Aturan Kemenkes" terbukti: RME (Permenkes untuk akreditasi) dan IDRG (surat
   edaran IDRG/SatuSehat).
+- **Khanza bukan vendor.** SIMRS open source dan gratis, dipakai rumah sakit apa
+  adanya. Klaim "sistem vendor" di copy RME dan "ekspektasi vendor SIMRS" di copy
+  Pendaftaran OCR sudah dikoreksi di `projects.js`.
 
 ## 3. Thesis panel desktop (keadaan awal, sebelum ada yang dipilih)
 
@@ -110,7 +114,7 @@ diturunkan dari `context`/`hard` yang sudah ada.
 - id: Pengajuan sampai sertifikat digital untuk sertifikasi benih tanaman.
 - en: Plant seed certification, from application through to a digital certificate.
 
-## 5. RME naik jadi halaman penuh
+## 5. RME naik jadi halaman penuh — SUDAH DIKERJAKAN
 
 Yang sudah ada dan tidak perlu ditulis ulang:
 
@@ -122,21 +126,38 @@ Yang sudah ada dan tidak perlu ditulis ulang:
 - `access` — internal.
 - `tech` — Laravel, Livewire, MySQL.
 
-Yang kosong dan menghalangi halamannya berdiri:
+Sudah diisi dari jawaban 2026-09-03 dan halamannya hidup di `/kerja/rme`:
 
-**[PERLU JAWABAN] `built` — daftar "apa yang saya bangun" untuk RME.** Empat
-sampai enam butir. Pertanyaan pemancingnya ada di bawah.
+- `tier` naik ke `full`; lima halaman baca sekarang, bukan empat.
+- `built` — SOAP, tanda-tanda vital, diagnosa ICD, permintaan lab, permintaan
+  radiologi, permintaan resep, resume medis.
+- `context` ditulis ulang: Khanza open source dan dibiarkan utuh, lapisan web
+  menulis ke tabel yang sama, pemakainya dokter dan perawat asisten dokter,
+  cakupan rawat jalan/rawat inap/IGD dengan rawat jalan dan rawat inap yang
+  berjalan sekarang.
+- **Field baru `notMine`** — batas lingkup yang ditulis terang: hasil lab, hasil
+  radiologi, dan pemberian obat tetap diinput di Khanza. Halaman baca
+  menampilkannya sebagai blok "Di luar lingkup saya", di bawah daftar yang
+  dibangun. Field ini opsional; hanya RME yang memakainya sekarang.
+- Screenshot `/assets/img/rme1.png` sudah tersensor (nama, no. RM, no. rawat
+  tertutup). Aman dipublikasikan.
 
-## 6. Pertanyaan terbuka untuk Utsman
+## 6. Jawaban Utsman, 2026-09-03
 
-1. **RME dipakai untuk apa saja?** Rawat jalan, rawat inap, IGD, atau
-   sebagiannya? Modul apa yang benar-benar Anda tulis — pencatatan SOAP/asesmen,
-   resep, diagnosa ICD, riwayat kunjungan, tanda vital, unggah hasil penunjang?
-2. **Siapa yang memakainya sehari-hari** — dokter, perawat, petugas rekam medis?
-3. **Bagaimana lapisan web ini hidup berdampingan dengan sistem vendor?** Menulis
-   ke tabel yang sama, atau ada tabel sendiri yang disinkronkan?
-4. **Apa yang tidak Anda kerjakan di RME**, supaya batas klaimnya jelas.
-5. **Headline:** pertahankan "empat tahun", atau pakai rentang yang terbukti di
-   peta (2024–2026)?
-6. **Screenshot HRIS dan PSB** masih belum ada. Sampai masuk, dua halaman itu
-   memakai keadaan kosong yang dirancang — bukan gambar palsu.
+1. RME mencakup rawat jalan, rawat inap, dan IGD; yang berjalan sampai sekarang
+   rawat jalan dan rawat inap. Modulnya: SOAP, TTV, diagnosa ICD, permintaan
+   lab, permintaan radiologi, permintaan resep, resume medis.
+2. Pemakainya dokter dan perawat asisten dokter.
+3. Menulis ke tabel yang sama. **Khanza bukan vendor** — SIMRS open source dan
+   gratis, jadi rumah sakit memakainya.
+4. Di luar lingkupnya: input hasil lab, hasil radiologi, dan pemberian obat —
+   semuanya tetap di Khanza.
+5. Tiga tahun. Freelance sejak akhir 2023 sampai sekarang.
+
+## 7. Yang masih terbuka
+
+- **Kata-kata headline belum dipotong.** Tiga varian di §2 menunggu pilihan.
+- **Screenshot HRIS dan PSB belum ada.** Sampai masuk, dua halaman itu memakai
+  keadaan kosong yang dirancang — bukan gambar palsu, bukan stok.
+- **Blurb delapan sistem di §4 belum masuk `projects.js`.** Menunggu desain baru
+  yang memakainya, atau persetujuan Utsman kalau mau dimasukkan lebih dulu.

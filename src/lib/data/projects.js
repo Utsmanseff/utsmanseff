@@ -1,6 +1,8 @@
 // Every project, flat. Each entry carries its own canvas position, so the
 // canvas and the reading pages are two views over one source.
 //
+// blurb  one line, derived from `context` — used wherever a system is listed
+//        rather than read: the rail, the selected panel, the phone spine
 // tier   'full'   -> big node, gets a /kerja/[slug] page
 //        'brief'  -> small node, preview panel only
 // access 'public'   -> anyone can open `site`
@@ -22,6 +24,10 @@ export const projects = [
     image: '/assets/img/pendaftaran.png',
     tech: ['Laravel', 'Next.js', 'MySQL', 'Google Vision', 'REST API'],
     shortName: { id: 'Pendaftaran OCR', en: 'OCR Registration' },
+    blurb: {
+      id: 'KTP difoto dan dibaca OCR, hasilnya masuk ke SIMRS tanpa diketik ulang di loket.',
+      en: 'A KTP is photographed and read by OCR, and the result reaches the SIMRS without being retyped at the counter.',
+    },
     title: {
       id: 'Pendaftaran Rumah Sakit Berbasis OCR',
       en: 'OCR-Powered Hospital Registration',
@@ -65,6 +71,10 @@ export const projects = [
     image: '/assets/img/eklaim.png',
     tech: ['Laravel', 'MySQL', 'REST API', 'SOAP'],
     shortName: { id: 'IDRG Bridging', en: 'IDRG Bridging' },
+    blurb: {
+      id: 'Mediator klaim antara SIMRS dan endpoint BPJS, ditulis ketika akses bridging terancam diputus.',
+      en: 'A claim mediator between the SIMRS and the BPJS endpoints, written while bridging access was about to be cut.',
+    },
     title: {
       id: 'Bridging IDRG / INA-CBGs untuk Klaim BPJS',
       en: 'IDRG / INA-CBGs Bridging for BPJS Claims',
@@ -106,6 +116,10 @@ export const projects = [
     image: null,
     tech: ['Laravel', 'Livewire', 'Alpine.js', 'MySQL', 'MediaPipe'],
     shortName: { id: 'HRIS', en: 'HRIS' },
+    blurb: {
+      id: 'Rumah sakit tanpa sistem kepegawaian sama sekali — mesin absen, surat cuti, Excel yang tersebar — disatukan ke satu tempat.',
+      en: 'A hospital with no HR system at all — a punch clock, paper leave forms, scattered Excel — pulled into one place.',
+    },
     title: {
       id: 'Sistem Kepegawaian Rumah Sakit',
       en: 'Hospital HR System',
@@ -160,6 +174,10 @@ export const projects = [
     image: '/assets/img/rme1.png',
     tech: ['Laravel', 'MySQL', 'Livewire'],
     shortName: { id: 'RME', en: 'EMR' },
+    blurb: {
+      id: 'Lapisan web di atas database SIMRS 1.168 tabel, tetap menulis balik ke sana supaya laporan lama tidak rusak.',
+      en: 'A web layer over a 1,168-table SIMRS database, still writing back into it so the existing reports keep working.',
+    },
     title: { id: 'Rekam Medis Elektronik', en: 'Electronic Medical Records' },
     context: {
       id: 'Permenkes mewajibkan rekam medis elektronik untuk akreditasi. Rumah sakit memakai SIMRS Khanza — SIMRS open source yang dipakai apa adanya — dan antarmukanya dibiarkan utuh. RME ini berdiri sebagai lapisan web terpisah di atas database yang sama dan menulis ke tabel yang sama, supaya alur kerja dan laporan yang sudah berjalan tidak rusak. Pemakainya dokter dan perawat asisten dokter. Cakupannya rawat jalan, rawat inap, dan IGD; yang berjalan sampai sekarang rawat jalan dan rawat inap.',
@@ -210,6 +228,10 @@ export const projects = [
     image: '/assets/img/sigap.jpg',
     tech: ['Laravel', 'Livewire', 'MySQL'],
     shortName: { id: 'SIGAP', en: 'SIGAP' },
+    blurb: {
+      id: 'Kepegawaian dengan absensi yang terikat pada lokasi kerja.',
+      en: 'Staff management with attendance tied to the actual work site.',
+    },
     title: {
       id: 'Kepegawaian & Absensi Geolocation',
       en: 'Staffing & Geolocation Attendance',
@@ -235,6 +257,10 @@ export const projects = [
     image: '/assets/img/aset.jpg',
     tech: ['Laravel', 'Livewire', 'MySQL'],
     shortName: { id: 'Aset KPHL', en: 'KPHL Assets' },
+    blurb: {
+      id: 'Aset organisasi dengan pelacakan lokasi, kondisi, jadwal perawatan, dan pelaporan.',
+      en: 'Organisational assets with location and condition tracking, maintenance scheduling and reporting.',
+    },
     title: { id: 'Manajemen Aset & Inventaris', en: 'Asset & Inventory Management' },
     context: {
       id: 'Pengelolaan aset organisasi dengan pelacakan lokasi dan kondisi, jadwal perawatan, dan pelaporan.',
@@ -257,6 +283,10 @@ export const projects = [
     image: '/assets/img/sertifikasi.png',
     tech: ['Laravel', 'Livewire', 'MySQL'],
     shortName: { id: 'Sertifikasi Benih', en: 'Seed Certification' },
+    blurb: {
+      id: 'Pengajuan sampai sertifikat digital untuk sertifikasi benih tanaman.',
+      en: 'Plant seed certification, from application through to a digital certificate.',
+    },
     title: { id: 'Aplikasi Sertifikasi Benih', en: 'Seed Certification System' },
     context: {
       id: 'Pendaftaran dan pemantauan sertifikasi benih tanaman, dari pengajuan sampai sertifikat digital.',
@@ -279,6 +309,10 @@ export const projects = [
     image: null,
     tech: ['Laravel', 'JavaScript', 'MySQL', 'Fonnte'],
     shortName: { id: 'PSB Walisongo', en: 'Walisongo Admissions' },
+    blurb: {
+      id: 'Pendaftaran sampai ujian masuk berbasis browser, dengan notifikasi WhatsApp di tiap tahap.',
+      en: 'Registration through a browser-based entrance exam, with WhatsApp notifications at every stage.',
+    },
     title: {
       id: 'Penerimaan Siswa Baru dengan Ujian CBT',
       en: 'School Admissions with Computer-Based Testing',

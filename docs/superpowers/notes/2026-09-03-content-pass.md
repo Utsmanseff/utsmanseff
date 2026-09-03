@@ -14,7 +14,7 @@ yang menunggu jawaban Utsman ditandai **[PERLU JAWABAN]**.
 | Slug | Slug repo dipertahankan, URL lama tidak mati |
 | Stack PSB | `Laravel, JavaScript, MySQL, Fonnte` — plate 4 lapis |
 | Tinggi plate | Jumlah teknologi, dilabeli jujur sebagai teknologi/stack |
-| Headline | Arah "batasan orang lain", kata-kata masih akan diperbaiki |
+| Headline | **Tidak ada kalimat headline.** Identitas saja, lalu sistemnya |
 | RME | Naik jadi halaman penuh — lima halaman baca, bukan empat |
 | Thesis desktop | Panel kanan saat belum ada sistem terpilih |
 | Urutan kerja | Dasar dulu, peta isometrik terakhir |
@@ -34,7 +34,28 @@ klien, dan HRIS sendiri berisi sembilan modul. Peta juga tidak mengukur
 | `5 PARTS · PUBLIC · GOOGLE VISION` | `5 TEKNOLOGI · PUBLIK · GOOGLE VISION` | sda |
 | `LAYERS` (panel) | `LAPISAN STACK` | Sama, tapi tidak bisa terbaca sebagai lapisan arsitektur |
 
-## 2. Headline — arah "batasan orang lain"
+## 2. Headline — DIBATALKAN, tidak ada headline kalimat
+
+Keputusan 2026-09-03: porto tidak memakai kalimat headline sama sekali. Yang
+berdiri di atas cuma identitas — `Utsman · Fullstack Developer · Banjarbaru` —
+lalu langsung sistem-sistemnya. Alasannya dari Utsman: setiap varian di bawah
+terbaca sok dan "pick me", dan pola "X: A, B, dan C" adalah ciri tulisan mesin.
+Detail BPJS, Kemenkes, dan 1.168 tabel tetap hidup di halaman project
+masing-masing, tempat ia jadi bukti alih-alih pajangan.
+
+Ikutannya:
+
+- **Panel kanan desktop** tidak berisi prosa pembuka. Isinya blok catatan mono:
+  NAMA, PERAN, LOKASI, SISTEM 8, KLIEN 5, RENTANG 2024–2026, EMAIL. Semua
+  angkanya dihitung dari data.
+- **Dokumen mobile** tidak punya judul maupun baris petunjuk. Nama, peran,
+  lokasi, lalu langsung tahun 2026.
+- **Blurb `CENTER_NODE`** kehilangan tempat di halaman; kalimat itu tinggal
+  dipakai sebagai `meta description` untuk mesin pencari.
+
+Varian yang ditolak, disimpan supaya tidak diusulkan lagi:
+
+### Varian lama — arah "batasan orang lain" (ditolak)
 
 Belum final. Varian di bawah sudah diperbaiki setelah jawaban 2026-09-03: kata
 **vendor dibuang** (Khanza open source, bukan produk vendor) dan angkanya jadi
@@ -156,8 +177,8 @@ Sudah diisi dari jawaban 2026-09-03 dan halamannya hidup di `/kerja/rme`:
 
 ## 7. Yang masih terbuka
 
-- **Kata-kata headline belum dipotong.** Tiga varian di §2 menunggu pilihan.
+- ~~Kata-kata headline~~ — selesai: tidak ada headline.
 - **Screenshot HRIS dan PSB belum ada.** Sampai masuk, dua halaman itu memakai
   keadaan kosong yang dirancang — bukan gambar palsu, bukan stok.
-- **Blurb delapan sistem di §4 belum masuk `projects.js`.** Menunggu desain baru
-  yang memakainya, atau persetujuan Utsman kalau mau dimasukkan lebih dulu.
+- ~~Blurb delapan sistem~~ — selesai: sudah masuk `projects.js` sebagai field
+  `blurb`, dua bahasa, dengan test yang menjaga tidak ada yang kosong.

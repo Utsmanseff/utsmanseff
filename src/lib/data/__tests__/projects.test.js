@@ -76,4 +76,24 @@ describe('projects dataset', () => {
     expect(CENTER_NODE.position.x).toBeLessThan(WORLD.width);
     expect(CENTER_NODE.position.y).toBeLessThan(WORLD.height);
   });
+
+  it('gives every system a one-line blurb in both languages', () => {
+    // The blurb is what a system says wherever it is listed rather than read.
+    // A missing one leaves a blank row, so the contract is checked here.
+    for (const p of projects) {
+      expect(p.blurb?.id, p.slug).toBeTruthy();
+      expect(p.blurb?.en, p.slug).toBeTruthy();
+      expect(p.blurb.id.length, p.slug).toBeLessThan(160);
+    }
+  });
+
+  it('states a scope boundary only where one was actually given', () => {
+    // `notMine` is optional. Where it exists it must carry both languages —
+    // a half-translated boundary is worse than none.
+    for (const p of projects) {
+      if (!p.notMine) continue;
+      expect(p.notMine.id, p.slug).toBeTruthy();
+      expect(p.notMine.en, p.slug).toBeTruthy();
+    }
+  });
 });

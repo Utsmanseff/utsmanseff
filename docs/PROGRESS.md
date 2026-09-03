@@ -1,106 +1,137 @@
 # Portfolio — Status Kerja
 
-> Dibaca di awal sesi baru. Menggantikan catatan redesign lama (9 section scroll), yang sudah tidak berlaku.
-
-## Bentuk sekarang
-
-Porto berdiri di **dua lapis**.
-
-- `/` — kanvas gelap yang digeser. Hanya project ber-`tier: 'full'` yang jadi simpul; empat project kecil berdiri di balik satu simpul "Project lain" bergaris putus-putus. Garis antar simpul menandai hubungan nyata, bukan hiasan. Di bawah 768px kanvas diganti daftar vertikal yang dikelompokkan per klaster klien.
-- `/kerja/[slug]` — halaman kertas krem untuk dibaca dan dibagikan. Dibuat statis dari project ber-`tier: 'full'`, dengan anatomi tujuh blok yang tetap.
-- `/kontak` — kontak singkat plus unduh CV.
-
-Stack kembali sebagai **legenda/filter di kanvas** (kiri bawah): tiap baris dihitung dari `project.tech`, klik satu nama meredupkan simpul dan garis yang tidak memakainya. Riwayat kerja, pendidikan, dan grid ikon skill **dibuang**, bukan disembunyikan — sudah ada di CV, dan di Indonesia HRD membaca CV sementara tim teknis yang membuka porto. Porto ini ditulis untuk yang kedua.
+> Dibaca di awal sesi baru. Menggantikan catatan kanvas simpul, yang sudah tidak berlaku sejak 2026-09-03.
 
 **Branch:** `portfolio-canvas-redesign` (bercabang dari `main`, belum di-merge)
+**Posisi sekarang:** Task 1 dan 2 dari rencana selesai. **Lanjut di Task 3.**
 
-**Dokumen acuan:**
-- Spec: `docs/superpowers/specs/2026-08-19-portfolio-canvas-redesign-design.md`
-- Rencana: `docs/superpowers/plans/2026-08-19-portfolio-canvas-redesign.md` (15 task)
-- Copy HRIS & PSB dari sumber: `docs/superpowers/notes/2026-08-19-project-copy.md`
+## Ke mana porto ini menuju
 
-## Di mana isinya
+Kanvas simpul dibuang. Penggantinya dua bentuk di atas satu sumber data:
+
+| Lebar | Bentuk | Warna |
+|-------|--------|-------|
+| ≥1024px | Cangkang perangkat lunak: peta isometrik + konsol perintah | Gelap |
+| <1024px | Dokumen teknis: spine tahun + filter sheet | Kertas |
+| `/kerja/<slug>` | Halaman baca, semua lebar | **Gelap** (berubah dari krem) |
+
+Desainnya datang dari Claude Design dan ada di `docs/design_handoff_porto_utsman/`
+(README + prototipe HTML). Prototipe itu **referensi, bukan kode untuk disalin**.
+
+**Dokumen yang mengikat, urut kepentingan:**
 
 | Apa | Di mana |
 |-----|---------|
-| Semua project (datar, satu sumber untuk kanvas dan halaman baca) | `src/lib/data/projects.js` |
-| Kontak, socials, `siteUrl` kanonik, berkas CV | `src/lib/data/meta.js` |
-| Token warna paper + ground + dua amber | `src/app/globals.css` (`@theme`) |
-| Kanvas, simpul, garis, panel, legenda stack, daftar mobile | `src/components/canvas/` |
-| Simpul "Project lain" (posisi, nama, catatan) | `OTHERS_NODE` di `src/lib/data/canvas.js` |
-| Turunan stack dari `project.tech` | `src/lib/canvas/tech.js` |
-| Halaman baca dan bagian-bagiannya | `src/components/work/` |
-| Metadata akar, JSON-LD, font | `src/app/layout.js`, `src/components/JsonLd.jsx` |
-| Kartu OG 1200x630 | `src/app/opengraph-image.jsx` |
+| Rencana implementasi, 17 task | `docs/superpowers/plans/2026-09-03-shell-dan-dokumen.md` |
+| Spec desain | `docs/superpowers/specs/2026-09-03-shell-dan-dokumen-design.md` |
+| Seluruh teks yang tampil, dua bahasa, sudah disetujui | `docs/superpowers/notes/2026-09-03-seluruh-isi-tulisan.md` |
+| Keputusan isi + jawaban mentah Utsman | `docs/superpowers/notes/2026-09-03-content-pass.md` |
+| Teks yang dibuang, diarsipkan | `docs/superpowers/notes/2026-09-03-arsip-bagian-sulit.md` |
+| Handoff desain | `docs/design_handoff_porto_utsman/README.md` |
 
-Field project yang berbeda per bahasa selalu berbentuk `{ id: '...', en: '...' }`. Field yang selalu string (`tech`, `client`, `year`, `slug`) tidak dibungkus.
+## Sudah dikerjakan
 
-`tier` menentukan bentuk: `full` dapat simpul di kanvas dan halaman `/kerja/[slug]`; `brief` tidak punya simpul sendiri — ia berada di balik simpul "Project lain" dan hanya punya panel pratinjau (di mobile tetap muncul sebagai kartu). `access` (`public` / `internal` / `none`) menentukan badge yang ditulis terang-terangan, bukan disamarkan.
+- **Task 1 — token & font.** Palet handoff penuh di `globals.css` (lapis gelap,
+  lima lapis plate, lapis `paper-` untuk dokumen HP, dua amber). Fraunces dan
+  Jersey 15 dibuang; sekarang Bricolage Grotesque + Inter + JetBrains Mono.
+  `--font-pixel` hilang, `.sr-only` masuk, radius dicabut dari focus ring.
+- **Task 2 — kosakata stack.** `src/lib/data/tech.js`: `techNames()` (nama unik,
+  urut abjad, tanpa hitungan) dan `techSlug()` (token konsol, `TensorFlow.js` →
+  `tensorflowjs`). Lima test.
 
-## Yang dihapus
+Keadaan: **109 test hijau**, `npx eslint src --max-warnings=0` bersih,
+`npm run build` sukses dengan lima halaman `/kerja/*`.
 
-Sembilan komponen section lama, `CaseStudyModal`, `Nav` lama, tombol tema gelap/terang, serta `experience.js`, `education.js`, dan `skills.js`. Kamus `src/lib/i18n/{id,en}.js` dipangkas tinggal grup `nav` dan `ui`. Token `cream`/`forest` diganti `paper`/`ground`.
+## Lanjut dari sini
 
-## Antrean 2026-08-20: selesai
+Kerjakan rencana **Task 3 dan seterusnya**, satu task sekali jalan, berhenti
+setiap selesai satu task dan tunggu aba-aba. Urutannya sengaja menaruh yang
+paling berisiko di belakang:
 
-1. **Bug chrome menindih panel — selesai.** Panel naik ke `z-40`; chrome memudar dan jadi `inert` selama panel terbuka. Verifikasi browser menemukan sebab kedua: `.canvas-root` yang `overflow-hidden` tetap bisa digulir oleh browser saat fokus pindah ke simpul (dunia yang ditransform menyumbang ~45px overflow), dan semua yang `absolute` di dalamnya ikut naik — tombol tutup mendarat di y=-28. Chrome dan panel sekarang `fixed` ke viewport, dan kotak kanvas menolak scroll.
-2. **Kurasi kanvas — selesai.** Empat simpul project + satu simpul "Project lain" berisi empat build kecil. Panelnya berupa daftar; membuka satu menampilkan pratinjaunya dengan tautan kembali. Daftar mobile tetap menampilkan kedelapan.
-3. **Stack — selesai.** Legenda filter di kiri bawah, diturunkan dari `project.tech` lewat `primaryTech()` (teknologi yang cuma dipakai sekali tidak masuk legenda). Klik = simpul & garis yang tidak memakainya turun ke opacity 0.22.
-4. **Tipografi — selesai untuk lapis kanvas.** Jersey 15 (OFL) untuk nama simpul, label tengah, dan chrome. Caption tetap mono, halaman baca tetap serif. Perbandingan enam muka piksel: artifact "Pixel Type on the Canvas".
+3. Filter murni (`src/lib/shell/filters.js`)
+4. `clientKey` di setiap project — celah data yang ditemukan saat menulis rencana
+5. Tabel perintah (`src/lib/shell/commands.js`)
+6. Geometri plate & skala (`src/lib/shell/layout.js`)
+7. Halaman baca pindah ke lapis gelap, tiga bagian bernomor
+8–9. Dokumen HP: spine tahun, filter sheet, bar bawah
+10. `/` merender dokumen dulu, cangkang menyusul kalau layak
+11–12. Chrome cangkang, tabel datar, panel, log rail
+13. **Peta isometrik** — paling mungkin gagal, sengaja paling akhir
+14. Konsol + papan ketik
+15. Hapus `src/components/canvas/`, `src/lib/canvas/`, `src/lib/data/canvas.js`
+16. Kontak & kartu OG ikut lapis gelap
+17. Dilihat dengan mata sendiri, bukan test
 
-## Status task
+## Larangan yang tidak bisa ditawar
 
-Task 1–14 dari rencana selesai, ditambah keempat antrean di atas. Yang tersisa tetap **Task 15: lihat dengan mata sendiri** — `npm run dev`, lalu daftar periksa di akhir rencana: seret 1:1, zoom yang menahan titik di bawah kursor, detail muncul saat zoom masuk, "Tampilkan semua", panel yang memudar bukan menyentak, Tab lewat semua simpul dan legenda stack, lebar di bawah 768px, dan membuka `/kerja/rsu-nirwana-web` langsung tanpa tahu-menahu soal kanvas.
-
-## Keadaan sekarang
-
-- **103 test hijau.**
-- `npx eslint src --max-warnings=0` bersih. (Pakai perintah ini, bukan `npm run lint`.)
-- `npm run build` sukses; empat halaman `/kerja/*` ikut terbentuk statis.
+- **Tidak ada angka jumlah di layar.** Tidak ada "8 sistem", "4 dari 8 tampil",
+  atau hitungan pemakaian teknologi. Umpan balik filter cuma kata `TERSARING`.
+- **Tidak ada penanda `langka` / `dasar`.** Stack tampil sebagai daftar nama.
+- **Tidak ada bagian "yang sulit" dan "di luar lingkup"** di halaman baca. Nadanya
+  seperti sidang skripsi; teksnya sudah diarsipkan.
+- **Tidak ada angka dampak.** Tidak ada persen, tidak ada jumlah pengguna.
+- **HRIS tidak punya payroll atau modul keuangan.** Jangan pernah disebut.
+- **Amber ada dua.** `#C97B3F` hanya di atas gelap (5.33:1); di atas kertas wajib
+  `#9C5A28` (4.9:1).
+- **SIMRS Khanza bukan vendor.** Ia open source dan gratis, dipakai rumah sakit
+  apa adanya. Klaim "sistem vendor" pernah salah tertulis dan sudah dikoreksi.
+- **Tidak ada kalimat headline.** Halaman dibuka identitas, lalu langsung
+  sistemnya. Panel kanan desktop berisi blok catatan, bukan prosa.
+- **Vitest & ESLint mengecualikan `.claude/**`.** Jangan "diperbaiki".
+- **`meta.siteUrl` satu-satunya sumber URL kanonik.**
 
 ## Keputusan yang mahal kalau dilupakan
 
-- **Amber ada dua.** `--color-amber` (#C97B3F) hanya untuk kanvas gelap (5.33:1). Di atas kertas ia cuma 2.82:1 — gagal WCAG AA. Semua amber yang menyentuh lapisan baca pakai `--color-amber-ink` (#9C5A28, 4.61:1).
-- **Kontrak gerak terbelah.** Seret dan zoom mengikuti jari 1:1 tanpa easing. Yang bergerak sendiri (panel, pindah halaman) memudar 700ms `cubic-bezier(0.22, 1, 0.36, 1)`.
-- **Tidak ada angka dampak.** Klaim tanpa sumber dibuang, bukan dikarang atau diperhalus. Screenshot dan URL live yang jadi bukti; status akses ditulis terang.
-- **HRIS tidak punya payroll/keuangan.** Jangan pernah disebut.
-- **Vitest & ESLint mengecualikan `.claude/**`.** Worktree di situ salinan penuh repo — sempat membuat vitest menghitung test basi dan membuat lint seperti menggantung.
-- **`meta.siteUrl` satu-satunya sumber URL kanonik.** `metadataBase`, JSON-LD, dan kartu OG semuanya membacanya. Jangan menulis domain di tempat lain; `utsman.dev` masih placeholder dan tidak melayani situs ini.
-- **Template judul ada di akar.** `layout.js` memasang `title.template` `"%s — Utsman"`. Judul per halaman tidak boleh menambahkan "— Utsman" sendiri.
+- **Slug tidak berubah.** `rsu-nirwana-web`, `idrg-bridging`, `hris-nirwana`,
+  `rme`, `psb-walisongo`. Slug prototipe (`pendaftaran-ocr` dsb) sengaja ditolak.
+- **RME naik jadi halaman penuh** (2026-09-03). Lima halaman baca, bukan empat.
+- **Prosa berasal dari repo**, bukan dari prototipe — prototipe hanya menyumbang
+  bentuk field `blurb`.
+- **Stack PSB:** `Laravel, JavaScript, MySQL, Fonnte`. Prototipe menulis Livewire;
+  itu keliru.
+- **HRIS memakai TensorFlow.js**, bukan MediaPipe (diganti 2026-09-03). Arsip
+  teks lama masih menyebut MediaPipe dan tidak boleh dipakai apa adanya.
+- **Tiga tahun, bukan empat.** Freelance sejak akhir 2023.
+- **Kontrak gerak terbelah.** Yang digerakkan jari 1:1 tanpa easing; yang bergerak
+  sendiri memudar 700ms `cubic-bezier(.22, 1, .36, 1)`; warna 180ms;
+  `prefers-reduced-motion` memangkas ke 1ms **dan** mendaratkan `/` di tabel datar.
+- **Tanpa JavaScript `/` harus tetap utuh.** Server merender dokumen; cangkang
+  menyusul hanya kalau JS hidup, lebar ≥1024px, dan gerak tidak dikurangi.
 
 ## Masih kurang dari user
 
 - Screenshot HRIS → `public/assets/img/hris.png`
 - Screenshot PSB → `public/assets/img/psb.png`
 
-Sampai masuk, `image: null` dan halaman menampilkan status kosong yang dirancang, bukan gambar rusak. Sensor dulu kalau memuat data pegawai/pasien asli.
-
-## Risiko yang diakui sejak awal
-
-Sembilan simpul bisa terasa sepele, bukan seperti peta. Sejak 2026-08-20 petanya tinggal lima simpul (empat project + satu pintu), dengan legenda stack sebagai alasan kedua untuk memakainya. Penawar lain tetap: garis hubungan yang bermakna, label informatif, detail bertambah saat zoom. Kalau tetap gagal — Task 15 memang menanyakan ini terus terang — kanvas dibuang dan daftar berkelompok dipakai di semua lebar. Halaman bacanya tetap hidup, jadi mundur berarti kehilangan satu komponen, bukan proyeknya.
-
-
-## Antrean berikutnya (dari sesi 2026-08-20, urut prioritas)
-
-### 1. Lihat dengan mata sendiri (belum bisa dilakukan sesi ini)
-Alat browser sesi 2026-08-20 tidak menampilkan panel Browser, jadi tidak ada frame yang dikomposit: screenshot gagal dan `requestAnimationFrame` beku, sehingga semua fade tidak bisa dinilai. Yang sudah terbukti hanya perilaku: klik pointer sungguhan, hit-test, dan geometri. **Yang masih harus dilihat mata:** ukuran Jersey 15 di simpul kecil dan di bar panduan, keterbacaan legenda stack di atas latar titik-titik, dan apakah fade chrome saat panel terbuka terasa halus.
-
-### 2. Tipografi halaman baca
-Lapis kanvas sudah punya wajah; halaman kertas masih Fraunces + Inter. Kalau porto masih terasa umum setelah perubahan ini, di situ sisanya.
-
-### 3. Pertanyaan terbuka: apakah ada konsep yang lebih baik?
-Belum dijawab. Peta sekarang lima simpul, bukan sembilan, jadi risiko "sembilan lingkaran terasa sepele" berkurang — tapi belum hilang. Jalan mundur yang disepakati tetap berlaku: daftar berkelompok di semua lebar, halaman baca tetap hidup.
+Sampai masuk, `image: null` dan halaman menampilkan keadaan kosong yang
+dirancang — bukan gambar stok, bukan kotak abu-abu. Sensor dulu kalau memuat
+data pegawai atau pasien asli. Screenshot RME (`rme1.png`) sudah tersensor dan
+aman.
 
 ## Pelajaran yang mahal (jangan diulang)
 
-- **`overflow-hidden` tidak menghentikan browser.** Kotak yang isinya melebihi batas tetap bisa digulir secara programatik, dan fokus yang pindah ke elemen di luar layar memicunya. Apa pun yang harus tetap di tempat (chrome, panel) dipasang `fixed` ke viewport, bukan `absolute` di dalam kotak itu.
-- **Tab yang tidak dikomposit membekukan rAF.** Di panel browser yang tidak ditampilkan, `requestAnimationFrame` tidak jalan, event `scroll` tidak terkirim, dan transisi tidak maju — `getComputedStyle` akan melaporkan nilai awal. Baca `element.style` untuk menilai keadaan yang dituju, dan jangan simpulkan soal animasi dari tab semacam itu.
-- **Klik sintetis membohongi.** `fireEvent.click` dan `.click()` melewati urutan pointer. Bug `setPointerCapture` membuat setiap klik simpul mendarat di latar kanvas, dan 86 test tetap hijau. Uji syarat penyebabnya, bukan sekadar "klik berhasil".
-- **Verifikasi lewat browser harus dicek kerangka koordinatnya.** Alat klik sempat memakai ukuran jendela lama, jadi klik meleset 1,74× dan menghasilkan "bukti" palsu.
-- **Riwayat konsol bukan keadaan sekarang.** Hydration error yang sudah diperbaiki masih terbaca di tab lama; buktikan dengan tab baru.
+- **Cache Turbopack menyajikan token basi.** Setelah mengubah `globals.css`, dev
+  server sempat terus mengirim `--color-ink: #1a1a1a` yang lama; reload biasa
+  tidak menolong. Hapus `.next`, jalankan ulang server. Kalau perubahan token
+  "tidak muncul", ini penyebabnya, bukan kodenya.
+- **Regex multi-baris menelan data.** Menghapus properti `hard:` dengan
+  `/hard: \{.*?\n    \},/s` memakan tiga project sekaligus, karena empat project
+  kecil menulisnya dalam satu baris. Hapus properti per baris, dan periksa jumlah
+  entri setelahnya.
+- **Klik sintetis membohongi.** `fireEvent.click` melewati urutan pointer. Bug
+  `setPointerCapture` membuat setiap klik simpul mendarat di latar, dan 86 test
+  tetap hijau.
+- **Kerangka koordinat alat browser.** Saat viewport diemulasi lebih besar dari
+  panel, klik berbasis koordinat meleset. Pakai `ref`, atau samakan ukurannya.
+- **Tab yang tidak dikomposit membekukan rAF.** Di panel browser yang tersembunyi,
+  animasi tidak maju dan `getComputedStyle` melaporkan nilai awal. Baca
+  `element.style` untuk menilai keadaan yang dituju.
+- **`overflow-hidden` tidak menghentikan browser.** Fokus yang pindah ke elemen
+  di luar layar tetap menggulir kotaknya. Apa pun yang harus diam dipasang
+  `fixed`, bukan `absolute` di dalam kotak itu.
 
 ## Cara lanjut
 
 1. `git checkout portfolio-canvas-redesign`
-2. `npm test` — harus 103 hijau
-3. Buka rencana, kerjakan Task 15 (dilihat langsung, bukan diuji otomatis)
+2. `npm test` — harus 109 hijau
+3. Buka rencana, kerjakan Task 3, berhenti setelah selesai

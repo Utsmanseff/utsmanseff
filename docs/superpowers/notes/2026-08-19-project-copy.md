@@ -15,7 +15,9 @@ Dikumpulkan 2026-08-20 langsung dari Utsman. Bagian **Jawaban mentah** adalah ka
 - Tahun: 2026
 - Klien: RSU Nirwana
 - Akses: internal, perlu login
-- Stack: Laravel, Livewire, Alpine.js, MySQL, MediaPipe
+- Stack: Laravel, Livewire, Alpine.js, MySQL, TensorFlow.js
+  (2026-09-03: deteksi wajah dipindahkan dari MediaPipe ke TensorFlow.js. Kalimat
+  di bawah masih menyebut MediaPipe karena ia jawaban mentah 2026-08-20 apa adanya.)
 - **Tidak ada payroll dan tidak ada modul keuangan apa pun.** Jangan disinggung.
 - Screenshot: ada, belum masuk repo
 

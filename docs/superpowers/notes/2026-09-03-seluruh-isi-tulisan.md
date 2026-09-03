@@ -277,7 +277,7 @@ kata "peta project" dibuang karena petanya cuma ada di desktop.
 | Klien | RSU Nirwana |
 | Tahun | 2026 |
 | Akses | internal |
-| Stack | Laravel, Livewire, Alpine.js, MySQL, MediaPipe |
+| Stack | Laravel, Livewire, Alpine.js, MySQL, TensorFlow.js |
 | URL | — |
 | Screenshot | BELUM ADA |
 

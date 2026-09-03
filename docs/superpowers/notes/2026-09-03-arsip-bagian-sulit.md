@@ -4,6 +4,10 @@ Dibuang dari situs 2026-09-03 atas keputusan Utsman: nadanya terlalu seperti
 mempertahankan skripsi. Disimpan di sini apa adanya. Kalau suatu saat dipakai
 lagi, bentuknya harus jauh lebih pendek dan tidak menjelaskan diri.
 
+Catatan 2026-09-03: teks HRIS di bawah menyebut MediaPipe. Deteksi wajahnya
+sudah dipindahkan ke TensorFlow.js, jadi kalimat itu tidak boleh dipakai lagi
+apa adanya.
+
 ## Pendaftaran OCR (`rsu-nirwana-web`)
 
 **Bagian sulit**

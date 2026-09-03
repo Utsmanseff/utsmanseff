@@ -110,7 +110,7 @@ export const projects = [
     position: { x: 520, y: 640 },
     related: ['rsu-nirwana-web'],
     image: null,
-    tech: ['Laravel', 'Livewire', 'Alpine.js', 'MySQL', 'MediaPipe'],
+    tech: ['Laravel', 'Livewire', 'Alpine.js', 'MySQL', 'TensorFlow.js'],
     shortName: { id: 'HRIS', en: 'HRIS' },
     blurb: {
       id: 'Absensi, cuti, jadwal, dan data pegawai dalam satu aplikasi.',

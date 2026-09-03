@@ -24,7 +24,7 @@ export function techIndex(projects) {
 
 // Everything, including the technologies used exactly once. Hiding the
 // one-offs was backwards: Laravel and MySQL are the baseline every Indonesian
-// web developer shares, while Google Vision, MediaPipe, SOAP and Fonnte are the
+// web developer shares, while Google Vision, TensorFlow.js, SOAP and Fonnte are the
 // only entries that say something specific about this work. The count stays
 // beside each name so the baseline still reads as the baseline.
 export function primaryTech(projects, min = 1) {

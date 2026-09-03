@@ -33,7 +33,7 @@ describe('primaryTech', () => {
 
   it('lists the rare integrations of the real portfolio', () => {
     const names = primaryTech(projects).map((t) => t.name);
-    for (const rare of ['Google Vision', 'MediaPipe', 'SOAP', 'Fonnte', 'Next.js']) {
+    for (const rare of ['Google Vision', 'TensorFlow.js', 'SOAP', 'Fonnte', 'Next.js']) {
       expect(names).toContain(rare);
     }
   });

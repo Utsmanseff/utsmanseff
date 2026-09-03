@@ -42,8 +42,8 @@ keadaan yang dirancang belakangan.
 Satu sumber tetap `src/lib/data/projects.js`. Tidak ada pengambilan data.
 
 Field yang sudah ada dan tetap: `slug`, `client`, `year`, `role`, `access`,
-`site`, `image`, `tech`, `shortName`, `title`, `context`, `built`, `hard`,
-`blurb`, `notMine`, `tier`.
+`site`, `image`, `tech`, `shortName`, `title`, `context`, `built`, `blurb`,
+`tier`.
 
 Yang dibuang: `position`, `cluster`, `related` — koordinat kanvas dan garis
 relasi tidak dipakai lagi. Tata letak plate dihitung, bukan ditulis tangan.
@@ -52,20 +52,20 @@ Yang diturunkan, bukan disimpan:
 
 | Turunan | Rumus | Dipakai untuk |
 |---|---|---|
-| `parts` | `tech.length` | tinggi tumpukan plate (3–5 lapis, jarak 7px) |
-| `useCount` | hitung `tech` di seluruh project | angka di samping nama teknologi |
-| `rare` | `useCount === 1` **dan** punya alasan di `TECH_WHY` | tepi amber, label `rare` |
+| tinggi | `tech.length` | tinggi tumpukan plate (3–5 lapis, jarak 7px) |
 | `hasPage` | `tier === 'full'` | luas plate: 165×115 vs 100×74 |
 | `isPublic` | `access === 'public'` | tepi lapisan teratas amber |
+| daftar stack | himpunan `tech` di seluruh project | chip filter `stack:` |
 
-`TECH_WHY` adalah peta kurasi di `src/lib/data/tech.js`: Google Vision → OCR KTP,
-MediaPipe → verifikasi wajah, SOAP → bridging BPJS, Fonnte → notifikasi WhatsApp,
-Next.js → front end pendaftaran. Teknologi yang cuma dipakai sekali tapi tidak
-punya alasan (Alpine.js, JavaScript) tidak dinaikkan jadi `rare` — hitungannya
-tetap tampil apa adanya. Laravel dan MySQL diberi label `baseline`.
+**Tidak ada `rare`, tidak ada `baseline`, tidak ada hitungan pemakaian.**
+Keputusan 2026-09-03: menandai satu teknologi sebagai "langka" dan yang lain
+sebagai "dasar" adalah cara memuji diri sendiri lewat data. Stack tampil sebagai
+daftar nama; filter `stack:` tetap jalan tanpa satu pun label nilai.
 
-Kalau sebuah nama teknologi ada di `TECH_WHY` tapi tidak dipakai project mana
-pun, test gagal. Legenda tidak boleh mengklaim yang tidak ada buktinya.
+**Tidak ada angka jumlah di mana pun.** Penghitung `8 SISTEM · 4 TAMPIL`, judul
+"Delapan sistem", catatan kaki "lima punya halaman", dan baris log "3 menyala ·
+5 redup" semuanya dibuang. Umpan balik filter berupa kata `TERSARING` yang muncul
+saat filter aktif — bukan hitungan.
 
 ## 4. Sumbu peta
 
@@ -74,7 +74,7 @@ Setiap saluran visual membawa data nyata. Tidak ada yang dekoratif.
 | Saluran | Arti |
 |---|---|
 | Kedalaman (baris) | tahun — 2024 belakang, 2025 tengah, 2026 depan |
-| Tinggi tumpukan | jumlah teknologi (dilabeli `TEKNOLOGI`, bukan `BAGIAN`) |
+| Tinggi tumpukan | jumlah teknologi (tanpa angka tertulis di mana pun) |
 | Luas plate | punya halaman baca atau tidak |
 | Tepi lapisan atas | amber kalau ada URL publik |
 | Opacity .34 | tersaring — tetap di peta, didorong ke belakang |
@@ -90,6 +90,22 @@ Cadangan 170px untuk label yang menjorok keluar. Diukur ulang saat resize.
 
 Label plate berjangkar di tengah plate-nya sendiri dan dilawan-rotasi setiap
 frame supaya tetap tegak.
+
+## 4b. Halaman baca — empat blok, bukan tujuh
+
+Keputusan 2026-09-03: halaman baca berhenti menjelaskan diri sendiri.
+
+| Ada | Dibuang |
+|---|---|
+| Kepala: klien · tahun · peran, judul, badge akses | `03 BAGIAN SULIT` |
+| `01 KONTEKS` | `DI LUAR LINGKUP SAYA` |
+| `02 YANG DIBANGUN` | catatan "Halaman ini statis…" |
+| `03 STACK` (nama saja) | hitungan pemakaian teknologi |
+| Screenshot + catatan (klien, tahun, peran, akses) | |
+| Kaki: sebelumnya / berikutnya | |
+
+Teks `hard` dan `notMine` sudah dihapus dari `projects.js` dan diarsipkan di
+`docs/superpowers/notes/2026-09-03-arsip-bagian-sulit.md`.
 
 ## 5. Komponen
 
@@ -118,7 +134,7 @@ Logika murni, tanpa DOM, supaya bisa diuji sendiri:
 src/lib/shell/commands.js   parse(perintah) -> { action, payload, log[] }
 src/lib/shell/filters.js    isShown(system, filters), toggle(filters, key, val)
 src/lib/shell/layout.js     platePositions(systems), fitScale(pane)
-src/lib/data/tech.js        useCount, rare, TECH_WHY, baseline
+src/lib/data/tech.js        daftar teknologi unik untuk chip filter
 ```
 
 `useShell()` menyimpan seluruh state cangkang dalam satu reducer.
@@ -129,10 +145,9 @@ Satu-satunya bagian yang menyatukan dua konsep: chip dan ketikan menulis baris
 log yang sama, sehingga tidak ada cara untuk membedakan keduanya di log.
 
 ```
-ls | ls modules            8 sistem · 2024–2026
+ls | ls systems            daftar sistem, tanpa hitungan
 open <slug|potongan nama>  buka halaman baca; sistem tanpa halaman menolak dan menyebut alasannya
 filter <kunci>:<nilai>     kunci ∈ client | year | access | stack; "client:bpn" tanpa kata filter juga jalan
---rare | stack --rare      hanya sistem dengan teknologi langka
 reset                      kosongkan semua filter
 view iso | view flat       peta / tabel (juga "iso", "flat", "map")
 lang id | lang en          ganti bahasa
@@ -141,7 +156,8 @@ help                       daftar di atas
 ```
 
 Masukan tak dikenal menulis `unknown · try help`. Filter yang sedang aktif dan
-diterapkan lagi akan mati (toggle). Log menyimpan sepuluh baris terakhir.
+diterapkan lagi akan mati (toggle). Log menyimpan sepuluh baris terakhir dan
+hanya menggemakan perintahnya — tidak ada baris hasil berisi hitungan.
 
 `parse()` tidak menyentuh state — ia mengembalikan niat. Itu yang membuat
 seluruh tabel perintah bisa diuji tanpa merender apa pun.
@@ -225,12 +241,13 @@ hidden` tidak menghentikan browser menggulir kotak saat fokus berpindah.
 - **Murni:** tabel perintah (`parse` untuk tiap baris di §6, termasuk masukan
   tak dikenal dan toggle), predikat filter, tata letak plate (tidak ada plate
   yang bertumpuk di baris yang sama), `fitScale` pada 1440×800 dan 1024×640.
-- **Data:** `blurb` dua bahasa lengkap, `notMine` dua bahasa kalau ada, setiap
-  nama di `TECH_WHY` benar-benar dipakai project, hitungan `useCount` cocok
-  dengan data.
+- **Data:** `blurb` dua bahasa lengkap untuk kedelapan sistem, setiap nilai chip
+  `stack:` benar-benar dipakai project, dan tidak ada field `hard` maupun
+  `notMine` yang hidup kembali diam-diam.
 - **Komponen:** memilih ≠ membuka; sistem tanpa halaman menolak dibuka dan
   menyebut alasannya; menyaring meredupkan dan tidak menghapus; chip dan
-  ketikan menghasilkan baris log yang sama; Tab mencapai setiap plate.
+  ketikan menghasilkan baris log yang sama; Tab mencapai setiap plate; tidak ada
+  hitungan jumlah sistem yang muncul di layar.
 - **Diverifikasi mata, bukan test:** keterbacaan label di lapisan 3D, orbit
   yang tidak menyentak, dokumen di 360px, halaman baca tanpa JavaScript.
 

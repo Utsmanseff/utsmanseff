@@ -44,17 +44,13 @@ export const metadata = {
     template: "%s — Utsman",
   },
   description:
-    "Peta project Utsman, fullstack web developer di Banjarbaru: sistem rumah sakit dan instansi publik di Kalimantan Selatan — pendaftaran OCR, bridging IDRG/INA-CBGs untuk klaim BPJS, HRIS, dan penerimaan siswa berbasis CBT.",
+    "Utsman — fullstack web developer di Banjarbaru, Kalimantan Selatan. Portofolio project dan cara menghubungi.",
   keywords: [
     "Utsman",
     "Fullstack Web Developer",
+    "Web Developer Banjarbaru",
     "Laravel",
     "Next.js",
-    "Sistem rumah sakit",
-    "Bridging BPJS",
-    "INA-CBGs",
-    "HRIS",
-    "OCR KTP",
     "Banjarbaru",
     "Kalimantan Selatan",
   ],
@@ -63,7 +59,7 @@ export const metadata = {
   openGraph: {
     title: "Utsman — Fullstack Web Developer",
     description:
-      "Peta project: sistem rumah sakit dan instansi publik di Kalimantan Selatan. Pendaftaran OCR, bridging BPJS, HRIS, penerimaan siswa CBT.",
+      "Portofolio Utsman, fullstack web developer di Banjarbaru, Kalimantan Selatan.",
     url: "/",
     siteName: "Utsman",
     locale: "id_ID",
@@ -74,7 +70,7 @@ export const metadata = {
     card: "summary_large_image",
     title: "Utsman — Fullstack Web Developer",
     description:
-      "Peta project: sistem rumah sakit dan instansi publik di Kalimantan Selatan.",
+      "Portofolio Utsman, fullstack web developer di Banjarbaru, Kalimantan Selatan.",
   },
   robots: { index: true, follow: true },
 };

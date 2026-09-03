@@ -48,7 +48,6 @@ describe('projects dataset', () => {
     for (const p of fullProjects) {
       expect(p.built.id.length).toBeGreaterThan(0);
       expect(p.built.en.length).toBe(p.built.id.length);
-      expect(p.hard.id).toBeTruthy();
       expect(p.tech.length).toBeGreaterThan(0);
     }
   });
@@ -87,13 +86,4 @@ describe('projects dataset', () => {
     }
   });
 
-  it('states a scope boundary only where one was actually given', () => {
-    // `notMine` is optional. Where it exists it must carry both languages —
-    // a half-translated boundary is worse than none.
-    for (const p of projects) {
-      if (!p.notMine) continue;
-      expect(p.notMine.id, p.slug).toBeTruthy();
-      expect(p.notMine.en, p.slug).toBeTruthy();
-    }
-  });
 });

@@ -11,9 +11,7 @@ import WorkFooterNav from '@/components/work/WorkFooterNav';
 
 const COPY = {
   built: { id: 'Apa yang saya bangun', en: 'What I built' },
-  hard: { id: 'Yang sulit', en: 'The hard part' },
   stack: { id: 'Stack', en: 'Stack' },
-  notMine: { id: 'Di luar lingkup saya', en: 'Outside my scope' },
   visit: { id: 'Coba langsung ↗', en: 'Try it live ↗' },
   back: { id: 'Kembali ke peta', en: 'Back to the map' },
 };
@@ -55,25 +53,9 @@ export default function ProjectView({ project, prev, next }) {
           ))}
         </ul>
 
-        {/* 4b — where the claim stops. Only some projects have a boundary worth
-            stating; where one exists, saying it out loud is what keeps the rest
-            of the page believable. */}
-        {project.notMine && (
-          <p className="text-sm leading-relaxed text-mute mt-4 pl-4 border-l border-dashed border-rule">
-            <span className="font-mono text-[10px] uppercase tracking-wider block mb-1">
-              {COPY.notMine[locale]}
-            </span>
-            {project.notMine[locale]}
-          </p>
-        )}
 
-        {/* 5 — the hard part */}
-        <h2 className="font-mono text-[11px] uppercase tracking-wider text-amber-ink mt-14 mb-4">
-          {COPY.hard[locale]}
-        </h2>
-        <p className="font-display text-lg leading-relaxed italic">{project.hard[locale]}</p>
 
-        {/* 6 — stack */}
+        {/* 5 — stack */}
         <h2 className="font-mono text-[11px] uppercase tracking-wider text-amber-ink mt-14 mb-4">
           {COPY.stack[locale]}
         </h2>
@@ -83,7 +65,7 @@ export default function ProjectView({ project, prev, next }) {
           ))}
         </div>
 
-        {/* 7 — foot */}
+        {/* 6 — foot */}
         {project.access === 'public' && project.site && (
           <a
             href={project.site}

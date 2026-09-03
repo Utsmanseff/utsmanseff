@@ -7,10 +7,7 @@ import FadeIn from '@/components/ui/FadeIn';
 
 const COPY = {
   heading: { id: 'Kontak', en: 'Contact' },
-  intro: {
-    id: 'Terbuka untuk pekerjaan fullstack dan project sistem internal. Paling cepat dibalas lewat email atau WhatsApp.',
-    en: 'Open to fullstack work and internal systems projects. Email or WhatsApp gets the fastest reply.',
-  },
+  intro: { id: 'Terbuka untuk kerja sama.', en: 'Open to work.' },
   cv: { id: 'Unduh CV (PDF)', en: 'Download CV (PDF)' },
 };
 

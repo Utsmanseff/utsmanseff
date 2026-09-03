@@ -1,8 +1,12 @@
 // Every project, flat. Each entry carries its own canvas position, so the
 // canvas and the reading pages are two views over one source.
 //
-// blurb  one line, derived from `context` — used wherever a system is listed
-//        rather than read: the rail, the selected panel, the phone spine
+// blurb  one line, used wherever a system is listed rather than read: the rail,
+//        the selected panel, the phone spine
+//
+// There is deliberately no "hard part" field and no scope-boundary field. Both
+// read as defending a thesis rather than describing work; their texts are kept
+// in docs/superpowers/notes/2026-09-03-arsip-bagian-sulit.md.
 // tier   'full'   -> big node, gets a /kerja/[slug] page
 //        'brief'  -> small node, preview panel only
 // access 'public'   -> anyone can open `site`
@@ -50,10 +54,6 @@ export const projects = [
         'Server-side validation across the whole form',
       ],
     },
-    hard: {
-      id: 'Akurasi OCR harus dijaga di foto KTP dengan pencahayaan dan sudut yang sangat beragam, sementara dua skema data milik pihak berbeda harus diselaraskan tanpa merusak apa yang sudah diharapkan SIMRS yang berjalan.',
-      en: 'Holding OCR accuracy across wildly inconsistent KTP photos, while aligning two separately-owned data schemas without breaking what the running SIMRS already expects.',
-    },
   },
   {
     slug: 'idrg-bridging',
@@ -72,34 +72,30 @@ export const projects = [
     tech: ['Laravel', 'MySQL', 'REST API', 'SOAP'],
     shortName: { id: 'IDRG Bridging', en: 'IDRG Bridging' },
     blurb: {
-      id: 'Mediator klaim antara SIMRS dan endpoint BPJS, ditulis ketika akses bridging terancam diputus.',
-      en: 'A claim mediator between the SIMRS and the BPJS endpoints, written while bridging access was about to be cut.',
+      id: 'Menyambungkan data klaim rumah sakit ke sistem BPJS.',
+      en: "Connects the hospital's claim data to the BPJS system.",
     },
     title: {
       id: 'Bridging IDRG / INA-CBGs untuk Klaim BPJS',
       en: 'IDRG / INA-CBGs Bridging for BPJS Claims',
     },
     context: {
-      id: 'Surat edaran Kemenkes mewajibkan update IDRG dan integrasi diagnosa SIMRS ke SatuSehat. Bridging bawaan SIMRS Khanza saat itu tidak memenuhi komponen penilaian, dan akses bridging terancam diputus — artinya klaim BPJS tidak bisa dikirim sama sekali.',
-      en: 'A Ministry of Health circular required an IDRG update and SIMRS-to-SatuSehat diagnosis integration. The bundled SIMRS Khanza bridging did not meet the assessment criteria, and bridging access was about to be cut — meaning no BPJS claims could be submitted at all.',
+      id: 'Klaim BPJS dikirim lewat bridging antara sistem rumah sakit dan BPJS. Ada pembaruan aturan IDRG dan integrasi diagnosa ke SatuSehat yang perlu dipenuhi, jadi saya membuat layanan penghubungnya supaya pengiriman klaim tetap berjalan.',
+      en: 'BPJS claims are submitted through a bridge between the hospital system and BPJS. An IDRG update and a SatuSehat diagnosis integration had to be met, so I built the connecting service that keeps claims going out.',
     },
     built: {
       id: [
-        'Web service mediator antara SIMRS dan endpoint BPJS, ditulis dari dokumentasi resmi',
+        'Layanan penghubung antara SIMRS dan endpoint BPJS, mengikuti dokumentasi resmi',
         'Pemetaan diagnosa dan prosedur ke grouper INA-CBG',
         'Antrian pengiriman klaim dengan penanganan gagal-kirim',
-        'Pencatatan jejak permintaan untuk penelusuran saat klaim ditolak',
+        'Pencatatan riwayat permintaan untuk menelusuri klaim yang ditolak',
       ],
       en: [
-        'A mediator web service between SIMRS and the BPJS endpoints, written from the official docs',
+        'A connecting service between the SIMRS and the BPJS endpoints, following the official docs',
         'Diagnosis and procedure mapping into the INA-CBG grouper',
         'A claim submission queue with failure handling',
-        'Request logging so rejected claims can be traced',
+        'Request history logging so rejected claims can be traced',
       ],
-    },
-    hard: {
-      id: 'Mengoordinasikan banyak endpoint BPJS di bawah tenggat regulasi, dengan taruhan yang tidak bisa ditawar: kalau bridging benar-benar diputus, rumah sakit berhenti bisa mengirim klaim.',
-      en: 'Coordinating many BPJS endpoints under a regulatory deadline, with a stake that allowed no slippage: if bridging was actually cut, the hospital could not submit claims at all.',
     },
   },
   {
@@ -117,16 +113,16 @@ export const projects = [
     tech: ['Laravel', 'Livewire', 'Alpine.js', 'MySQL', 'MediaPipe'],
     shortName: { id: 'HRIS', en: 'HRIS' },
     blurb: {
-      id: 'Rumah sakit tanpa sistem kepegawaian sama sekali — mesin absen, surat cuti, Excel yang tersebar — disatukan ke satu tempat.',
-      en: 'A hospital with no HR system at all — a punch clock, paper leave forms, scattered Excel — pulled into one place.',
+      id: 'Absensi, cuti, jadwal, dan data pegawai dalam satu aplikasi.',
+      en: 'Attendance, leave, schedules and staff records in one app.',
     },
     title: {
       id: 'Sistem Kepegawaian Rumah Sakit',
       en: 'Hospital HR System',
     },
     context: {
-      id: 'Rumah sakit belum punya sistem kepegawaian sama sekali. Absensi bergantung pada mesin absen, pengajuan cuti berjalan lewat surat, dan sisanya dicatat di Excel yang tersebar. HRIS dibangun untuk menyatukan semuanya ke satu tempat.',
-      en: 'The hospital had no HR system at all. Attendance ran through a punch clock, leave requests moved on paper, and everything else lived in scattered Excel files. The HRIS was built to pull all of it into one place.',
+      id: 'Sebelumnya absensi memakai mesin absen, pengajuan cuti lewat surat, dan data pegawai tersimpan di Excel. HRIS ini menyatukannya ke satu aplikasi, dengan absensi yang memakai lokasi dan deteksi wajah serta terhubung ke jadwal shift pegawai.',
+      en: "Attendance used to run on a punch clock, leave requests on paper, and staff data in Excel. This HRIS brings them into one app, with attendance that uses location and face detection and is tied to each employee's shift.",
     },
     built: {
       id: [
@@ -152,10 +148,6 @@ export const projects = [
         'Runs as a PWA, installable on staff phones',
       ],
     },
-    hard: {
-      id: 'Bagian tersulitnya absensi, karena tiga hal harus benar sekaligus. Lokasi harus cukup akurat untuk memastikan pegawai benar-benar berada di rumah sakit, wajah harus diverifikasi supaya absen tidak bisa dititipkan, dan setiap absen harus dicocokkan dengan shift serta jadwal pegawai yang bersangkutan. Deteksi wajah dijalankan di browser lewat MediaPipe, geolokasi dipaksa ke mode akurasi tinggi, dan absen yang tidak cocok dengan jadwal aktif ditolak. Hasilnya yang tercatat bukan sekadar "hadir", tapi hadir pada shift yang benar, di tempat yang benar, oleh orang yang benar.',
-      en: 'Attendance was the hard part, because three things had to be right at once. The location had to be accurate enough to confirm the employee was actually at the hospital, the face had to be verified so a check-in could not be done on someone\'s behalf, and every check-in had to be matched against that employee\'s shift and schedule. Face detection runs in the browser through MediaPipe, geolocation is forced into high-accuracy mode, and a check-in that does not match the active schedule is rejected. What gets recorded is not simply "present" — it is present on the right shift, in the right place, by the right person.',
-    },
   },
   {
     slug: 'rme',
@@ -175,13 +167,13 @@ export const projects = [
     tech: ['Laravel', 'MySQL', 'Livewire'],
     shortName: { id: 'RME', en: 'EMR' },
     blurb: {
-      id: 'Lapisan web di atas database SIMRS 1.168 tabel, tetap menulis balik ke sana supaya laporan lama tidak rusak.',
-      en: 'A web layer over a 1,168-table SIMRS database, still writing back into it so the existing reports keep working.',
+      id: 'Pencatatan rekam medis elektronik untuk rawat jalan dan rawat inap.',
+      en: 'Electronic medical records for outpatient and inpatient care.',
     },
     title: { id: 'Rekam Medis Elektronik', en: 'Electronic Medical Records' },
     context: {
-      id: 'Permenkes mewajibkan rekam medis elektronik untuk akreditasi. Rumah sakit memakai SIMRS Khanza — SIMRS open source yang dipakai apa adanya — dan antarmukanya dibiarkan utuh. RME ini berdiri sebagai lapisan web terpisah di atas database yang sama dan menulis ke tabel yang sama, supaya alur kerja dan laporan yang sudah berjalan tidak rusak. Pemakainya dokter dan perawat asisten dokter. Cakupannya rawat jalan, rawat inap, dan IGD; yang berjalan sampai sekarang rawat jalan dan rawat inap.',
-      en: 'Ministry regulation made electronic medical records mandatory for accreditation. The hospital runs SIMRS Khanza — an open-source SIMRS used as it comes — and its interface was left untouched. This EMR stands as a separate web layer over the same database, writing into the same tables so the existing workflows and reports keep working. Its users are doctors and the nurses assisting them. It covers outpatient, inpatient and emergency; outpatient and inpatient are what run today.',
+      id: 'Rekam medis elektronik untuk rawat jalan dan rawat inap, dipakai dokter dan perawat asisten dokter. Rumah sakit sudah memakai SIMRS Khanza, jadi RME ini dibuat sebagai aplikasi web terpisah yang menulis ke database yang sama supaya pencatatan dan laporannya tetap menyatu.',
+      en: 'Electronic medical records for outpatient and inpatient care, used by doctors and the nurses assisting them. The hospital already runs SIMRS Khanza, so this was built as a separate web app that writes into the same database, keeping records and reports in one place.',
     },
     built: {
       id: [
@@ -202,16 +194,6 @@ export const projects = [
         'Prescription requests',
         'Discharge summaries',
       ],
-    },
-    // Deliberate boundary, stated so the claim stays exact: this layer raises
-    // the requests, it does not record their outcomes.
-    notMine: {
-      id: 'Hasil laboratorium, hasil radiologi, dan pemberian obat tetap diinput di SIMRS Khanza.',
-      en: 'Laboratory results, radiology results and drug administration are still entered in SIMRS Khanza.',
-    },
-    hard: {
-      id: 'Database SIMRS punya 1.168 tabel tanpa dokumentasi yang memadai, sehingga memetakan data klinis beserta relasi dan constraint-nya lebih mirip rekonstruksi struktur data daripada pekerjaan antarmuka.',
-      en: 'The SIMRS database had 1,168 tables with no usable documentation, so mapping the clinical data with its relations and constraints was closer to reconstructing a schema than to interface work.',
     },
   },
   {
@@ -241,7 +223,6 @@ export const projects = [
       en: 'Staff management with location-based attendance, so presence is recorded against the actual work site.',
     },
     built: { id: [], en: [] },
-    hard: { id: '', en: '' },
   },
   {
     slug: 'aset-kphl',
@@ -267,7 +248,6 @@ export const projects = [
       en: 'Organisational asset management with location and condition tracking, maintenance scheduling and reporting.',
     },
     built: { id: [], en: [] },
-    hard: { id: '', en: '' },
   },
   {
     slug: 'sertifikasi-benih',
@@ -293,7 +273,6 @@ export const projects = [
       en: 'Plant seed certification registration and monitoring, from application through to a digital certificate.',
     },
     built: { id: [], en: [] },
-    hard: { id: '', en: '' },
   },
   {
     slug: 'psb-walisongo',
@@ -334,10 +313,6 @@ export const projects = [
         'Tab-switch detection while the exam is running',
         'Automatic WhatsApp notifications through Fonnte at every stage',
       ],
-    },
-    hard: {
-      id: 'Tiga bagian yang sulitnya berbeda-beda. Skema ujian harus menampung bank soal, sesi, jawaban tiap peserta dan waktu pengerjaan dalam satu struktur yang tetap masuk akal saat banyak peserta mengerjakan bersamaan. Pengawasan tidak mungkin dilakukan manusia satu per satu, jadi perpindahan tab dipakai sebagai sinyal — begitu peserta meninggalkan halaman ujian, kejadian itu tercatat dan bisa ditinjau. Terakhir, notifikasi WhatsApp disambungkan lewat Fonnte di setiap tahapan supaya pendaftar tidak perlu menelepon sekolah hanya untuk bertanya sudah sampai mana.',
-      en: "Three parts, each hard in a different way. The exam schema had to hold the question bank, sessions, each participant's answers and their timing in one structure that still made sense with many people sitting the exam at once. Invigilating each screen by hand was impossible, so a tab switch became the signal — the moment a participant leaves the exam page, it is recorded and can be reviewed. Finally, WhatsApp notifications were wired through Fonnte at every stage, so applicants did not have to phone the school just to ask where things stood.",
     },
   },
 ];

@@ -14,7 +14,7 @@ Dua bentuk, satu identitas, satu sumber data.
 |---|---|---|
 | ≥1024px | Cangkang perangkat lunak: peta isometrik + konsol | Gelap |
 | <1024px | Dokumen teknis: spine tahun + filter sheet | Kertas |
-| `/kerja/<slug>` | Halaman baca, semua lebar | Gelap |
+| `/kerja/<slug>` | Halaman baca, semua lebar | Gelap (diputuskan 2026-09-03) |
 
 Peta bukan satu-satunya jalan ke sebuah sistem. Chip "lewati peta", tabel datar,
 konsol, dan spine mobile semuanya mendarat di halaman baca yang sama.
@@ -185,9 +185,12 @@ halaman baca kertas).
 Konsekuensi: di HP, mengetuk sistem berarti berpindah dari kertas ke gelap.
 Prototipe memang begitu, dan handoff menyebut warnanya final.
 
-**[PERLU KEPUTUSAN]** — ikuti handoff (halaman baca gelap), atau pertahankan
-halaman baca kertas seperti sekarang? Jawaban memengaruhi token, kontras amber,
-dan seluruh komponen `work/`.
+**Diputuskan 2026-09-03: ikut handoff — halaman baca gelap.** Lapis kertas
+tinggal dipakai dokumen mobile. Konsekuensinya seluruh komponen `work/` berpindah
+token: `paper`→`ground`, `ink`→`ground-ink`, `rule`→`ground-rule`, dan
+`amber-ink`→`amber` (di atas gelap kontrasnya 5.33:1, aman). Kartu OG dan
+halaman kontak ikut lapis gelap supaya tidak ada satu halaman kertas yang
+tertinggal sendirian.
 
 Aturan amber tidak berubah dan tidak bisa ditawar: `#C97B3F` hanya di atas
 gelap; di atas kertas `#9C5A28`.

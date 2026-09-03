@@ -1,60 +1,94 @@
 @import "tailwindcss";
 
 @theme {
-  /* Reading layer — cream paper */
-  --color-paper: #F2EDE3;
-  --color-paper-deep: #E7E0D0;
-  --color-ink: #1A1A1A;
-  --color-mute: #6B6B5E;
-  --color-rule: #D9D0BC;
-
-  /* Exploring layer — warm charcoal canvas */
+  /* Dark layer — the shell, the reading pages, contact. Everything except the
+     phone document lives here now. */
   --color-ground: #161A1D;
-  --color-ground-soft: #1F2529;
-  --color-ground-ink: #E8E0D0;
-  --color-ground-mute: #7A8580;
-  --color-ground-rule: #2E3539;
+  --color-ground-deep: #0E1113;
+  --color-surface: #1B2124;
+  --color-surface-raised: #1F2529;
+  --color-surface-plate: #252E33;
+  --color-rule: #2E3539;
+  --color-rule-soft: #1F262A;
+  --color-ink: #E8E0D0;
+  --color-ink-bright: #F2EDE3;
+  --color-muted: #7A8580;
+  --color-muted-deep: #4C555A;
+  --color-body-soft: #B9B2A2;
 
-  /* Shared accent, the thread between both layers */
+  /* Plate stack, bottom to top. Depth on the map is built from these, not
+     from shadows — the design has none. */
+  --color-plate-1: #1B2124;
+  --color-plate-2: #1D2428;
+  --color-plate-3: #20272B;
+  --color-plate-4: #252E33;
+  --color-plate-5: #2C3439;
+  --color-plate-edge-1: #333C41;
+  --color-plate-edge-2: #3A4348;
+  --color-plate-edge-3: #3F484D;
+  --color-plate-edge-4: #4A545A;
+
+  /* Paper layer — the phone document only. */
+  --color-paper: #F2EDE3;
+  --color-paper-deep: #EDE7DA;
+  --color-paper-deeper: #E7E0D0;
+  --color-paper-plate: #E2DBC9;
+  --color-paper-rule: #D9D0BC;
+  --color-paper-rule-soft: #E2DBC9;
+  --color-paper-rule-edge: #C7BEA8;
+  --color-paper-ink: #1A1A1A;
+  --color-paper-ink-soft: #3A3A34;
+  --color-paper-muted: #6B6B5E;
+
+  /* Amber is two colours and always has been. #C97B3F is 5.33:1 on the dark
+     ground but only 2.82:1 on paper, where #9C5A28 (4.9:1) carries it. */
   --color-amber: #C97B3F;
-  --color-amber-soft: #E8B888;
-  /* Amber is only 2.82:1 on paper — this darker one carries text and
-     focus rings on the reading layer, where there is no other mode. */
   --color-amber-ink: #9C5A28;
 
-  --font-display: var(--font-display), Georgia, serif;
-  --font-body: var(--font-body), -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: var(--font-display), system-ui, sans-serif;
+  --font-body: var(--font-body), system-ui, sans-serif;
   --font-mono: var(--font-mono), ui-monospace, monospace;
-  /* Canvas only. The fallback is a monospace on purpose: if the pixel face
-     fails to load, labels should stay narrow rather than reflow the nodes. */
-  --font-pixel: var(--font-pixel), ui-monospace, monospace;
 }
 
 html, body {
-  background: var(--color-paper);
+  background: var(--color-ground);
   color: var(--color-ink);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* The canvas route paints its own ground; body must not show through. */
-body:has(.canvas-root) {
-  background: var(--color-ground);
+/* The phone document is the one paper surface left; the body must not show
+   the dark ground through it. */
+body:has(.paper-doc) {
+  background: var(--color-paper);
+  color: var(--color-paper-ink);
   overscroll-behavior: none;
 }
 
 /* Selection */
 ::selection {
-  background: var(--color-amber-ink);
-  color: var(--color-paper);
+  background: var(--color-amber);
+  color: var(--color-ground);
 }
 
-/* Focus ring */
+/* Focus ring. Radius 0 everywhere else, so none here either. */
 :focus-visible {
-  outline: 2px solid var(--color-amber-ink);
+  outline: 2px solid var(--color-amber);
   outline-offset: 2px;
-  border-radius: 2px;
+}
+
+/* Screen-reader-only, for labels that must exist without being drawn. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* Skip-to-content (keyboard a11y) */
@@ -62,12 +96,11 @@ body:has(.canvas-root) {
   position: absolute;
   left: -9999px;
   top: 0;
-  background: var(--color-amber-ink);
-  color: var(--color-paper);
+  background: var(--color-amber);
+  color: var(--color-ground);
   padding: 0.75rem 1rem;
   z-index: 200;
   font-weight: 600;
-  border-radius: 4px;
   text-decoration: none;
 }
 .skip-link:focus {
@@ -75,7 +108,7 @@ body:has(.canvas-root) {
   top: 1rem;
 }
 
-/* Transitions are decoration; dragging is not. Keep the canvas usable. */
+/* Transitions are decoration; dragging is not. Keep the map usable. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     transition-duration: 0.01ms !important;

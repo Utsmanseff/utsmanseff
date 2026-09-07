@@ -14,13 +14,15 @@ const COPY = {
 
 const ACCESS = ['public', 'internal', 'none'];
 
+// min-h-11 is the 44px thumb target. Padding alone left these at 38px, which
+// no unit test can catch: happy-dom lays nothing out.
 function Chip({ label, active, onClick }) {
   return (
     <button
       type="button"
       aria-pressed={active}
       onClick={onClick}
-      className={`font-mono text-[11px] px-3.5 py-2.5 border transition-colors duration-200 ${
+      className={`font-mono text-[11px] px-3.5 py-2.5 border inline-flex items-center min-h-11 transition-colors duration-200 ${
         active ? 'border-amber text-amber' : 'border-rule text-muted'
       }`}
     >

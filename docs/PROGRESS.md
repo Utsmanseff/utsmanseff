@@ -3,135 +3,165 @@
 > Dibaca di awal sesi baru. Menggantikan catatan kanvas simpul, yang sudah tidak berlaku sejak 2026-09-03.
 
 **Branch:** `portfolio-canvas-redesign` (bercabang dari `main`, belum di-merge)
-**Posisi sekarang:** Task 1 dan 2 dari rencana selesai. **Lanjut di Task 3.**
+**Posisi sekarang:** Rencana `2026-09-03-shell-dan-dokumen.md` **selesai, Task 1–17.**
+Belum di-merge ke `main`, dan belum di-deploy.
 
-## Ke mana porto ini menuju
+## Bentuk sekarang
 
-Kanvas simpul dibuang. Penggantinya dua bentuk di atas satu sumber data:
+Kanvas simpul sudah dihapus dari repo. Yang ada sekarang dua bentuk di atas satu
+sumber data, plus halaman baca:
 
 | Lebar | Bentuk | Warna |
 |-------|--------|-------|
-| ≥1024px | Cangkang perangkat lunak: peta isometrik + konsol perintah | Gelap |
-| <1024px | Dokumen teknis: spine tahun + filter sheet | Kertas |
-| `/kerja/<slug>` | Halaman baca, semua lebar | **Gelap** (berubah dari krem) |
+| ≥1024px, JS hidup, gerak tidak dikurangi | Cangkang: peta isometrik + konsol perintah | Gelap |
+| Selain itu (termasuk tanpa JS) | Dokumen: spine tahun + filter sheet | Kertas |
+| `/kerja/<slug>` | Halaman baca, semua lebar | Gelap |
+| `/kontak` | Halaman kontak | Gelap |
 
-Desainnya datang dari Claude Design dan ada di `docs/design_handoff_porto_utsman/`
-(README + prototipe HTML). Prototipe itu **referensi, bukan kode untuk disalin**.
+Server selalu merender **dokumen**. Cangkang menumpuk di atasnya setelah mount,
+dan hanya kalau ketiga syarat `useShellEligible` terpenuhi.
 
-**Dokumen yang mengikat, urut kepentingan:**
+## Di mana isinya
 
 | Apa | Di mana |
 |-----|---------|
-| Rencana implementasi, 17 task | `docs/superpowers/plans/2026-09-03-shell-dan-dokumen.md` |
+| Data tunggal, 8 project | `src/lib/data/projects.js` |
+| Filter murni (DOM-free) | `src/lib/shell/filters.js` |
+| Tabel perintah konsol | `src/lib/shell/commands.js` |
+| Geometri plate & skala | `src/lib/shell/layout.js` |
+| Kosakata stack | `src/lib/data/tech.js` |
+| Cangkang desktop | `src/components/shell/` |
+| Dokumen HP | `src/components/document/` |
+| Halaman baca | `src/components/work/` |
+| Rencana 17 task (selesai) | `docs/superpowers/plans/2026-09-03-shell-dan-dokumen.md` |
 | Spec desain | `docs/superpowers/specs/2026-09-03-shell-dan-dokumen-design.md` |
-| Seluruh teks yang tampil, dua bahasa, sudah disetujui | `docs/superpowers/notes/2026-09-03-seluruh-isi-tulisan.md` |
-| Keputusan isi + jawaban mentah Utsman | `docs/superpowers/notes/2026-09-03-content-pass.md` |
+| Seluruh teks tampil, dua bahasa | `docs/superpowers/notes/2026-09-03-seluruh-isi-tulisan.md` |
 | Teks yang dibuang, diarsipkan | `docs/superpowers/notes/2026-09-03-arsip-bagian-sulit.md` |
-| Handoff desain | `docs/design_handoff_porto_utsman/README.md` |
 
-## Sudah dikerjakan
-
-- **Task 1 — token & font.** Palet handoff penuh di `globals.css` (lapis gelap,
-  lima lapis plate, lapis `paper-` untuk dokumen HP, dua amber). Fraunces dan
-  Jersey 15 dibuang; sekarang Bricolage Grotesque + Inter + JetBrains Mono.
-  `--font-pixel` hilang, `.sr-only` masuk, radius dicabut dari focus ring.
-- **Task 2 — kosakata stack.** `src/lib/data/tech.js`: `techNames()` (nama unik,
-  urut abjad, tanpa hitungan) dan `techSlug()` (token konsol, `TensorFlow.js` →
-  `tensorflowjs`). Lima test.
-
-Keadaan: **109 test hijau**, `npx eslint src --max-warnings=0` bersih,
+Keadaan: **92 test hijau**, `npx eslint src --max-warnings=0` bersih,
 `npm run build` sukses dengan lima halaman `/kerja/*`.
 
-## Lanjut dari sini
-
-Kerjakan rencana **Task 3 dan seterusnya**, satu task sekali jalan, berhenti
-setiap selesai satu task dan tunggu aba-aba. Urutannya sengaja menaruh yang
-paling berisiko di belakang:
-
-3. Filter murni (`src/lib/shell/filters.js`)
-4. `clientKey` di setiap project — celah data yang ditemukan saat menulis rencana
-5. Tabel perintah (`src/lib/shell/commands.js`)
-6. Geometri plate & skala (`src/lib/shell/layout.js`)
-7. Halaman baca pindah ke lapis gelap, tiga bagian bernomor
-8–9. Dokumen HP: spine tahun, filter sheet, bar bawah
-10. `/` merender dokumen dulu, cangkang menyusul kalau layak
-11–12. Chrome cangkang, tabel datar, panel, log rail
-13. **Peta isometrik** — paling mungkin gagal, sengaja paling akhir
-14. Konsol + papan ketik
-15. Hapus `src/components/canvas/`, `src/lib/canvas/`, `src/lib/data/canvas.js`
-16. Kontak & kartu OG ikut lapis gelap
-17. Dilihat dengan mata sendiri, bukan test
+Jumlah test turun dari 165 ke 92 di Task 15 karena 73 test kanvas ikut dihapus
+bersama kodenya. Itu bukan regresi.
 
 ## Larangan yang tidak bisa ditawar
 
 - **Tidak ada angka jumlah di layar.** Tidak ada "8 sistem", "4 dari 8 tampil",
   atau hitungan pemakaian teknologi. Umpan balik filter cuma kata `TERSARING`.
 - **Tidak ada penanda `langka` / `dasar`.** Stack tampil sebagai daftar nama.
-- **Tidak ada bagian "yang sulit" dan "di luar lingkup"** di halaman baca. Nadanya
-  seperti sidang skripsi; teksnya sudah diarsipkan.
+  `parseCommand('--rare')` sengaja dijawab `unknown`, dan ada test yang menjaga itu.
+- **Tidak ada bagian "yang sulit" dan "di luar lingkup"** di halaman baca.
 - **Tidak ada angka dampak.** Tidak ada persen, tidak ada jumlah pengguna.
 - **HRIS tidak punya payroll atau modul keuangan.** Jangan pernah disebut.
-- **Amber ada dua.** `#C97B3F` hanya di atas gelap (5.33:1); di atas kertas wajib
-  `#9C5A28` (4.9:1).
-- **SIMRS Khanza bukan vendor.** Ia open source dan gratis, dipakai rumah sakit
-  apa adanya. Klaim "sistem vendor" pernah salah tertulis dan sudah dikoreksi.
-- **Tidak ada kalimat headline.** Halaman dibuka identitas, lalu langsung
-  sistemnya. Panel kanan desktop berisi blok catatan, bukan prosa.
+- **Amber ada dua.** `#C97B3F` hanya di atas gelap; di atas kertas wajib
+  `#9C5A28`. Di lapis kertas, `#C97B3F` cuma 2.8:1 — itu sebabnya
+  `document/AccessTick.jsx` ada dan terpisah dari `work/AccessBadge.jsx`.
+- **SIMRS Khanza bukan vendor.** Open source, dipakai apa adanya.
+- **Tidak ada kalimat headline.** Panel kanan desktop berisi blok catatan.
 - **Vitest & ESLint mengecualikan `.claude/**`.** Jangan "diperbaiki".
-- **`meta.siteUrl` satu-satunya sumber URL kanonik.**
+- **`meta.siteUrl` satu-satunya sumber URL kanonik.** Sudah diperiksa: tidak ada
+  URL yang ditulis ulang di tempat lain.
 
 ## Keputusan yang mahal kalau dilupakan
 
 - **Slug tidak berubah.** `rsu-nirwana-web`, `idrg-bridging`, `hris-nirwana`,
-  `rme`, `psb-walisongo`. Slug prototipe (`pendaftaran-ocr` dsb) sengaja ditolak.
-- **RME naik jadi halaman penuh** (2026-09-03). Lima halaman baca, bukan empat.
-- **Prosa berasal dari repo**, bukan dari prototipe — prototipe hanya menyumbang
-  bentuk field `blurb`.
-- **Stack PSB:** `Laravel, JavaScript, MySQL, Fonnte`. Prototipe menulis Livewire;
-  itu keliru.
-- **HRIS memakai TensorFlow.js**, bukan MediaPipe (diganti 2026-09-03). Arsip
-  teks lama masih menyebut MediaPipe dan tidak boleh dipakai apa adanya.
+  `rme`, `psb-walisongo`. Lima halaman baca.
+- **Prosa berasal dari repo**, bukan dari prototipe.
+- **Stack PSB:** `Laravel, JavaScript, MySQL, Fonnte`. Bukan Livewire.
+- **HRIS memakai TensorFlow.js**, bukan MediaPipe. Arsip teks lama masih
+  menyebut MediaPipe dan tidak boleh dipakai apa adanya.
 - **Tiga tahun, bukan empat.** Freelance sejak akhir 2023.
-- **Kontrak gerak terbelah.** Yang digerakkan jari 1:1 tanpa easing; yang bergerak
-  sendiri memudar 700ms `cubic-bezier(.22, 1, .36, 1)`; warna 180ms;
-  `prefers-reduced-motion` memangkas ke 1ms **dan** mendaratkan `/` di tabel datar.
-- **Tanpa JavaScript `/` harus tetap utuh.** Server merender dokumen; cangkang
-  menyusul hanya kalau JS hidup, lebar ≥1024px, dan gerak tidak dikurangi.
+- **Kontrak gerak terbelah.** Yang digerakkan jari 1:1 tanpa easing (grup peta
+  sengaja tidak punya `transition`); yang bergerak sendiri memudar 700ms
+  `cubic-bezier(.22, 1, .36, 1)`; warna 180ms; `prefers-reduced-motion`
+  memangkas ke 1ms **dan** menahan cangkang supaya tidak mount.
+- **Tanpa JavaScript `/` harus tetap utuh.** Sudah diverifikasi lewat `curl`:
+  HTML server memuat delapan sistem dan lima tautan `/kerja/*`.
+- **Satu tautan kembali saja di halaman baca.** Kepala yang memegangnya; kaki
+  dulu punya tautan kedua ke tujuan yang sama, dan dua tautan dengan nama
+  aksesibel identik itu kebisingan di daftar tautan.
+- **`LangSwitcher` tidak punya prop `tone` lagi.** Satu lapis.
 
-## Masih kurang dari user
+## Yang belum dikerjakan
 
+- **Merge ke `main` dan deploy.** Belum dilakukan sama sekali.
 - Screenshot HRIS → `public/assets/img/hris.png`
 - Screenshot PSB → `public/assets/img/psb.png`
 
 Sampai masuk, `image: null` dan halaman menampilkan keadaan kosong yang
-dirancang — bukan gambar stok, bukan kotak abu-abu. Sensor dulu kalau memuat
-data pegawai atau pasien asli. Screenshot RME (`rme1.png`) sudah tersensor dan
-aman.
+dirancang. Sensor dulu kalau memuat data pegawai atau pasien asli.
+
+**Satu ambiguitas spec yang belum diputuskan user.** Spec §7 menulis
+`prefers-reduced-motion` membuat `/` "mendarat di tabel datar, bukan peta",
+sedangkan §2 menulis cangkang hanya menyusul kalau gerak **tidak** dikurangi.
+Implementasi mengikuti §2: gerak dikurangi → dokumen (daftar datar berbasis
+tahun), bukan `FlatTable` di dalam cangkang. Kalau yang dimaksud `FlatTable`,
+`useShellEligible` perlu diubah supaya cangkang tetap mount dengan `view='list'`.
+
+**Kontras label tahun di peta rendah.** `#4C555A` di atas ground ±2.3:1.
+Itu palet handoff, informasinya juga ada di legenda dan rail, jadi dibiarkan —
+tapi belum pernah ditawarkan ke user untuk dinaikkan.
 
 ## Pelajaran yang mahal (jangan diulang)
 
-- **Cache Turbopack menyajikan token basi.** Setelah mengubah `globals.css`, dev
-  server sempat terus mengirim `--color-ink: #1a1a1a` yang lama; reload biasa
-  tidak menolong. Hapus `.next`, jalankan ulang server. Kalau perubahan token
-  "tidak muncul", ini penyebabnya, bukan kodenya.
-- **Regex multi-baris menelan data.** Menghapus properti `hard:` dengan
-  `/hard: \{.*?\n    \},/s` memakan tiga project sekaligus, karena empat project
-  kecil menulisnya dalam satu baris. Hapus properti per baris, dan periksa jumlah
-  entri setelahnya.
-- **Klik sintetis membohongi.** `fireEvent.click` melewati urutan pointer. Bug
-  `setPointerCapture` membuat setiap klik simpul mendarat di latar, dan 86 test
-  tetap hijau.
-- **Kerangka koordinat alat browser.** Saat viewport diemulasi lebih besar dari
-  panel, klik berbasis koordinat meleset. Pakai `ref`, atau samakan ukurannya.
-- **Tab yang tidak dikomposit membekukan rAF.** Di panel browser yang tersembunyi,
-  animasi tidak maju dan `getComputedStyle` melaporkan nilai awal. Baca
-  `element.style` untuk menilai keadaan yang dituju.
-- **`overflow-hidden` tidak menghentikan browser.** Fokus yang pindah ke elemen
-  di luar layar tetap menggulir kotaknya. Apa pun yang harus diam dipasang
-  `fixed`, bukan `absolute` di dalam kotak itu.
+### Tentang kode
+
+- **Cache Turbopack menyajikan token basi.** Setelah mengubah `globals.css`,
+  hapus `.next` dan jalankan ulang server.
+- **Regex multi-baris menelan data.** Hapus properti per baris, lalu hitung
+  ulang jumlah entri. Waktu membuang `position`/`cluster`/`related` di Task 15,
+  yang dihitung: tepat 8+8+8 baris hilang, 8 slug tetap.
+- **`body:has(...)` tidak cukup.** Elemen `html` tetap memakai warna lamanya,
+  jadi ground gelap membayang di bawah dokumen pendek dan di area overscroll.
+  Cat `html` juga.
+- **`1fr` punya `min-width: auto`.** Alamat email menahan panel jadi menggulir
+  ke samping. `min-w-0` di sel yang panjang.
+- **ESLint menolak `setState` di badan `useEffect`.** Untuk mengukur elemen,
+  pakai `ResizeObserver` — laporan pertamanya datang lewat callback, dan ia
+  juga menangkap panel yang berubah ukuran sendiri.
+- **Vitest tidak mau mem-parse JSX dari berkas `.js`.** Next tidak peduli;
+  begitu sebuah route diuji, namanya harus `.jsx`.
+- **`useRouter` butuh mock di setiap berkas test yang merender komponennya**,
+  bukan cuma di test komponen itu sendiri. `Shell.test.jsx` hijau sementara
+  `page.test.jsx` pecah.
+
+### Tentang menguji
+
+- **Klik sintetis membohongi.** `fireEvent.click` melewati urutan pointer.
+- **Assertion substring bisa lolos palsu.** Test `LangSwitcher` memeriksa
+  `className` mengandung `text-ink`, padahal tombol yang tidak aktif punya
+  `hover:text-ink`. Test itu hijau apa pun locale yang aktif. Baca `aria-pressed`,
+  jangan menebak.
+- **happy-dom tidak menata letak.** Ukuran target sentuh hanya ada di browser
+  sungguhan: chip filter 38px lolos semua test sampai diukur di Task 17.
+- **Baca ulang setelah navigasi.** Pembacaan `location.pathname` 900ms setelah
+  klik sempat melaporkan URL lama dan membuat navigasi yang berhasil terlihat
+  seperti bug.
+
+### Tentang alat browser (mahal, berulang)
+
+- **Kerangka koordinat.** Kalau viewport diemulasi lebih besar dari panel, klik
+  berbasis koordinat **maupun** `ref` mendarat di tempat lain — nol event, tanpa
+  error. Samakan ukuran (`preset: desktop`) sebelum menguji interaksi, atau
+  pasang penghitung event untuk membuktikan klik benar-benar mendarat.
+- **Preset `mobile` menggantungkan klik.** Emulasi sentuh membuat `left_click`
+  timeout 30 detik, sementara screenshot, scroll dan JS tetap jalan — persis
+  seperti halaman yang rusak. Uji interaksi di lebar non-sentuh.
+- **`key: "Return"` tidak dikenal**, diam-diam tidak melakukan apa-apa. Pakai
+  `"Enter"`. Nama tombol `/` ditulis `"/"`, bukan `"slash"`.
+- **Badge devtools Next menutupi pojok kiri bawah**, tepat di atas tombol
+  `⌃ FILTER`. Sembunyikan `nextjs-portal` sebelum menguji di sana.
+- **Panel browser ini selalu melaporkan `prefers-reduced-motion: reduce`.**
+  Akibatnya cangkang tidak pernah mount di `/`, dan semua transisi terbaca
+  `1e-05s`. Untuk melihat cangkang, render `Shell` lewat route probe sementara;
+  jangan simpulkan cangkang rusak.
+- **Buffer console lintas sesi.** Error 404 dan WebSocket dari server yang sudah
+  dimatikan tetap muncul di pembacaan berikutnya. Periksa daftar network sebelum
+  mempercayainya.
 
 ## Cara lanjut
 
 1. `git checkout portfolio-canvas-redesign`
-2. `npm test` — harus 109 hijau
-3. Buka rencana, kerjakan Task 3, berhenti setelah selesai
+2. `npm test` — harus 92 hijau
+3. Rencana sudah habis. Yang tersisa: jawab dua pertanyaan terbuka di atas,
+   masukkan dua screenshot, lalu putuskan merge dan deploy.

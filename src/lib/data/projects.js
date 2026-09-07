@@ -1,5 +1,5 @@
-// Every project, flat. Each entry carries its own canvas position, so the
-// canvas and the reading pages are two views over one source.
+// Every project, flat. One source behind every view: the map, the flat table,
+// the phone document and the reading pages.
 //
 // blurb  one line, used wherever a system is listed rather than read: the rail,
 //        the selected panel, the phone spine
@@ -7,8 +7,8 @@
 // There is deliberately no "hard part" field and no scope-boundary field. Both
 // read as defending a thesis rather than describing work; their texts are kept
 // in docs/superpowers/notes/2026-09-03-arsip-bagian-sulit.md.
-// tier   'full'   -> big node, gets a /kerja/[slug] page
-//        'brief'  -> small node, preview panel only
+// tier   'full'   -> big plate, gets a /kerja/[slug] page
+//        'brief'  -> small plate, selected panel only
 // access 'public'   -> anyone can open `site`
 //        'internal' -> `site` exists but needs a login
 //        'none'     -> no live URL at all
@@ -20,12 +20,9 @@ export const projects = [
     clientKey: 'rsu-nirwana',
     year: '2025',
     role: { id: 'Pengembang tunggal', en: 'Sole developer' },
-    cluster: 'nirwana',
     tier: 'full',
     access: 'public',
     site: 'https://rsunirwana.id',
-    position: { x: 560, y: 320 },
-    related: ['rme', 'idrg-bridging'],
     image: '/assets/img/pendaftaran.png',
     tech: ['Laravel', 'Next.js', 'MySQL', 'Google Vision', 'REST API'],
     shortName: { id: 'Pendaftaran OCR', en: 'OCR Registration' },
@@ -62,14 +59,11 @@ export const projects = [
     clientKey: 'rsu-nirwana',
     year: '2025',
     role: { id: 'Pengembang tunggal', en: 'Sole developer' },
-    cluster: 'nirwana',
     tier: 'full',
     access: 'internal',
     site: null,
-    position: { x: 760, y: 250 },
     // No line to `rme`: RSU already links to both, and a straight IDRG-RME
     // line passes through the RSU node, reading as a relation that isn't there.
-    related: [],
     image: '/assets/img/eklaim.png',
     tech: ['Laravel', 'MySQL', 'REST API', 'SOAP'],
     shortName: { id: 'IDRG Bridging', en: 'IDRG Bridging' },
@@ -106,12 +100,9 @@ export const projects = [
     clientKey: 'rsu-nirwana',
     year: '2026',
     role: { id: 'Pengembang tunggal', en: 'Sole developer' },
-    cluster: 'nirwana',
     tier: 'full',
     access: 'internal',
     site: null,
-    position: { x: 520, y: 640 },
-    related: ['rsu-nirwana-web'],
     image: null,
     tech: ['Laravel', 'Livewire', 'Alpine.js', 'MySQL', 'TensorFlow.js'],
     shortName: { id: 'HRIS', en: 'HRIS' },
@@ -158,15 +149,12 @@ export const projects = [
     clientKey: 'rsu-nirwana',
     year: '2025',
     role: { id: 'Pengembang tunggal', en: 'Sole developer' },
-    cluster: 'nirwana',
     // Promoted from 'brief' on 2026-09-03. Its hard part — a 1,168-table schema
     // with no usable documentation — is the strongest technical evidence here,
     // and as a summary-only entry it never surfaced anywhere.
     tier: 'full',
     access: 'internal',
     site: null,
-    position: { x: 400, y: 480 },
-    related: [],
     image: '/assets/img/rme1.png',
     tech: ['Laravel', 'MySQL', 'Livewire'],
     shortName: { id: 'RME', en: 'EMR' },
@@ -206,12 +194,9 @@ export const projects = [
     clientKey: 'bpn',
     year: '2024',
     role: { id: 'Pengembang tunggal', en: 'Sole developer' },
-    cluster: 'gov',
     tier: 'brief',
     access: 'none',
     site: null,
-    position: { x: 1140, y: 400 },
-    related: ['aset-kphl'],
     image: '/assets/img/sigap.jpg',
     tech: ['Laravel', 'Livewire', 'MySQL'],
     shortName: { id: 'SIGAP', en: 'SIGAP' },
@@ -235,12 +220,9 @@ export const projects = [
     clientKey: 'kphl',
     year: '2024',
     role: { id: 'Pengembang tunggal', en: 'Sole developer' },
-    cluster: 'gov',
     tier: 'brief',
     access: 'none',
     site: null,
-    position: { x: 1220, y: 620 },
-    related: ['sertifikasi-benih'],
     image: '/assets/img/aset.jpg',
     tech: ['Laravel', 'Livewire', 'MySQL'],
     shortName: { id: 'Aset KPHL', en: 'KPHL Assets' },
@@ -261,12 +243,9 @@ export const projects = [
     clientKey: 'dinas-pertanian',
     year: '2024',
     role: { id: 'Pengembang tunggal', en: 'Sole developer' },
-    cluster: 'gov',
     tier: 'brief',
     access: 'none',
     site: null,
-    position: { x: 1060, y: 700 },
-    related: [],
     image: '/assets/img/sertifikasi.png',
     tech: ['Laravel', 'Livewire', 'MySQL'],
     shortName: { id: 'Sertifikasi Benih', en: 'Seed Certification' },
@@ -287,12 +266,9 @@ export const projects = [
     clientKey: 'mts-walisongo',
     year: '2026',
     role: { id: 'Pengembang tunggal', en: 'Sole developer' },
-    cluster: 'edu',
     tier: 'full',
     access: 'none',
     site: null,
-    position: { x: 830, y: 810 },
-    related: [],
     image: null,
     tech: ['Laravel', 'JavaScript', 'MySQL', 'Fonnte'],
     shortName: { id: 'PSB Walisongo', en: 'Walisongo Admissions' },
@@ -326,7 +302,8 @@ export const projects = [
 ];
 
 export const fullProjects = projects.filter((p) => p.tier === 'full');
-// What sits behind the canvas's "other work" node.
+// Summary-only systems: they appear everywhere the others do, but have no
+// reading page behind them.
 export const briefProjects = projects.filter((p) => p.tier === 'brief');
 
 export function bySlug(slug) {

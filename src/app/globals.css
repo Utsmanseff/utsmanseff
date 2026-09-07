@@ -58,9 +58,10 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* The phone document is the one paper surface left; the body must not show
-   the dark ground through it. */
-body:has(.paper-doc) {
+/* The phone document is the one paper surface left; neither the body nor the
+   root must show the dark ground through it. Styling body alone left the dark
+   ground painted below a document shorter than the page, and behind overscroll. */
+html:has(.paper-doc), body:has(.paper-doc) {
   background: var(--color-paper);
   color: var(--color-paper-ink);
   overscroll-behavior: none;

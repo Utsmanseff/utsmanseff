@@ -3,16 +3,11 @@
 import { useLocale } from '@/lib/hooks/useLocale';
 import { LOCALES } from '@/lib/i18n/config';
 
-// The switcher stands on both layers, which have opposite grounds. It used to
-// hardcode tokens that no longer exist (`text-forest dark:text-cream`), so it
-// silently inherited the body's dark ink — 1.01:1 against the canvas, invisible.
-export default function LangSwitcher({ tone = 'paper' }) {
+// One layer now, so the switcher no longer takes a tone. It used to hardcode
+// tokens that no longer exist (`text-forest dark:text-cream`), and silently
+// inherited the body's ink — 1.01:1 against the dark ground, invisible.
+export default function LangSwitcher() {
   const { locale, setLocale, t } = useLocale();
-  const active = tone === 'ground' ? 'text-ground-ink' : 'text-ink';
-  const idle =
-    tone === 'ground'
-      ? 'text-ground-mute hover:text-ground-ink'
-      : 'text-mute hover:text-ink';
 
   return (
     <div
@@ -26,15 +21,13 @@ export default function LangSwitcher({ tone = 'paper' }) {
             type="button"
             onClick={() => setLocale(loc)}
             className={`px-1 transition-colors ${
-              locale === loc ? `${active} font-bold` : idle
+              locale === loc ? 'text-ink font-bold' : 'text-muted hover:text-ink'
             }`}
             aria-pressed={locale === loc}
           >
             {loc}
           </button>
-          {i < LOCALES.length - 1 && (
-            <span className={tone === 'ground' ? 'text-ground-mute' : 'text-mute'}>/</span>
-          )}
+          {i < LOCALES.length - 1 && <span className="text-muted">/</span>}
         </span>
       ))}
     </div>

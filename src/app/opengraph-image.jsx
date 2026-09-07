@@ -27,7 +27,7 @@ export default async function OG() {
           flexDirection: 'column',
           justifyContent: 'space-between',
           padding: '80px',
-          fontFamily: 'serif',
+          fontFamily: 'sans-serif',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>

@@ -6,10 +6,16 @@ const LABEL = {
   none: { id: 'Tidak ada URL publik', en: 'No public URL' },
 };
 
-export default function AccessBadge({ access, locale, tone = 'paper' }) {
-  const border = tone === 'ground' ? 'border-ground-rule text-ground-mute' : 'border-rule text-mute';
+// One layer now, so the badge no longer takes a tone: only public earns amber.
+const TONE = {
+  public: 'border-amber text-amber',
+  internal: 'border-rule text-muted',
+  none: 'border-dashed border-rule text-muted',
+};
+
+export default function AccessBadge({ access, locale }) {
   return (
-    <span className={`font-mono text-[10px] uppercase tracking-wide border px-2 py-1 rounded-sm ${border}`}>
+    <span className={`font-mono text-[10px] uppercase tracking-wide border px-2 py-1 ${TONE[access]}`}>
       {LABEL[access][locale]}
     </span>
   );

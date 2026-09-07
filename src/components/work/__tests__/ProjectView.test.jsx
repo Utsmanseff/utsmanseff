@@ -54,9 +54,23 @@ describe('ProjectView', () => {
     expect(links[0]).toHaveAttribute('href', '/kerja/idrg-bridging');
   });
 
-  it('always offers a way back to the canvas', () => {
+  it('always offers a way back to all systems', () => {
     render(<ProjectView project={project} prev={null} next={null} />);
-    expect(screen.getByRole('link', { name: /Kembali ke peta/ })).toHaveAttribute('href', '/');
+    expect(screen.getByRole('link', { name: /SEMUA SISTEM/ })).toHaveAttribute('href', '/');
+  });
+
+  it('numbers its three sections and links back to all systems', () => {
+    render(<ProjectView project={project} prev={null} next={null} />);
+    expect(screen.getByText('01 KONTEKS')).toBeInTheDocument();
+    expect(screen.getByText('02 YANG DIBANGUN')).toBeInTheDocument();
+    expect(screen.getByText('03 STACK')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /SEMUA SISTEM/ })).toBeInTheDocument();
+  });
+
+  it('paints on the dark layer, not on paper', () => {
+    const { container } = render(<ProjectView project={project} prev={null} next={null} />);
+    expect(container.querySelector('.paper-doc')).toBeNull();
+    expect(container.innerHTML).not.toMatch(/text-amber-ink|bg-paper/);
   });
 
 

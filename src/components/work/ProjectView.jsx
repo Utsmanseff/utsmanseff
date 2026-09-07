@@ -1,6 +1,5 @@
 "use client";
 
-import Link from 'next/link';
 import { useLocale } from '@/lib/hooks/useLocale';
 import Tag from '@/components/ui/Tag';
 import FadeIn from '@/components/ui/FadeIn';
@@ -10,11 +9,14 @@ import PaperHeader from '@/components/work/PaperHeader';
 import WorkFooterNav from '@/components/work/WorkFooterNav';
 
 const COPY = {
-  built: { id: 'Apa yang saya bangun', en: 'What I built' },
-  stack: { id: 'Stack', en: 'Stack' },
+  context: { id: '01 KONTEKS', en: '01 CONTEXT' },
+  built: { id: '02 YANG DIBANGUN', en: '02 BUILT' },
+  stack: { id: '03 STACK', en: '03 STACK' },
   visit: { id: 'Coba langsung ↗', en: 'Try it live ↗' },
-  back: { id: 'Kembali ke peta', en: 'Back to the map' },
 };
+
+// Sections are numbered because the page is read as a record, not as an essay.
+const SECTION = 'font-mono text-[10px] uppercase tracking-[.12em] text-muted mt-14 mb-4';
 
 export default function ProjectView({ project, prev, next }) {
   const { locale } = useLocale();
@@ -25,16 +27,17 @@ export default function ProjectView({ project, prev, next }) {
 
       <FadeIn as="article">
         {/* 1 — head */}
-        <div className="font-mono text-[11px] uppercase tracking-wider text-mute">
+        <div className="font-mono text-[11px] uppercase tracking-wider text-muted">
           {project.client} · {project.year} · {project.role[locale]}
         </div>
-        <h1 className="font-display text-4xl sm:text-5xl leading-tight mt-3 mb-4">
+        <h1 className="font-display text-[28px] sm:text-[44px] leading-[1.15] font-extrabold tracking-[-.035em] mt-3 mb-4">
           {project.title[locale]}
         </h1>
         <AccessBadge access={project.access} locale={locale} />
 
         {/* 2 — context */}
-        <p className="text-base leading-relaxed text-ink/85 mt-8 mb-10">
+        <h2 className={SECTION}>{COPY.context[locale]}</h2>
+        <p className="text-base leading-relaxed text-body-soft mb-10">
           {project.context[locale]}
         </p>
 
@@ -42,23 +45,17 @@ export default function ProjectView({ project, prev, next }) {
         <ScreenshotBlock src={project.image} alt={project.title[locale]} locale={locale} />
 
         {/* 4 — what I built */}
-        <h2 className="font-mono text-[11px] uppercase tracking-wider text-amber-ink mt-14 mb-4">
-          {COPY.built[locale]}
-        </h2>
+        <h2 className={SECTION}>{COPY.built[locale]}</h2>
         <ul className="flex flex-col gap-2">
           {project.built[locale].map((item) => (
-            <li key={item} className="text-sm leading-relaxed text-ink/85 pl-4 border-l border-rule">
+            <li key={item} className="text-sm leading-relaxed text-body-soft pl-4 border-l border-rule">
               {item}
             </li>
           ))}
         </ul>
 
-
-
         {/* 5 — stack */}
-        <h2 className="font-mono text-[11px] uppercase tracking-wider text-amber-ink mt-14 mb-4">
-          {COPY.stack[locale]}
-        </h2>
+        <h2 className={SECTION}>{COPY.stack[locale]}</h2>
         <div className="flex flex-wrap gap-2">
           {project.tech.map((t) => (
             <Tag key={t}>{t}</Tag>
@@ -71,20 +68,13 @@ export default function ProjectView({ project, prev, next }) {
             href={project.site}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block font-mono text-xs border border-amber-ink text-amber-ink px-4 py-2 rounded-sm mt-12 hover:bg-amber-ink hover:text-paper transition-colors duration-500"
+            className="inline-block font-mono text-xs border border-amber text-amber px-4 py-2 mt-12 hover:bg-amber hover:text-ground transition-colors duration-500"
           >
             {COPY.visit[locale]}
           </a>
         )}
 
         <WorkFooterNav prev={prev} next={next} locale={locale} />
-
-        <Link
-          href="/"
-          className="inline-block font-mono text-[11px] text-mute mt-10 hover:text-amber-ink transition-colors duration-500"
-        >
-          ← {COPY.back[locale]}
-        </Link>
       </FadeIn>
     </div>
   );

@@ -11,10 +11,10 @@ export default function WorkFooterNav({ prev, next, locale }) {
       <div>
         {prev && (
           <Link href={`/kerja/${prev.slug}`} className="group block">
-            <span className="font-mono text-[10px] uppercase tracking-wider text-mute">
+            <span className="font-mono text-[10px] uppercase tracking-wider text-muted">
               {COPY.prev[locale]}
             </span>
-            <span className="block font-display text-lg group-hover:text-amber-ink transition-colors duration-500">
+            <span className="block font-display text-lg group-hover:text-amber transition-colors duration-500">
               {prev.shortName[locale]}
             </span>
           </Link>
@@ -23,10 +23,10 @@ export default function WorkFooterNav({ prev, next, locale }) {
       <div className="text-right">
         {next && (
           <Link href={`/kerja/${next.slug}`} className="group block">
-            <span className="font-mono text-[10px] uppercase tracking-wider text-mute">
+            <span className="font-mono text-[10px] uppercase tracking-wider text-muted">
               {COPY.next[locale]}
             </span>
-            <span className="block font-display text-lg group-hover:text-amber-ink transition-colors duration-500">
+            <span className="block font-display text-lg group-hover:text-amber transition-colors duration-500">
               {next.shortName[locale]}
             </span>
           </Link>

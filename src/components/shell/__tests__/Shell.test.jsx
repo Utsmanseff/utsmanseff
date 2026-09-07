@@ -1,8 +1,10 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent, within } from '@testing-library/react';
 import { LocaleProvider } from '@/lib/hooks/useLocale';
 import Shell from '@/components/shell/Shell';
 import { projects } from '@/lib/data/projects';
+
+vi.mock('next/navigation', () => ({ useRouter: () => ({ push: vi.fn() }) }));
 
 const renderShell = () =>
   render(<Shell systems={projects} locale="id" />, { wrapper: LocaleProvider });
@@ -57,5 +59,37 @@ describe('Shell', () => {
     renderShell();
     fireEvent.click(screen.getByRole('button', { name: 'client:bpn' }));
     expect(screen.getByText('$ filter client:bpn')).toBeInTheDocument();
+  });
+
+  it('runs a typed command and logs it exactly like a chip', () => {
+    renderShell();
+    const input = screen.getByLabelText(/konsol/i);
+    fireEvent.change(input, { target: { value: 'filter client:bpn' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    expect(screen.getByText('$ filter client:bpn')).toBeInTheDocument();
+  });
+
+  it('says why a summary-only system will not open', () => {
+    renderShell();
+    const input = screen.getByLabelText(/konsol/i);
+    fireEvent.change(input, { target: { value: 'open sigap' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    expect(screen.getByText(/ringkasan saja · tidak ada halaman/i)).toBeInTheDocument();
+  });
+
+  it('reports an unknown command without pretending it worked', () => {
+    renderShell();
+    const input = screen.getByLabelText(/konsol/i);
+    fireEvent.change(input, { target: { value: 'deploy' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    expect(screen.getByText(/tidak dikenal · coba help/i)).toBeInTheDocument();
+  });
+
+  it('clears the filters on Escape', () => {
+    renderShell();
+    fireEvent.click(screen.getByRole('button', { name: 'client:bpn' }));
+    const input = screen.getByLabelText(/konsol/i);
+    fireEvent.keyDown(input, { key: 'Escape' });
+    expect(screen.getByRole('button', { name: 'client:bpn' })).toHaveAttribute('aria-pressed', 'false');
   });
 });

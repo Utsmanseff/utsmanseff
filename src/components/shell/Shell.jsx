@@ -1,19 +1,27 @@
 "use client";
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { meta } from '@/lib/data/meta';
+import { useLocale } from '@/lib/hooks/useLocale';
 import { EMPTY_FILTERS, isShown, toggleFilter, isFiltering } from '@/lib/shell/filters';
+import { parseCommand, findSystem } from '@/lib/shell/commands';
 import TopBar from './TopBar';
 import StatusBar from './StatusBar';
 import FlatTable from './FlatTable';
 import SelectedPanel from './SelectedPanel';
 import LogRail from './LogRail';
 import MapScene from './MapScene';
+import Console from './Console';
 
 export default function Shell({ systems, locale }) {
+  const { setLocale } = useLocale();
+  const router = useRouter();
   const [view, setView] = useState('map');
   const [selected, setSelected] = useState(null);
   const [filters, setFilters] = useState(EMPTY_FILTERS);
   const [log, setLog] = useState([{ text: '$ ls systems', kind: 'command' }]);
+  const [cmd, setCmd] = useState('');
 
   // Ten lines, oldest dropped. The log is a record of intent, not a report:
   // it echoes what was asked for and never counts what came back.
@@ -29,13 +37,51 @@ export default function Shell({ systems, locale }) {
     say('$ reset', 'command');
   };
 
+  const RESULT = {
+    noPage: { id: '  ringkasan saja · tidak ada halaman', en: '  summary only · no page' },
+    unknown: { id: '  tidak dikenal · coba help', en: '  unknown · try help' },
+    noMatch: { id: '  tidak ada yang cocok', en: '  no match' },
+    help: {
+      id: '  ls · open [nama] · filter [k:v] · reset · view iso/flat · lang id/en',
+      en: '  ls · open [name] · filter [k:v] · reset · view iso/flat · lang id/en',
+    },
+    contact: `  ${meta.email} · ${meta.whatsapp}`,
+  };
+
+  const run = (raw) => {
+    const intent = parseCommand(raw);
+    setCmd('');
+    if (intent.action === 'none') return;
+
+    if (intent.action === 'filter') { applyFilter(intent.key, intent.value); return; }
+    if (intent.action === 'reset') { resetFilters(); return; }
+    if (intent.action === 'view') { setView(intent.view); say(`$ view ${intent.view === 'map' ? 'iso' : 'flat'}`, 'command'); return; }
+    if (intent.action === 'lang') { setLocale(intent.lang); say(`$ lang ${intent.lang}`, 'command'); return; }
+    if (intent.action === 'list') { say('$ ls systems', 'command'); return; }
+    if (intent.action === 'help') { say('$ help', 'command'); say(RESULT.help[locale], 'result'); return; }
+    if (intent.action === 'contact') { say('$ contact', 'command'); say(RESULT.contact, 'result'); return; }
+
+    if (intent.action === 'open') {
+      const found = findSystem(systems, intent.query);
+      say(`$ open ${intent.query}`, 'command');
+      if (!found) { say(RESULT.noMatch[locale], 'result'); return; }
+      setSelected(found.slug);
+      if (found.tier !== 'full') { say(RESULT.noPage[locale], 'result'); return; }
+      router.push(`/kerja/${found.slug}`);
+      return;
+    }
+
+    say(`$ ${intent.input}`, 'command');
+    say(RESULT.unknown[locale], 'result');
+  };
+
   const dimmed = new Set(systems.filter((s) => !isShown(s, filters)).map((s) => s.slug));
   const years = systems.map((s) => Number(s.year));
   const span = `${Math.min(...years)}–${Math.max(...years)}`;
   const current = systems.find((s) => s.slug === selected) ?? null;
 
   return (
-    <div data-testid="shell" className="h-[100dvh] grid grid-rows-[auto_1fr_34px] overflow-hidden bg-ground">
+    <div data-testid="shell" className="h-[100dvh] grid grid-rows-[auto_1fr_44px_34px] overflow-hidden bg-ground">
       <TopBar
         locale={locale}
         view={view}
@@ -74,6 +120,14 @@ export default function Shell({ systems, locale }) {
         )}
         <SelectedPanel system={current} locale={locale} span={span} />
       </div>
+
+      <Console
+        locale={locale}
+        value={cmd}
+        onChange={setCmd}
+        onRun={run}
+        onEscape={resetFilters}
+      />
 
       <StatusBar locale={locale} />
     </div>

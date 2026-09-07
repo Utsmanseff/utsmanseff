@@ -3,6 +3,9 @@ import { render, screen } from '@testing-library/react';
 import Home from '@/app/page';
 import { LocaleProvider } from '@/lib/hooks/useLocale';
 
+// Shell reaches for the app router; this test renders it for real.
+vi.mock('next/navigation', () => ({ useRouter: () => ({ push: vi.fn() }) }));
+
 const eligible = vi.hoisted(() => ({ value: false }));
 vi.mock('@/lib/hooks/useShellEligible', () => ({
   useShellEligible: () => eligible.value,

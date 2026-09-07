@@ -7,6 +7,7 @@ import StatusBar from './StatusBar';
 import FlatTable from './FlatTable';
 import SelectedPanel from './SelectedPanel';
 import LogRail from './LogRail';
+import MapScene from './MapScene';
 
 export default function Shell({ systems, locale }) {
   const [view, setView] = useState('map');
@@ -63,7 +64,13 @@ export default function Shell({ systems, locale }) {
             onSelect={setSelected}
           />
         ) : (
-          <div className="min-h-0" />
+          <MapScene
+            systems={systems}
+            locale={locale}
+            selected={selected}
+            dimmed={dimmed}
+            onSelect={setSelected}
+          />
         )}
         <SelectedPanel system={current} locale={locale} span={span} />
       </div>

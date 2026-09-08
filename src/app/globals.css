@@ -67,6 +67,58 @@ html:has(.paper-doc), body:has(.paper-doc) {
   overscroll-behavior: none;
 }
 
+/* Scrollbar. Yang bawaan Windows adalah satu-satunya elemen di layar yang tidak
+   mengikuti palet dan satu-satunya yang punya sudut membulat — 15px, dengan
+   tombol panah di kedua ujungnya.
+   Sengaja samar: thumb #2E3539 di atas ground #161A1D berkontras 1.4:1, dan
+   memang tidak dimaksudkan terbaca sampai kursor mendekat. Ia indikator posisi,
+   bukan kontrol — menggulir tetap lewat roda, keyboard dan sentuh.
+   180ms adalah laju warna yang dipakai seluruh cangkang; aturan
+   prefers-reduced-motion di bawah memangkasnya tanpa tambahan apa pun. */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Tombol panah di kedua ujung batang. Bagian paling ribut dari scrollbar
+   Windows, dan tidak ada padanannya di desain ini. */
+::-webkit-scrollbar-button {
+  display: none;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-rule);
+  border-radius: 0;
+  transition: background-color 180ms;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-muted-deep);
+}
+
+/* Firefox tidak mengenal ::-webkit-scrollbar sama sekali. Ia tidak punya hover
+   dan tidak menerima lebar dalam piksel, jadi ia dapat versi yang lebih kasar
+   dari hal yang sama.
+   Penjaganya bukan gaya penulisan, ia wajib: diukur di Chrome 148, elemen yang
+   punya `scrollbar-color` mengabaikan seluruh blok ::-webkit-scrollbar-nya —
+   8px yang diminta jadi 10px, diam-diam, tanpa error. Chrome menjawab
+   `selector(::-webkit-scrollbar)` dengan true, jadi ia melewati blok ini;
+   Firefox menjawab false dan mendapatkannya. */
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-rule) transparent;
+  }
+}
+
 /* Selection */
 ::selection {
   background: var(--color-amber);

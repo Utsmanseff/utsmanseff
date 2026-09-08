@@ -102,14 +102,19 @@ describe('Shell', () => {
 });
 
 describe('Shell · what the URL decides', () => {
-  it('offers a way back to the gate', () => {
-    // The back button already covers a visitor who came through the gate. This
-    // is for the one who was handed a link straight to /sistem and has no
-    // history to go back through.
+  it('offers a way back, and says so', () => {
+    // For the visitor handed a link straight to /sistem, who has no history to
+    // go back through. It names itself rather than hiding in the wordmark.
     renderShell();
-    // Exact: the status bar's github link reads `.../Utsmanseff`, and a loose
-    // match would pick up both.
-    expect(screen.getByRole('link', { name: 'UTSMAN' })).toHaveAttribute('href', '/');
+    expect(screen.getByRole('link', { name: 'KEMBALI' })).toHaveAttribute('href', '/');
+  });
+
+  it('leaves the wordmark as plain text', () => {
+    // One destination, one control. The wordmark was the way back before this
+    // button existed, and two links to `/` in one bar is one too many.
+    renderShell();
+    expect(screen.queryByRole('link', { name: 'UTSMAN' })).toBeNull();
+    expect(screen.getByText('UTSMAN')).toBeInTheDocument();
   });
 
   it('writes the view it switched to into the URL', () => {

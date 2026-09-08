@@ -1,10 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { meta } from '@/lib/data/meta';
 import { techNames } from '@/lib/data/tech';
-
-const EASE = 'cubic-bezier(.22, 1, .36, 1)';
 
 const COPY = {
   label: { id: 'Gerbang', en: 'Gate' },
@@ -62,10 +60,24 @@ function GateButton({ primary = false, onClick, children }) {
   );
 }
 
-export default function Gate({ systems, locale, calm, leaving = false, onEnter }) {
+export default function Gate({ systems, locale, calm, onEnter }) {
   const gateRef = useRef(null);
   const years = systems.map((s) => Number(s.year));
   const span = `${Math.min(...years)}–${Math.max(...years)}`;
+
+  // Where each door leads. `wantList` null means "no opinion" — the two buttons
+  // have one, everything else defers to what the visitor asked the OS for.
+  // URLSearchParams does the escaping; a letter like `&` would otherwise cut the
+  // query in half.
+  // Memoised because the key listener below depends on it, and a fresh function
+  // every render would tear that listener down and rebuild it every render too.
+  const destination = useCallback((wantList, seed) => {
+    const params = new URLSearchParams();
+    if (wantList ?? calm) params.set('tampilan', 'datar');
+    if (seed) params.set('ketik', seed);
+    const query = params.toString();
+    return query ? `/sistem?${query}` : '/sistem';
+  }, [calm]);
 
   // The console below takes typing. A visitor who lands and types `filter`
   // straight away must not lose the f, so the key that opens the gate is handed
@@ -77,18 +89,18 @@ export default function Gate({ systems, locale, calm, leaving = false, onEnter }
       if (e.ctrlKey || e.metaKey || e.altKey) return;
       if (e.key === 'Enter' || e.key === 'Escape') {
         e.preventDefault();
-        onEnter(null, null);
+        onEnter(destination(null, null));
         return;
       }
       if (e.key.length !== 1) return;
       // The console is focused a moment from now, and without this the browser
       // delivers this very keystroke to it as well — the letter arrives twice.
       e.preventDefault();
-      onEnter(null, e.key === ' ' ? null : e.key);
+      onEnter(destination(null, e.key === ' ' ? null : e.key));
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [onEnter]);
+  }, [onEnter, destination]);
 
   // Cursor-driven, so it follows 1:1 with no transition — the same side of the
   // motion contract as dragging the map. Transform only: touching left/top here
@@ -131,12 +143,7 @@ export default function Gate({ systems, locale, calm, leaving = false, onEnter }
       role="group"
       aria-label={COPY.label[locale]}
       className="absolute inset-0 z-50 bg-ground overflow-hidden"
-      style={{
-        transition: `opacity 700ms ${EASE}`,
-        opacity: leaving ? 0 : 1,
-        pointerEvents: leaving ? 'none' : undefined,
-      }}
-      onWheel={(e) => { if (e.deltaY > 0) onEnter(null, null); }}
+      onWheel={(e) => { if (e.deltaY > 0) onEnter(destination(null, null)); }}
     >
       <div className="absolute inset-y-0 right-0 w-[56%] pointer-events-none" aria-hidden="true">
         {PLATES.map((p, i) => (
@@ -158,8 +165,8 @@ export default function Gate({ systems, locale, calm, leaving = false, onEnter }
       </div>
 
       <div className="relative h-full flex flex-col justify-center px-16 max-w-[720px]">
-        {/* Not an h1. The flat table underneath already owns the page's heading,
-            and the gate is something you pass through, not something you read. */}
+        {/* Not an h1. The name is a doorplate, not the heading of a document —
+            the heading belongs to the systems, and they live at /sistem. */}
         <p className="font-display font-extrabold text-[64px] leading-none tracking-[-.03em] text-ink-bright m-0">
           {meta.name}
         </p>
@@ -176,10 +183,10 @@ export default function Gate({ systems, locale, calm, leaving = false, onEnter }
         </p>
 
         <div className="flex gap-3 mt-8">
-          <GateButton onClick={() => onEnter('map', null)} primary>
+          <GateButton onClick={() => onEnter(destination(false, null))} primary>
             {COPY.map[locale]}
           </GateButton>
-          <GateButton onClick={() => onEnter('list', null)}>
+          <GateButton onClick={() => onEnter(destination(true, null))}>
             {COPY.list[locale]}
           </GateButton>
         </div>

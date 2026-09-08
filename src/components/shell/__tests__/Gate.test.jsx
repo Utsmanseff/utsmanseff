@@ -41,10 +41,18 @@ describe('Gate', () => {
   it('offers two doors, and each one names where it goes', () => {
     const { onEnter } = renderGate();
     fireEvent.click(screen.getByRole('button', { name: /PETA/ }));
-    expect(onEnter).toHaveBeenCalledWith('map', null);
+    expect(onEnter).toHaveBeenCalledWith('/sistem');
 
     fireEvent.click(screen.getByRole('button', { name: /DAFTAR/ }));
-    expect(onEnter).toHaveBeenCalledWith('list', null);
+    expect(onEnter).toHaveBeenCalledWith('/sistem?tampilan=datar');
+  });
+
+  it('takes the map door to the map even for a reduced-motion visitor', () => {
+    // The default is the flat table for them; the button is how they say
+    // otherwise, and it has to outrank the default.
+    const { onEnter } = renderGate({ calm: true });
+    fireEvent.click(screen.getByRole('button', { name: /PETA/ }));
+    expect(onEnter).toHaveBeenCalledWith('/sistem');
   });
 
   it('keeps the arrow out of the accessible name', () => {
@@ -59,41 +67,49 @@ describe('Gate', () => {
     expect(screen.getByRole('button', { name: /SEE SYSTEMS · MAP/ })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /SEE SYSTEMS · LIST/ })).toBeInTheDocument();
   });
-
-  it('fades out when it is told it is leaving', () => {
-    const { rerender } = renderGate();
-    expect(screen.getByTestId('gate')).toHaveStyle({ opacity: '1' });
-
-    rerender(
-      <Gate systems={projects} locale="id" calm={false} leaving onEnter={vi.fn()} />,
-    );
-    expect(screen.getByTestId('gate')).toHaveStyle({ opacity: '0' });
-  });
 });
 
 describe('Gate · dismissal', () => {
   it('closes on Enter, using the default view', () => {
     const { onEnter } = renderGate();
     fireEvent.keyDown(window, { key: 'Enter' });
-    expect(onEnter).toHaveBeenCalledWith(null, null);
+    expect(onEnter).toHaveBeenCalledWith('/sistem');
+  });
+
+  it('sends a reduced-motion visitor to the flat table by default', () => {
+    const { onEnter } = renderGate({ calm: true });
+    fireEvent.keyDown(window, { key: 'Enter' });
+    expect(onEnter).toHaveBeenCalledWith('/sistem?tampilan=datar');
   });
 
   it('closes on Escape', () => {
     const { onEnter } = renderGate();
     fireEvent.keyDown(window, { key: 'Escape' });
-    expect(onEnter).toHaveBeenCalledWith(null, null);
+    expect(onEnter).toHaveBeenCalledWith('/sistem');
   });
 
-  it('closes on a letter and hands that letter on to the console', () => {
+  it('carries the letter it swallowed in the URL', () => {
     const { onEnter } = renderGate();
     fireEvent.keyDown(window, { key: 'f' });
-    expect(onEnter).toHaveBeenCalledWith(null, 'f');
+    expect(onEnter).toHaveBeenCalledWith('/sistem?ketik=f');
+  });
+
+  it('escapes a letter that would break the query', () => {
+    const { onEnter } = renderGate();
+    fireEvent.keyDown(window, { key: '&' });
+    expect(onEnter).toHaveBeenCalledWith('/sistem?ketik=%26');
+  });
+
+  it('carries the letter alongside the view a reduced-motion visitor gets', () => {
+    const { onEnter } = renderGate({ calm: true });
+    fireEvent.keyDown(window, { key: 'f' });
+    expect(onEnter).toHaveBeenCalledWith('/sistem?tampilan=datar&ketik=f');
   });
 
   it('does not treat a space as a letter worth keeping', () => {
     const { onEnter } = renderGate();
     fireEvent.keyDown(window, { key: ' ' });
-    expect(onEnter).toHaveBeenCalledWith(null, null);
+    expect(onEnter).toHaveBeenCalledWith('/sistem');
   });
 
   it('swallows the keystroke it hands on, so the letter arrives once', () => {
@@ -103,7 +119,7 @@ describe('Gate · dismissal', () => {
     // it never performs the default text insertion.
     const { onEnter } = renderGate();
     expect(fireEvent.keyDown(window, { key: 'f' })).toBe(false);
-    expect(onEnter).toHaveBeenCalledWith(null, 'f');
+    expect(onEnter).toHaveBeenCalledWith('/sistem?ketik=f');
   });
 
   it('does not swallow Tab — the browser still needs it', () => {
@@ -133,7 +149,7 @@ describe('Gate · dismissal', () => {
   it('closes when the visitor scrolls down', () => {
     const { onEnter } = renderGate();
     fireEvent.wheel(screen.getByTestId('gate'), { deltaY: 40 });
-    expect(onEnter).toHaveBeenCalledWith(null, null);
+    expect(onEnter).toHaveBeenCalledWith('/sistem');
   });
 
   it('stays put when the visitor scrolls up', () => {

@@ -46,48 +46,45 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useGatePassed } from '@/lib/hooks/useGatePassed';
 
-// Every render's value, in order. The first one is the one that has to match
-// what the server rendered.
-function renderSeen() {
-  const seen = [];
-  const view = renderHook(() => {
-    const state = useGatePassed();
-    seen.push(state.passed);
-    return state;
-  });
-  return { seen, ...view };
-}
-
 beforeEach(() => {
   window.sessionStorage.clear();
   vi.restoreAllMocks();
 });
 
 describe('useGatePassed', () => {
-  it('is false on the very first render even when the flag is already stored', () => {
+  it('carries the flag a tab already holds, on the first render', () => {
     window.sessionStorage.setItem('gate', '1');
-    const { seen } = renderSeen();
-    expect(seen[0]).toBe(false);
-    expect(seen[seen.length - 1]).toBe(true);
+    const { result } = renderHook(() => useGatePassed());
+    expect(result.current.passed).toBe(true);
   });
 
   it('stays false when nothing is stored', () => {
-    const { seen } = renderSeen();
-    expect(seen.every((v) => v === false)).toBe(true);
+    const { result } = renderHook(() => useGatePassed());
+    expect(result.current.passed).toBe(false);
   });
 
   it('remembers the gate once it is passed', () => {
-    const { result } = renderSeen();
+    const { result } = renderHook(() => useGatePassed());
     act(() => result.current.pass());
     expect(result.current.passed).toBe(true);
     expect(window.sessionStorage.getItem('gate')).toBe('1');
+  });
+
+  it('does not leak between tabs — a cleared store means the gate returns', () => {
+    window.sessionStorage.setItem('gate', '1');
+    const first = renderHook(() => useGatePassed());
+    expect(first.result.current.passed).toBe(true);
+
+    window.sessionStorage.clear();
+    const second = renderHook(() => useGatePassed());
+    expect(second.result.current.passed).toBe(false);
   });
 
   it('survives storage that refuses to be read', () => {
     vi.spyOn(window.sessionStorage, 'getItem').mockImplementation(() => {
       throw new Error('denied');
     });
-    const { result } = renderSeen();
+    const { result } = renderHook(() => useGatePassed());
     expect(result.current.passed).toBe(false);
   });
 
@@ -95,7 +92,7 @@ describe('useGatePassed', () => {
     vi.spyOn(window.sessionStorage, 'setItem').mockImplementation(() => {
       throw new Error('denied');
     });
-    const { result } = renderSeen();
+    const { result } = renderHook(() => useGatePassed());
     act(() => result.current.pass());
     expect(result.current.passed).toBe(true);
   });
@@ -117,7 +114,7 @@ Buat `src/lib/hooks/useGatePassed.js`:
 ```js
 "use client";
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 const KEY = 'gate';
 
@@ -133,13 +130,11 @@ function read() {
 }
 
 export function useGatePassed() {
-  // False on the first render, always. Reading storage while initialising state
-  // makes the client's first HTML disagree with the server's, and React says so.
-  const [passed, setPassed] = useState(false);
-
-  useEffect(() => {
-    if (read()) setPassed(true);
-  }, []);
+  // Read while initialising, not in an effect. The shell never renders on the
+  // server — page.jsx hands back the paper document until useMediaQuery says the
+  // viewport is wide — so the gate never hydrates, and there is no server HTML
+  // here for a first render to disagree with.
+  const [passed, setPassed] = useState(read);
 
   const pass = useCallback(() => {
     setPassed(true);
@@ -160,7 +155,7 @@ export function useGatePassed() {
 npx vitest run src/lib/hooks/__tests__/useGatePassed.test.jsx
 ```
 
-Expected: PASS, 5 test.
+Expected: PASS, 6 test.
 
 - [ ] **Step 5: Commit**
 

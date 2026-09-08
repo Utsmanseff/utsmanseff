@@ -84,9 +84,13 @@ Dibungkus `try/catch` — sebagian browser melempar saat `sessionStorage` diakse
 di mode privat. Kalau melempar, hasilnya `false`: gerbang muncul, dan itu
 keadaan yang aman.
 
-Nilai awal `passed` **wajib `false` di render pertama**, lalu disetel di
-`useEffect`. Membacanya saat inisialisasi state membuat HTML server dan klien
-berbeda, dan React akan mengeluh hydration mismatch.
+Dibaca saat inisialisasi state, bukan di `useEffect`. Versi pertama spec ini
+menyuruh sebaliknya, dengan alasan hydration mismatch — alasan itu salah:
+`Shell` tidak pernah dirender di server, karena `page.jsx` mengembalikan dokumen
+kertas sampai `useMediaQuery` bilang viewport lebar, dan `getServerSnapshot`-nya
+`false`. Gerbang tidak pernah ikut hidrasi, jadi tidak ada HTML server yang bisa
+dibantah. Membacanya di efek juga ditolak ESLint (`react-hooks/set-state-in-effect`),
+pelajaran yang sudah tercatat di `PROGRESS.md`.
 
 ### Yang tidak berubah
 
@@ -249,8 +253,9 @@ keadaan nyata, bukan pintu belakang. Gerbang sendiri diuji di berkas baru saat
 
 `src/lib/hooks/__tests__/useGatePassed.test.jsx`
 
-- render pertama selalu `false`, walau `sessionStorage` sudah berisi `'1'`
-- setelah efek jalan, `true` kalau `sessionStorage.gate === '1'`
+- `true` sejak render pertama kalau `sessionStorage.gate === '1'`
+- `false` kalau tidak ada apa-apa yang tersimpan
+- store yang dikosongkan berarti gerbang kembali
 - `pass()` menulis `'1'` dan menyetel `true`
 - `sessionStorage` yang melempar menghasilkan `false`, bukan crash
 

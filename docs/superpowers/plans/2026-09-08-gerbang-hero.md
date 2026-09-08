@@ -1081,38 +1081,39 @@ describe('Gate · the drifting plates', () => {
   const flushFrames = () =>
     vi.stubGlobal('requestAnimationFrame', (cb) => { cb(); return 1; });
 
+  afterEach(() => vi.unstubAllGlobals());
+
+  const plate = (i) =>
+    screen.getByTestId('gate').querySelector(`[data-gate-plate="${i}"]`);
+
   it('moves the plates by different amounts as the pointer moves', () => {
     flushFrames();
     renderGate();
-    const gate = screen.getByTestId('gate');
-    const first = gate.querySelector('[data-gate-plate="0"]');
-    const second = gate.querySelector('[data-gate-plate="1"]');
+    fireEvent.mouseMove(screen.getByTestId('gate'), { clientX: 900, clientY: 300 });
 
-    fireEvent.mouseMove(gate, { clientX: 900, clientY: 300 });
-
-    expect(first.style.transform).toMatch(/translate\(/);
-    expect(first.style.transform).not.toBe(second.style.transform);
+    expect(plate(0).style.transform).toMatch(/translate\(/);
+    expect(plate(0).style.transform).not.toBe(plate(1).style.transform);
   });
 
   it('keeps skewing them, so they stay the same shape as the map plates', () => {
     flushFrames();
     renderGate();
-    const gate = screen.getByTestId('gate');
-    fireEvent.mouseMove(gate, { clientX: 900, clientY: 300 });
-    expect(gate.querySelector('[data-gate-plate="0"]').style.transform)
-      .toMatch(/skewY\(-16deg\)/);
+    fireEvent.mouseMove(screen.getByTestId('gate'), { clientX: 900, clientY: 300 });
+    expect(plate(0).style.transform).toMatch(/skewY\(-16deg\)/);
+  });
+
+  it('gives them no transition — a cursor is dragged, and dragging is 1:1', () => {
+    flushFrames();
+    renderGate();
+    expect(plate(0).style.transition).toBe('');
   });
 
   it('does not move them at all for a visitor who asked for less motion', () => {
     flushFrames();
     renderGate({ calm: true });
-    const gate = screen.getByTestId('gate');
-    const plate = gate.querySelector('[data-gate-plate="0"]');
-    const before = plate.style.transform;
-
-    fireEvent.mouseMove(gate, { clientX: 900, clientY: 300 });
-
-    expect(plate.style.transform).toBe(before);
+    const before = plate(0).style.transform;
+    fireEvent.mouseMove(screen.getByTestId('gate'), { clientX: 900, clientY: 300 });
+    expect(plate(0).style.transform).toBe(before);
   });
 });
 ```
@@ -1123,7 +1124,7 @@ describe('Gate · the drifting plates', () => {
 npx vitest run src/components/shell/__tests__/Gate.test.jsx
 ```
 
-Expected: FAIL pada dua test pertama — `transform` tetap `skewY(-16deg)` tanpa `translate(`.
+Expected: FAIL pada satu test — `transform` tetap `skewY(-16deg)` tanpa `translate(`. Tiga sisanya hijau justru karena belum ada gerakan sama sekali; mereka baru menjaga sesuatu setelah implementasinya masuk.
 
 - [ ] **Step 3: Tulis implementasinya**
 
@@ -1201,7 +1202,7 @@ Dan tambahkan ini di badan komponen, setelah efek keyboard:
 npx vitest run src/components/shell/__tests__/Gate.test.jsx
 ```
 
-Expected: PASS, 21 test.
+Expected: PASS, 22 test.
 
 - [ ] **Step 5: Commit**
 

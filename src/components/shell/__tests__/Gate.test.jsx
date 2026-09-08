@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import Gate from '@/components/shell/Gate';
 import { projects } from '@/lib/data/projects';
@@ -133,5 +133,47 @@ describe('Gate · dismissal', () => {
     const { onEnter } = renderGate();
     fireEvent.wheel(screen.getByTestId('gate'), { deltaY: -40 });
     expect(onEnter).not.toHaveBeenCalled();
+  });
+});
+
+describe('Gate · the drifting plates', () => {
+  // The component throttles with rAF. Running the callback straight away makes
+  // the assertion about the wiring, not about frame timing.
+  const flushFrames = () =>
+    vi.stubGlobal('requestAnimationFrame', (cb) => { cb(); return 1; });
+
+  afterEach(() => vi.unstubAllGlobals());
+
+  const plate = (i) =>
+    screen.getByTestId('gate').querySelector(`[data-gate-plate="${i}"]`);
+
+  it('moves the plates by different amounts as the pointer moves', () => {
+    flushFrames();
+    renderGate();
+    fireEvent.mouseMove(screen.getByTestId('gate'), { clientX: 900, clientY: 300 });
+
+    expect(plate(0).style.transform).toMatch(/translate\(/);
+    expect(plate(0).style.transform).not.toBe(plate(1).style.transform);
+  });
+
+  it('keeps skewing them, so they stay the same shape as the map plates', () => {
+    flushFrames();
+    renderGate();
+    fireEvent.mouseMove(screen.getByTestId('gate'), { clientX: 900, clientY: 300 });
+    expect(plate(0).style.transform).toMatch(/skewY\(-16deg\)/);
+  });
+
+  it('gives them no transition — a cursor is dragged, and dragging is 1:1', () => {
+    flushFrames();
+    renderGate();
+    expect(plate(0).style.transition).toBe('');
+  });
+
+  it('does not move them at all for a visitor who asked for less motion', () => {
+    flushFrames();
+    renderGate({ calm: true });
+    const before = plate(0).style.transform;
+    fireEvent.mouseMove(screen.getByTestId('gate'), { clientX: 900, clientY: 300 });
+    expect(plate(0).style.transform).toBe(before);
   });
 });

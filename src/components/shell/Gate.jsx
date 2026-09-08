@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { meta } from '@/lib/data/meta';
 import { techNames } from '@/lib/data/tech';
 
@@ -16,14 +16,17 @@ const COPY = {
 
 // Four empty plates, the same shape as the ones behind the gate. The gate
 // promises the contents rather than decorating over them.
+// `pull` is how far each one answers the cursor, in pixels. Four different
+// numbers is the whole effect: equal ones read as a single sheet sliding.
 const PLATES = [
-  { width: 168, height: 100, right: 172, top: 44, bg: '#1D2428', edge: '#333C41' },
-  { width: 196, height: 116, right: 78, top: 132, bg: '#252E33', edge: '#4A545A' },
-  { width: 146, height: 88, right: 200, top: 244, bg: '#27302F', edge: '#C97B3F' },
-  { width: 112, height: 68, right: 24, top: 28, bg: '#1D2428', edge: '#333C41' },
+  { width: 168, height: 100, right: 172, top: 44, bg: '#1D2428', edge: '#333C41', pull: 34 },
+  { width: 196, height: 116, right: 78, top: 132, bg: '#252E33', edge: '#4A545A', pull: 20 },
+  { width: 146, height: 88, right: 200, top: 244, bg: '#27302F', edge: '#C97B3F', pull: 46 },
+  { width: 112, height: 68, right: 24, top: 28, bg: '#1D2428', edge: '#333C41', pull: 12 },
 ];
 
 export default function Gate({ systems, locale, calm, leaving = false, onEnter }) {
+  const gateRef = useRef(null);
   const years = systems.map((s) => Number(s.year));
   const span = `${Math.min(...years)}–${Math.max(...years)}`;
 
@@ -50,8 +53,41 @@ export default function Gate({ systems, locale, calm, leaving = false, onEnter }
     return () => window.removeEventListener('keydown', onKey);
   }, [onEnter]);
 
+  // Cursor-driven, so it follows 1:1 with no transition — the same side of the
+  // motion contract as dragging the map. Transform only: touching left/top here
+  // would relayout four elements every frame. A visitor who asked for less
+  // motion gets no listener at all, rather than a listener whose work is thrown
+  // away.
+  useEffect(() => {
+    if (calm) return undefined;
+    const gate = gateRef.current;
+    if (!gate) return undefined;
+
+    let frame = null;
+    const onMove = (e) => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = null;
+        const box = gate.getBoundingClientRect();
+        const x = (e.clientX - box.left) / (box.width || 1) - 0.5;
+        const y = (e.clientY - box.top) / (box.height || 1) - 0.5;
+        gate.querySelectorAll('[data-gate-plate]').forEach((node) => {
+          const { pull } = PLATES[Number(node.dataset.gatePlate)];
+          node.style.transform = `skewY(-16deg) translate(${(-x * pull).toFixed(1)}px, ${(-y * pull * 0.6).toFixed(1)}px)`;
+        });
+      });
+    };
+
+    gate.addEventListener('mousemove', onMove);
+    return () => {
+      gate.removeEventListener('mousemove', onMove);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, [calm]);
+
   return (
     <div
+      ref={gateRef}
       data-testid="gate"
       role="group"
       aria-label={COPY.label[locale]}

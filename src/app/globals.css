@@ -119,6 +119,38 @@ html:has(.paper-doc), body:has(.paper-doc) {
   }
 }
 
+/* Lapis kertas. Warna yang sama perannya, dari palet kertas. Selektornya
+   menyebut `html` juga, bukan cuma `body` dan `.paper-doc`: elemen html tidak
+   ikut berubah lewat body saja, dan itu sudah pernah membuat ground gelap
+   membayang di bawah dokumen pendek. */
+/* Baris `html:has(...)::-webkit-scrollbar-thumb` tanpa spasi itu yang membawa
+   scrollbar jendela. Dengan spasi ia cuma mengenai scrollbar milik anak-anak
+   html, dan batang yang sebenarnya dilihat pengunjung — yang digambar dari
+   elemen akar — tetap memakai warna gelap. Diukur: html #2E3539 sementara body
+   dan isi dokumen sudah #D9D0BC. */
+html:has(.paper-doc)::-webkit-scrollbar-thumb,
+html:has(.paper-doc) ::-webkit-scrollbar-thumb,
+body:has(.paper-doc)::-webkit-scrollbar-thumb,
+body:has(.paper-doc) ::-webkit-scrollbar-thumb,
+.paper-doc ::-webkit-scrollbar-thumb {
+  background: var(--color-paper-rule);
+}
+
+html:has(.paper-doc)::-webkit-scrollbar-thumb:hover,
+html:has(.paper-doc) ::-webkit-scrollbar-thumb:hover,
+body:has(.paper-doc)::-webkit-scrollbar-thumb:hover,
+body:has(.paper-doc) ::-webkit-scrollbar-thumb:hover,
+.paper-doc ::-webkit-scrollbar-thumb:hover {
+  background: var(--color-paper-rule-edge);
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  html:has(.paper-doc),
+  html:has(.paper-doc) * {
+    scrollbar-color: var(--color-paper-rule) transparent;
+  }
+}
+
 /* Selection */
 ::selection {
   background: var(--color-amber);

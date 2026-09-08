@@ -155,7 +155,7 @@ export function useGatePassed() {
 npx vitest run src/lib/hooks/__tests__/useGatePassed.test.jsx
 ```
 
-Expected: PASS, 6 test.
+Expected: PASS, 7 test.
 
 - [ ] **Step 5: Commit**
 
@@ -233,6 +233,16 @@ describe('Gate', () => {
     expect(screen.getByRole('button', { name: /SEE SYSTEMS · MAP/ })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /SEE SYSTEMS · LIST/ })).toBeInTheDocument();
   });
+
+  it('fades out when it is told it is leaving', () => {
+    const { rerender } = renderGate();
+    expect(screen.getByTestId('gate')).toHaveStyle({ opacity: '1' });
+
+    rerender(
+      <Gate systems={projects} locale="id" calm={false} leaving onEnter={vi.fn()} />,
+    );
+    expect(screen.getByTestId('gate')).toHaveStyle({ opacity: '0' });
+  });
 });
 ```
 
@@ -257,14 +267,15 @@ import { techNames } from '@/lib/data/tech';
 const EASE = 'cubic-bezier(.22, 1, .36, 1)';
 
 const COPY = {
+  label: { id: 'Gerbang', en: 'Gate' },
   role: { id: 'FULLSTACK DEVELOPER', en: 'FULLSTACK DEVELOPER' },
   map: { id: 'LIHAT SISTEM · PETA →', en: 'SEE SYSTEMS · MAP →' },
   list: { id: 'LIHAT SISTEM · DAFTAR →', en: 'SEE SYSTEMS · LIST →' },
   hint: { id: '↓ ATAU TEKAN APA SAJA', en: '↓ OR PRESS ANY KEY' },
 };
 
-// Four empty plates, same shape as the ones behind the gate. The gate promises
-// the contents rather than decorating over them.
+// Four empty plates, the same shape as the ones behind the gate. The gate
+// promises the contents rather than decorating over them.
 const PLATES = [
   { width: 168, height: 100, right: 172, top: 44, bg: '#1D2428', edge: '#333C41' },
   { width: 196, height: 116, right: 78, top: 132, bg: '#252E33', edge: '#4A545A' },
@@ -280,7 +291,7 @@ export default function Gate({ systems, locale, calm, leaving = false, onEnter }
     <div
       data-testid="gate"
       role="group"
-      aria-label={locale === 'id' ? 'Gerbang' : 'Gate'}
+      aria-label={COPY.label[locale]}
       className="absolute inset-0 z-50 bg-ground overflow-hidden"
       style={{
         transition: `opacity 700ms ${EASE}`,
@@ -308,8 +319,8 @@ export default function Gate({ systems, locale, calm, leaving = false, onEnter }
       </div>
 
       <div className="relative h-full flex flex-col justify-center px-16 max-w-[720px]">
-        {/* Not an h1. The flat table underneath already owns the page's
-            heading, and the gate is something you pass through, not read. */}
+        {/* Not an h1. The flat table underneath already owns the page's heading,
+            and the gate is something you pass through, not something you read. */}
         <p className="font-display font-extrabold text-[64px] leading-none tracking-[-.03em] text-ink-bright m-0">
           {meta.name}
         </p>
@@ -318,7 +329,10 @@ export default function Gate({ systems, locale, calm, leaving = false, onEnter }
           {COPY.role[locale]} · {meta.location[locale]} · {span}
         </p>
 
-        <p data-testid="gate-stack" className="font-mono text-[12px] leading-[1.9] text-body-soft mt-4 mb-0 max-w-[560px]">
+        <p
+          data-testid="gate-stack"
+          className="font-mono text-[12px] leading-[1.9] text-body-soft mt-4 mb-0 max-w-[560px]"
+        >
           {techNames(systems).join(' · ')}
         </p>
 
@@ -348,7 +362,7 @@ export default function Gate({ systems, locale, calm, leaving = false, onEnter }
 }
 ```
 
-Catatan: `calm` sudah ada di daftar prop tapi belum dipakai — Task 6 yang memakainya. ESLint tidak mengeluhkan prop yang tidak dipakai di JS biasa, tapi kalau ternyata mengeluh, biarkan `calm` keluar dari destructuring sampai Task 6 dan tambahkan di sana.
+Catatan: `calm` sudah ada di daftar prop tapi belum dipakai — Task 6 yang memakainya. ESLint tidak mengeluhkannya.
 
 - [ ] **Step 4: Jalankan, pastikan hijau**
 
@@ -493,7 +507,7 @@ Dan tambahkan handler roda di elemen terluar — ubah pembuka `<div data-testid=
 npx vitest run src/components/shell/__tests__/Gate.test.jsx
 ```
 
-Expected: PASS, 15 test.
+Expected: PASS, 16 test.
 
 - [ ] **Step 5: Commit**
 
@@ -1047,7 +1061,7 @@ Dan tambahkan ini di badan komponen, setelah efek keyboard:
 npx vitest run src/components/shell/__tests__/Gate.test.jsx
 ```
 
-Expected: PASS, 18 test.
+Expected: PASS, 19 test.
 
 - [ ] **Step 5: Commit**
 

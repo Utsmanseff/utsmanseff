@@ -209,12 +209,14 @@ dulu `/` selalu mendarat di dokumen kertas — plate tidak bergeser sama sekali,
   `"Enter"`. Nama tombol `/` ditulis `"/"`, bukan `"slash"`.
 - **Badge devtools Next menutupi pojok kiri bawah**, tepat di atas tombol
   `⌃ FILTER`. Sembunyikan `nextjs-portal` sebelum menguji di sana.
-- **`prefers-reduced-motion` ikut setelan OS, bukan cuma browser.** Sepanjang
-  sesi 2026-09-08 panel browser melaporkan `reduce` dan cangkang tidak pernah
-  mount di `/` — penyebabnya "Animation effects" Windows yang mati
-  (`HKCU:\Control Panel\Desktop\UserPreferencesMask`, bit `0x02` pada byte 0).
-  Semua transisi juga terbaca `1e-05s`. Sebelum menyimpulkan cangkang rusak,
-  periksa setelan itu, dan render `Shell` lewat route probe sementara.
+- **`prefers-reduced-motion` ikut setelan OS, bukan cuma browser.** Sumbernya
+  "Animation effects" Windows (`HKCU:\Control Panel\Desktop\UserPreferencesMask`,
+  bit `0x02` pada byte 0; `0x9E` menyala, `0x90` mati). Waktu mati, semua
+  transisi terbaca `1e-05s`. Periksa setelan itu sebelum menyimpulkan ada yang
+  rusak — dan itu perlu **PowerShell**, bukan Bash: `$m = (Get-ItemProperty ...)`
+  langsung parse error di Bash.
+  Dulu setelan ini menahan cangkang supaya tidak mount; sejak 2026-09-08 tidak
+  lagi. Sekarang ia cuma memilih view awal.
 - **Buffer console lintas sesi.** Error 404 dan WebSocket dari server yang sudah
   dimatikan tetap muncul di pembacaan berikutnya. Periksa daftar network sebelum
   mempercayainya.

@@ -12,6 +12,19 @@
 
 **Dari spec:** `docs/superpowers/specs/2026-09-09-perpindahan-naik-turun-design.md`
 
+> **Selesai 2026-09-09, 156 test hijau, 24 berkas.** Task 1 mengubah rancangannya:
+> `slideTo` **tidak** memanggil `startViewTransition` — memotret DOM lama dua kali
+> — dan yang menganimasikan adalah boundary `<ViewTransition>` di root layout,
+> yang rencana ini tidak pernah menyebutkannya. Ditambahkan di Task 5. Nama
+> ekspornya `ViewTransition`, bukan `unstable_ViewTransition`.
+>
+> Tiga test di rencana ini menuntut `dataset.nav` terisi tanpa memasang API
+> tiruan; di happy-dom itu mustahil, karena `slideTo` sengaja tidak menandai arah
+> waktu tidak ada yang akan membacanya. Diperbaiki di tempat.
+>
+> **Animasinya belum pernah dilihat berjalan** — panel browser melaporkan
+> `document.hidden === true` dan Chrome membatalkan tiap transisi.
+
 ---
 
 ## Yang perlu diketahui sebelum mulai
@@ -46,7 +59,7 @@ ketiganya menentukan isi Task 2.
 **Files:** tidak ada yang diubah di langkah 1–3. `next.config.mjs` diubah di
 langkah 4, dan itu satu-satunya berkas yang tersentuh task ini.
 
-- [ ] **Step 1: Apakah peramban ini punya API-nya**
+- [x] **Step 1: Apakah peramban ini punya API-nya**
 
 Emulasi 1280×800, `navigate` ke `http://localhost:3000/`, lalu lewat
 `javascript_tool`:
@@ -61,7 +74,7 @@ Emulasi 1280×800, `navigate` ke `http://localhost:3000/`, lalu lewat
 Kalau `hasApi` `false`, berhenti — seluruh rencana ini tidak bisa diverifikasi
 di sini. Laporkan dan tanya Utsman.
 
-- [ ] **Step 2: Apakah `router.push` di dalam `startViewTransition` memotret DOM baru**
+- [x] **Step 2: Apakah `router.push` di dalam `startViewTransition` memotret DOM baru**
 
 Ini pertanyaan intinya. Kalau React merender belakangan, potret "sesudah" diambil
 sebelum halaman barunya ada, dan yang teranimasi layar kosong.
@@ -95,7 +108,7 @@ lewat jalur ini.
 Baca `url` **sekali lagi** di panggilan terpisah sebelum menyimpulkan navigasinya
 gagal.
 
-- [ ] **Step 3: Apakah potret barunya berisi halaman baru, bukan layar kosong**
+- [x] **Step 3: Apakah potret barunya berisi halaman baru, bukan layar kosong**
 
 `navigate` kembali ke `/`, lalu ulangi Step 2 dengan satu tambahan: sebelum
 `t.finished`, baca apa yang ada di layar.
@@ -121,7 +134,7 @@ link.remove();
 - `midway.shellPresent === false` → React belum merender waktu potret diambil;
   **flag Next diperlukan**, lanjut ke Step 4.
 
-- [ ] **Step 4: Kalau flag diperlukan — nyalakan dan ukur lagi**
+- [x] **Step 4: Kalau flag diperlukan — nyalakan dan ukur lagi**
 
 Lewati langkah ini kalau Step 3 menjawab `true`.
 
@@ -154,13 +167,13 @@ Kalau `experimental.viewTransition` tidak dikenal Next 16.1.3, terminal akan
 mengatakannya. **Laporkan apa adanya dan berhenti** — jangan menebak nama opsi
 lain.
 
-- [ ] **Step 5: Catat hasilnya**
+- [x] **Step 5: Catat hasilnya**
 
 Tulis di ringkasan task: `hasApi`, isi `animations` beserta durasi, nilai
 `midway.shellPresent`, dan keputusan mana yang diambil — manual atau flag. Angka
 ini yang dikutip Task 6.
 
-- [ ] **Step 6: Commit, hanya kalau `next.config.mjs` berubah**
+- [x] **Step 6: Commit, hanya kalau `next.config.mjs` berubah**
 
 ```bash
 git add next.config.mjs
@@ -177,7 +190,7 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 - Create: `src/lib/nav/slideTo.js`
 - Test: `src/lib/nav/__tests__/slideTo.test.js`
 
-- [ ] **Step 1: Tulis test yang gagal**
+- [x] **Step 1: Tulis test yang gagal**
 
 happy-dom tidak punya `document.startViewTransition`, jadi jalur cadangan adalah
 yang default di sini — dan itu justru jalur yang paling penting dijaga.
@@ -244,7 +257,7 @@ describe('slideTo', () => {
 });
 ```
 
-- [ ] **Step 2: Jalankan, pastikan gagal**
+- [x] **Step 2: Jalankan, pastikan gagal**
 
 ```bash
 npx vitest run src/lib/nav
@@ -252,7 +265,7 @@ npx vitest run src/lib/nav
 
 Expected: FAIL — `Failed to resolve import "@/lib/nav/slideTo"`.
 
-- [ ] **Step 3: Tulis implementasinya**
+- [x] **Step 3: Tulis implementasinya**
 
 ```js
 // Everything this project knows about the View Transitions API lives here.
@@ -285,7 +298,7 @@ export function slideTo(router, href, direction) {
 }
 ```
 
-- [ ] **Step 4: Jalankan, pastikan hijau**
+- [x] **Step 4: Jalankan, pastikan hijau**
 
 ```bash
 npx vitest run src/lib/nav
@@ -293,7 +306,7 @@ npx vitest run src/lib/nav
 
 Expected: PASS, 6 test.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/lib/nav
@@ -310,7 +323,7 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 - Modify: `src/components/shell/TopBar.jsx`
 - Modify: `src/components/shell/__tests__/Shell.test.jsx`
 
-- [ ] **Step 1: Ubah test lebih dulu**
+- [x] **Step 1: Ubah test lebih dulu**
 
 Di `Shell.test.jsx`, ganti test `offers a way back to the gate` — ia sekarang
 menjaga tautan yang sedang dicopot:
@@ -336,7 +349,7 @@ menjaga tautan yang sedang dicopot:
   });
 ```
 
-- [ ] **Step 2: Jalankan, pastikan gagal**
+- [x] **Step 2: Jalankan, pastikan gagal**
 
 ```bash
 npx vitest run src/components/shell/__tests__/Shell.test.jsx
@@ -344,7 +357,7 @@ npx vitest run src/components/shell/__tests__/Shell.test.jsx
 
 Expected: FAIL pada ketiga test itu.
 
-- [ ] **Step 3: Ubah `TopBar`**
+- [x] **Step 3: Ubah `TopBar`**
 
 `UTSMAN` kembali jadi `<span>`, dan tautan baru berdiri di sebelahnya. Tautan,
 bukan tombol: klik tengah dan "buka di tab baru" ikut gratis, dan pembaca layar
@@ -420,7 +433,7 @@ export default function TopBar({ locale, view, filtering, onView }) {
 }
 ```
 
-- [ ] **Step 4: Jalankan seluruh test**
+- [x] **Step 4: Jalankan seluruh test**
 
 ```bash
 npx vitest run
@@ -430,13 +443,13 @@ Expected: PASS. Kalau ada test lain yang mencari `link` bernama `UTSMAN`,
 perbaiki di sini — bukan dengan melonggarkan assertion, tapi dengan mengejar
 maksud aslinya.
 
-- [ ] **Step 5: Lint**
+- [x] **Step 5: Lint**
 
 ```bash
 npx eslint src --max-warnings=0
 ```
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/components/shell
@@ -453,7 +466,7 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 - Modify: `src/app/page.jsx`
 - Modify: `src/app/__tests__/page.test.jsx`
 
-- [ ] **Step 1: Tulis test yang gagal**
+- [x] **Step 1: Tulis test yang gagal**
 
 Di `page.test.jsx`, tambahkan di dalam `describe('/')`:
 
@@ -475,7 +488,7 @@ Tambahkan juga pembersihan di `beforeEach` berkas itu:
   delete document.documentElement.dataset.nav;
 ```
 
-- [ ] **Step 2: Jalankan, pastikan gagal**
+- [x] **Step 2: Jalankan, pastikan gagal**
 
 ```bash
 npx vitest run src/app/__tests__/page.test.jsx
@@ -483,7 +496,7 @@ npx vitest run src/app/__tests__/page.test.jsx
 
 Expected: FAIL — `dataset.nav` masih `undefined`.
 
-- [ ] **Step 3: Ubah `page.jsx`**
+- [x] **Step 3: Ubah `page.jsx`**
 
 Satu baris. `Gate.jsx` tidak disentuh: kelima pemicunya sudah menyalurkan ke
 prop `onEnter` ini.
@@ -498,13 +511,13 @@ Dan impornya:
 import { slideTo } from '@/lib/nav/slideTo';
 ```
 
-- [ ] **Step 4: Jalankan, pastikan hijau**
+- [x] **Step 4: Jalankan, pastikan hijau**
 
 ```bash
 npx vitest run
 ```
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/app
@@ -520,7 +533,7 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 **Files:**
 - Modify: `src/app/globals.css`
 
-- [ ] **Step 1: Tulis CSS-nya**
+- [x] **Step 1: Tulis CSS-nya**
 
 Sisipkan tepat sebelum blok `@media (prefers-reduced-motion: reduce)` yang sudah
 ada di ujung berkas.
@@ -591,11 +604,11 @@ html[data-nav="down"]::view-transition-new(root) {
 }
 ```
 
-- [ ] **Step 2: Minta Utsman membuang cache dan menjalankan ulang server**
+- [x] **Step 2: Minta Utsman membuang cache dan menjalankan ulang server**
 
 Ctrl+C, `Remove-Item -Recurse -Force .next`, `npm run dev`. Tunggu konfirmasi.
 
-- [ ] **Step 3: Ukur arah naik**
+- [x] **Step 3: Ukur arah naik**
 
 Emulasi 1280×800, `navigate` ke `http://localhost:3000/sistem`, lalu:
 
@@ -619,7 +632,7 @@ Expected: `nav` **"up"**, dan `running` memuat `nav-leave-down` pada
 Kalau `running` kosong, animasinya mungkin sudah selesai sebelum dibaca —
 kecilkan jeda 120ms, jangan menyimpulkan gagal dari satu pembacaan.
 
-- [ ] **Step 4: Ukur arah turun**
+- [x] **Step 4: Ukur arah turun**
 
 Baca ulang untuk memastikan sudah di `/`, lalu:
 
@@ -637,7 +650,7 @@ const running = document.getAnimations().map(a => ({
 
 Expected: `nav` **"down"**, `nav-leave-up` dan `nav-enter-from-bottom`.
 
-- [ ] **Step 5: Ukur reduced-motion**
+- [x] **Step 5: Ukur reduced-motion**
 
 Setelan ini ikut OS, bukan peramban. Periksa dulu keadaannya lewat **PowerShell**
 (bukan Bash — `$m = (Get-ItemProperty ...)` langsung parse error di sana):
@@ -653,11 +666,11 @@ Utsman mematikan "Animation effects" di Settings, atau lewati langkah ini dan
 
 Waktu mati, ulangi Step 3 dan periksa `duration` terbaca sangat kecil, bukan 700.
 
-- [ ] **Step 6: Kembalikan viewport**
+- [x] **Step 6: Kembalikan viewport**
 
 `resize_window` `{ preset: "desktop" }`.
 
-- [ ] **Step 7: Test dan lint**
+- [x] **Step 7: Test dan lint**
 
 ```bash
 npx vitest run
@@ -669,7 +682,7 @@ Expected: hijau, jumlahnya tidak berubah dari Task 4 — CSS tidak menambah test
 npx eslint src --max-warnings=0
 ```
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add src/app/globals.css
@@ -686,7 +699,7 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 - Modify: `docs/superpowers/specs/2026-09-09-perpindahan-naik-turun-design.md`
 - Modify: `docs/PROGRESS.md`
 
-- [ ] **Step 1: Koreksi spec**
+- [x] **Step 1: Koreksi spec**
 
 Dua hal:
 
@@ -698,7 +711,7 @@ Dua hal:
    hasil Task 1 yang sebenarnya: apakah cara manual cukup atau flag diperlukan,
    dan angka dari `document.getAnimations()`.
 
-- [ ] **Step 2: Perbarui `docs/PROGRESS.md`**
+- [x] **Step 2: Perbarui `docs/PROGRESS.md`**
 
 Empat tempat:
 
@@ -715,7 +728,7 @@ Empat tempat:
 Kalau Step 5 di Task 5 dilewati, tulis di PROGRESS bahwa reduced-motion untuk
 pseudo-element itu **belum pernah diukur**. Jangan diam-diam.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add docs

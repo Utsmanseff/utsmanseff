@@ -95,40 +95,44 @@ Seluruh sentuhan ke API View Transitions tinggal di **satu berkas** di
 `src/lib/nav/`. Ia mengekspor satu fungsi:
 
 ```
-slideTo(href, direction)   // direction: 'up' | 'down'
+slideTo(router, href, direction)   // direction: 'up' | 'down'
 ```
 
-`TopBar` dan `Gate` memanggil fungsi itu. Keduanya tidak pernah menyentuh
-`startViewTransition`, `unstable_ViewTransition`, atau `dataset.nav` langsung.
+`TopBar` dan `src/app/page.jsx` memanggil fungsi itu. Keduanya tidak pernah
+menyentuh `dataset.nav` langsung. Satu-satunya pemakaian API di luar berkas itu
+adalah boundary `<ViewTransition>` di root layout — dan itu memang tempatnya,
+karena ia harus membungkus pohon.
 
-Alasannya bukan kerapian: API-nya masih `unstable_` dan namanya bisa berubah
-waktu Next dinaikkan versinya. Satu berkas berarti satu tempat yang perlu
-dibetulkan, bukan tiga halaman.
+Alasannya bukan kerapian: namanya sudah berpindah sekali (`ViewTransition`,
+bukan `unstable_ViewTransition`) dan bisa berpindah lagi. Satu berkas berarti
+satu tempat yang perlu dibetulkan.
 
 `next.config.mjs` perlu `experimental: { viewTransition: true }`, berdampingan
 dengan `reactCompiler` yang sudah menyala.
 
-**Bentuk persis pemakaian API-nya sengaja tidak dikunci di spec ini.** Saya belum
-pernah menjalankannya di repo ini, dan menuliskannya sebagai fakta akan mengulang
-kesalahan yang baru saja dibayar di spec scrollbar — di mana klaim dari ingatan
-ternyata meleset dan baru ketahuan waktu diukur. Task pertama rencana
-implementasi adalah membuktikan bentuk mana yang benar-benar bekerja di
-Next 16.1.3 + React Compiler, dan sisanya ditulis di atas hasil itu.
+**Bentuk API-nya diukur sebelum ditulis, dan hasilnya mengubah rancangan.**
+Diukur di Chrome 148, Next 16.1.3:
 
-Yang perlu dibuktikan di task itu, minimal:
+| Pertanyaan | Jawaban terukur |
+|------------|-----------------|
+| `experimental.viewTransition` ada di Next 16.1.3? | Ya — `config-schema.js:268` |
+| `router.push` dibungkus `startViewTransition` sendiri? | **Gagal.** `shellPresent: false` saat `ready`, nol animasi, URL masih lama — React merender setelah potret diambil |
+| Flag saja cukup? | **Tidak.** `calledByNext: 0` — Next tidak membungkus navigasi sendiri |
+| Apa yang membuatnya jalan? | `<ViewTransition>` di root layout. Dengan itu `calledByNext: 1` |
+| Nama impornya? | **`ViewTransition`**, bukan `unstable_ViewTransition` |
+| React mana yang dipakai? | Dengan flag menyala, Next menukar React aplikasi jadi **19.3.0-canary**, bukan 19.2.3 di `node_modules/react` |
 
-1. Apakah `experimental.viewTransition` benar-benar ada di Next 16.1.3, dan
-   apa nama impornya.
-2. Apakah potret "sesudah" diambil setelah React selesai merender — gejala
-   gagalnya: animasi berjalan di atas layar kosong.
-3. Apakah `dataset.nav` yang disetel tepat sebelum navigasi sudah terbaca CSS
-   waktu animasi mulai, atau perlu disetel lebih awal.
+Akibatnya `slideTo` **tidak** memanggil `startViewTransition`. Tugasnya tinggal
+menandai arah lalu `router.push`; React yang menganimasikan, lewat boundary di
+layout. Dua pemanggil yang bersaing adalah kemungkinan penyebab
+`InvalidStateError` yang muncul waktu keduanya sempat hidup bersama.
 
 ## Yang tidak dapat animasi
 
 - **Peramban tanpa dukungan.** `slideTo` memeriksa keberadaan API lebih dulu;
-  kalau tidak ada, ia langsung `router.push`. Bukan rusak, cuma memotong.
-  Ini juga yang terjadi di test, karena happy-dom tidak punya API-nya.
+  kalau tidak ada, ia tidak menandai arah dan cuma `router.push`. Bukan rusak,
+  cuma memotong. Ini juga yang terjadi di test, karena happy-dom tidak punya
+  API-nya — jadi jalur itulah yang paling keras diuji.
 - **`/sistem` → `/kerja/<slug>` dan `/kontak`.** Sengaja dibiarkan memotong.
   PROGRESS sudah mencatat rencana **zoom** dari plate peta ke halaman baca, dan
   itu View Transitions juga. Memasang geser naik-turun di pintu yang sama
@@ -148,7 +152,10 @@ Yang perlu dibuktikan di task itu, minimal:
 - `UTSMAN` bukan lagi tautan.
 - `slideTo` memanggil `router.push` apa adanya waktu `document.startViewTransition`
   tidak ada — yang selalu benar di happy-dom.
-- `slideTo` menyetel `dataset.nav` sesuai arah yang diminta, sebelum berpindah.
+- `slideTo` menyetel `dataset.nav` sesuai arah yang diminta, sebelum berpindah,
+  dan **tidak** menyetelnya sama sekali kalau peramban tidak bisa menganimasikan
+  — atribut yang tak terbaca siapa pun itu state mati.
+- `slideTo` tidak memanggil `startViewTransition` sendiri.
 
 **Yang tidak bisa diuji vitest, dan diukur di browser sungguhan:**
 
@@ -180,7 +187,23 @@ dijalankan Utsman; jangan menjalankan yang baru.
   dilihat di layar. Satu token, satu baris untuk menyetelnya.
 - **`KEMBALI` bisa dikira tombol kembali browser.** Diterima sadar; lihat bagian
   Kontrol.
-- **Gerbang punya tiga pemicu masuk** — dua tombol, huruf apa pun, dan roda ke
-  bawah. Ketiganya harus lewat `slideTo`, bukan cuma tombolnya. Kalau satu
-  terlewat, satu jalan masuk memotong sementara dua lainnya beranimasi, dan itu
-  terbaca sebagai bug.
+- ~~**Gerbang punya tiga pemicu masuk.**~~ Terbukti bukan risiko. Kelima pemicu —
+  dua tombol, `Enter`, `Escape`, huruf apa pun, dan roda — menyalurkan ke satu
+  prop `onEnter` yang cuma dipasang sekali, di `src/app/page.jsx`. Satu titik
+  panggil menutup semuanya, dan `Gate.jsx` tidak disentuh sama sekali.
+  Diverifikasi di browser: tombol `PETA` dan tekan `f` sama-sama menghasilkan
+  `dataset.nav === "down"`.
+
+- **Geraknya belum pernah dilihat berjalan.** Panel browser sesi ini melaporkan
+  `document.hidden === true` walau sudah ditampilkan, dan Chrome membatalkan
+  setiap View Transition di dokumen yang tidak dirender —
+  `InvalidStateError: Transition was aborted because of invalid state`. Yang
+  terbukti: React memanggil API-nya, arah tertulis benar, empat `@keyframes` dan
+  enam aturan pseudo-element terdaftar di stylesheet, `--nav-slide` sampai
+  bernilai `22vh`, dan `npm run build` sukses dengan `/` dan `/sistem` tetap
+  statis. Yang belum: bahwa gesernya terlihat. Penilaian itu jatuh ke mata
+  Utsman di browsernya sendiri.
+
+- **Reduced-motion juga belum diukur berjalan.** `UserPreferencesMask` byte 0
+  terbaca `9E` — animasi Windows sedang menyala, jadi jalurnya tidak aktif waktu
+  diperiksa. Aturannya ada di stylesheet; bahwa ia memangkas belum dibuktikan.

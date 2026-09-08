@@ -29,6 +29,11 @@ cangkang menggantikannya setelah mount, dan hanya kalau kedua syarat
 `useShellEligible` terpenuhi — lebar dan JS. Gerak yang dikurangi **bukan lagi**
 salah satunya.
 
+Perpindahan `/` ⇄ `/sistem` membawa arah: naik untuk mundur, turun untuk masuk,
+700ms, jarak `--nav-slide` `22vh`. Pintu lain — halaman baca, kontak — memotong
+seperti biasa, menunggu kerja zoom peta. **Geraknya belum pernah dilihat berjalan
+dari sesi ini**; lihat catatan di bawah.
+
 Gerbang berdiri di `/` sebagai halaman penuh, bukan lapisan: nama, peran, lokasi,
 rentang tahun, daftar stack, dan dua tombol yang menyebut tujuannya
 (`PETA` / `DAFTAR`). Menekan tombol, huruf apa pun, atau menggulir ke bawah
@@ -51,6 +56,7 @@ kembali browser bekerja.
 | Gerbang, halaman `/` | `src/app/page.jsx` + `src/components/shell/Gate.jsx` |
 | Cangkang, halaman `/sistem` | `src/app/sistem/page.jsx` (+ `layout.js` untuk canonical) |
 | Lapis kertas, dipakai dua route | `src/components/document/PaperFallback.jsx` |
+| Arah perpindahan halaman | `src/lib/nav/slideTo.js` |
 | Pita identitas HP | `src/components/document/PaperHead.jsx` |
 | Cangkang desktop | `src/components/shell/` |
 | Dokumen HP | `src/components/document/` |
@@ -63,14 +69,15 @@ kembali browser bekerja.
 | Seluruh teks tampil, dua bahasa | `docs/superpowers/notes/2026-09-03-seluruh-isi-tulisan.md` |
 | Teks yang dibuang, diarsipkan | `docs/superpowers/notes/2026-09-03-arsip-bagian-sulit.md` |
 
-Keadaan: **145 test hijau, 22 berkas**, `npx eslint src --max-warnings=0` bersih,
+Keadaan: **156 test hijau, 24 berkas**, `npx eslint src --max-warnings=0` bersih,
 `npm run build` sukses: `/sistem` terdaftar **statis** (`○`), bersama `/`,
 `/kontak` dan lima halaman `/kerja/*`.
 
 Jumlah test turun dari 165 ke 92 di Task 15 karena 73 test kanvas ikut dihapus
 bersama kodenya. Itu bukan regresi. Naik ke 142 lewat rencana gerbang, lalu
 sempat turun ke 130 waktu 10 test lapisan gerbang dan 6 test `useGatePassed`
-ikut dibuang, lalu naik lagi ke 145.
+ikut dibuang, lalu naik ke 145 lewat gaya scrollbar dan ke 156 lewat perpindahan
+naik-turun.
 
 ## Larangan yang tidak bisa ditawar
 
@@ -139,6 +146,16 @@ ikut dibuang, lalu naik lagi ke 145.
   plate didorong; `15/9/20/5` tidak kelihatan kecuali diperhatikan. Yang salah
   di percobaan pertama ternyata **tandanya**, bukan besarannya — mendatar angka
   sekarang praktis sama dengan yang pertama.
+- **Gerbang di atas, sistem di bawah, dan ruang itu tetap.** `↑ KEMBALI` naik,
+  tombol gerbang turun. `--nav-slide` (`22vh`) dan `--nav-ease` di `globals.css`
+  adalah satu-satunya tempat menyetelnya. `UTSMAN` **sengaja bukan tautan lagi** —
+  satu tujuan, satu kontrol; jangan dikembalikan. Tombolnya sengaja tidak 44px:
+  cangkang cuma hidup di ≥1024px dengan penunjuk presisi, dan 44px merusak baris
+  setinggi 34px.
+- **`slideTo` tidak boleh memanggil `startViewTransition`.** Yang menganimasikan
+  adalah boundary `<ViewTransition>` di `src/app/layout.js`. Memanggilnya sendiri
+  di sekitar `router.push` memotret DOM lama dua kali — React merender setelah
+  potret diambil. Terukur, bukan dugaan.
 - **Scrollbar 8px, samar, dan kontrasnya memang rendah.** Thumb
   `--color-rule` (`#2E3539`) yang naik ke `--color-muted-deep` (`#4C555A`) saat
   hover; di kertas `--color-paper-rule` → `--color-paper-rule-edge`. Track
@@ -184,6 +201,28 @@ pernah ditawarkan ke Utsman untuk dinaikkan.
 kalau memuat data pegawai atau pasien asli.
 
 **5. Merge ke `main` dan deploy.**
+
+### Perpindahan naik-turun — **selesai 2026-09-09, satu bagian belum dilihat**
+
+`↑ KEMBALI` di TopBar (dan `UTSMAN` berhenti jadi tautan), `slideTo` di
+`src/lib/nav/`, boundary `<ViewTransition>` di layout, empat `@keyframes` di
+`globals.css`. Halaman baca dan kontak juga diperbaiki di sesi yang sama:
+`← SEMUA SISTEM` dulu menunjuk `/`, yang sejak gerbang pindah berarti mendarat di
+nama besar dengan dua tombol, bukan di daftar sistem. Sekarang `/sistem`.
+
+**Terukur:** React memanggil `startViewTransition` sekali per navigasi
+(`calledByNext: 1`); `dataset.nav` terisi `"down"` lewat tombol `PETA` **dan**
+lewat ketikan huruf `f`, `"up"` lewat `↑ KEMBALI`; empat keyframes `nav-*` dan
+enam aturan `::view-transition-*` ada di stylesheet dengan durasi `0.7s`;
+`--nav-slide` sampai bernilai `22vh`; `npm run build` sukses dengan `/` dan
+`/sistem` tetap `○ Static`.
+
+**Belum terukur, dan jangan diklaim sudah:** bahwa gesernya terlihat. Panel
+browser melaporkan `document.hidden === true` dan Chrome membatalkan tiap
+transisi (`InvalidStateError`). Begitu juga `prefers-reduced-motion` untuk
+pseudo-element itu — `UserPreferencesMask` byte 0 terbaca `9E`, animasi Windows
+sedang menyala, jadi jalurnya tidak aktif waktu diperiksa. Keduanya perlu mata
+Utsman di browsernya sendiri, dan `22vh` mungkin perlu disetel setelah dilihat.
 
 ### Gerbang punya URL — **selesai 2026-09-09**
 
@@ -333,6 +372,20 @@ dulu `/` selalu mendarat di dokumen kertas — plate tidak bergeser sama sekali,
   sebelum `frame = requestAnimationFrame(...)` selesai di-assign, jadi `frame`
   tinggal terisi dan `if (frame) return` memblokir semua event berikutnya. Dua
   pembacaan pertama saya salah gara-gara ini.
+- **View Transitions dibatalkan diam-diam waktu panel browser tersembunyi.**
+  `document.hidden` tetap `true` di panel sesi ini walau sudah ditampilkan, dan
+  tiap transisi berakhir `InvalidStateError: Transition was aborted because of
+  invalid state`. `document.getAnimations()` selalu kosong — yang terbaca seperti
+  CSS yang tidak berlaku, padahal kabelnya benar. Kerabat pelajaran rAF di bawah.
+  Yang masih bisa dibuktikan tanpa panel terlihat: React memanggil API-nya
+  (tempel penghitung di `document.startViewTransition`), `dataset.nav` terisi, dan
+  aturan CSS-nya benar-benar ada — telusuri `document.styleSheets` dan cari
+  `KEYFRAMES_RULE` bernama `nav-*` beserta selektor `::view-transition-*`.
+- **Flag `experimental.viewTransition` saja tidak menganimasikan apa pun.** Next
+  tidak membungkus navigasi sendiri (`calledByNext: 0`); yang memicu React adalah
+  `<ViewTransition>` di layout. Dan dengan flag itu menyala, React aplikasi
+  ditukar jadi **19.3.0-canary** — ekspornya bernama `ViewTransition`, tanpa
+  awalan `unstable_`, berbeda dari 19.2.3 yang ada di `node_modules/react`.
 - **`scrollbar-color` mematikan seluruh blok `::-webkit-scrollbar` di elemen yang
   sama.** Diukur di Chrome 148: elemen uji yang sama memberi 15px tanpa aturan,
   8px dengan webkit saja, tapi **10px** kalau keduanya ditulis berdampingan —
@@ -362,7 +415,7 @@ dulu `/` selalu mendarat di dokumen kertas — plate tidak bergeser sama sekali,
 ## Cara lanjut
 
 1. `git checkout portfolio-canvas-redesign`
-2. `npx vitest run` — harus 145 hijau, `npx eslint src --max-warnings=0` bersih
+2. `npx vitest run` — harus 156 hijau, `npx eslint src --max-warnings=0` bersih
 3. Antrean ada di bagian **"Antrean berikutnya, urut"** di atas. Nomor 1 sekarang
    gaya scrollbar — pekerjaan kecil yang berdiri sendiri dan belum dispec.
 

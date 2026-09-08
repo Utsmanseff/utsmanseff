@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from 'react';
 import { meta } from '@/lib/data/meta';
 import { techNames } from '@/lib/data/tech';
 
@@ -26,6 +27,22 @@ export default function Gate({ systems, locale, calm, leaving = false, onEnter }
   const years = systems.map((s) => Number(s.year));
   const span = `${Math.min(...years)}–${Math.max(...years)}`;
 
+  // The console below takes typing. A visitor who lands and types `filter`
+  // straight away must not lose the f, so the key that opens the gate is handed
+  // on rather than swallowed. Tab is the exception: it has to keep walking the
+  // two buttons.
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === 'Tab') return;
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      if (e.key === 'Enter' || e.key === 'Escape') { onEnter(null, null); return; }
+      if (e.key.length !== 1) return;
+      onEnter(null, e.key === ' ' ? null : e.key);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onEnter]);
+
   return (
     <div
       data-testid="gate"
@@ -37,6 +54,7 @@ export default function Gate({ systems, locale, calm, leaving = false, onEnter }
         opacity: leaving ? 0 : 1,
         pointerEvents: leaving ? 'none' : undefined,
       }}
+      onWheel={(e) => { if (e.deltaY > 0) onEnter(null, null); }}
     >
       <div className="absolute inset-y-0 right-0 w-[56%] pointer-events-none" aria-hidden="true">
         {PLATES.map((p, i) => (

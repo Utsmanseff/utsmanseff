@@ -63,3 +63,60 @@ describe('Gate', () => {
     expect(screen.getByTestId('gate')).toHaveStyle({ opacity: '0' });
   });
 });
+
+describe('Gate · dismissal', () => {
+  it('closes on Enter, using the default view', () => {
+    const { onEnter } = renderGate();
+    fireEvent.keyDown(window, { key: 'Enter' });
+    expect(onEnter).toHaveBeenCalledWith(null, null);
+  });
+
+  it('closes on Escape', () => {
+    const { onEnter } = renderGate();
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(onEnter).toHaveBeenCalledWith(null, null);
+  });
+
+  it('closes on a letter and hands that letter on to the console', () => {
+    const { onEnter } = renderGate();
+    fireEvent.keyDown(window, { key: 'f' });
+    expect(onEnter).toHaveBeenCalledWith(null, 'f');
+  });
+
+  it('does not treat a space as a letter worth keeping', () => {
+    const { onEnter } = renderGate();
+    fireEvent.keyDown(window, { key: ' ' });
+    expect(onEnter).toHaveBeenCalledWith(null, null);
+  });
+
+  it('leaves Tab alone, so the two buttons stay reachable', () => {
+    const { onEnter } = renderGate();
+    fireEvent.keyDown(window, { key: 'Tab' });
+    expect(onEnter).not.toHaveBeenCalled();
+  });
+
+  it('ignores keys that are not text and not a decision', () => {
+    const { onEnter } = renderGate();
+    fireEvent.keyDown(window, { key: 'ArrowDown' });
+    fireEvent.keyDown(window, { key: 'Shift' });
+    expect(onEnter).not.toHaveBeenCalled();
+  });
+
+  it('ignores a letter pressed with a modifier — that is a browser shortcut', () => {
+    const { onEnter } = renderGate();
+    fireEvent.keyDown(window, { key: 'r', ctrlKey: true });
+    expect(onEnter).not.toHaveBeenCalled();
+  });
+
+  it('closes when the visitor scrolls down', () => {
+    const { onEnter } = renderGate();
+    fireEvent.wheel(screen.getByTestId('gate'), { deltaY: 40 });
+    expect(onEnter).toHaveBeenCalledWith(null, null);
+  });
+
+  it('stays put when the visitor scrolls up', () => {
+    const { onEnter } = renderGate();
+    fireEvent.wheel(screen.getByTestId('gate'), { deltaY: -40 });
+    expect(onEnter).not.toHaveBeenCalled();
+  });
+});

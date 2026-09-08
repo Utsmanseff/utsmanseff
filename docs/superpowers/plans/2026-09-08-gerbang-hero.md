@@ -490,13 +490,14 @@ Lalu sisipkan efek ini tepat setelah baris `const span = ...`:
   }, [onEnter]);
 ```
 
-Dan tambahkan handler roda di elemen terluar — ubah pembuka `<div data-testid="gate" ...>` jadi:
+Dan tambahkan handler roda di elemen terluar — sisipkan `onWheel` tepat setelah blok `style`:
 
 ```jsx
-    <div
-      data-testid="gate"
-      className="absolute inset-0 z-50 bg-ground overflow-hidden"
-      style={{ transition: `opacity 700ms ${EASE}` }}
+      style={{
+        transition: `opacity 700ms ${EASE}`,
+        opacity: leaving ? 0 : 1,
+        pointerEvents: leaving ? 'none' : undefined,
+      }}
       onWheel={(e) => { if (e.deltaY > 0) onEnter(null, null); }}
     >
 ```

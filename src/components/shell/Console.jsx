@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const COPY = {
   label: { id: 'Konsol perintah', en: 'Command console' },
@@ -14,8 +14,11 @@ const COPY = {
   },
 };
 
-export default function Console({ locale, value, onChange, onRun, onEscape, focusToken = 0 }) {
+export default function Console({ locale, value, onChange, onRun, onEscape }) {
   const ref = useRef(null);
+  // Read once, at mount: a letter carried in from the gate is already sitting in
+  // the box, and it is the first letter of a command somebody is still typing.
+  const [seeded] = useState(() => value !== '');
 
   // "/" focuses the console from anywhere, the way it does in the tools this
   // audience already uses.
@@ -30,11 +33,11 @@ export default function Console({ locale, value, onChange, onRun, onEscape, focu
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
-  // Zero is the value it starts at, and starting focused would steal the page
-  // from a keyboard visitor who has not asked for the console yet.
+  // Only when something was carried in. Focusing an empty console would steal
+  // the page from a keyboard visitor who has not asked for it yet.
   useEffect(() => {
-    if (focusToken) ref.current?.focus();
-  }, [focusToken]);
+    if (seeded) ref.current?.focus();
+  }, [seeded]);
 
   return (
     <div className="h-11 bg-ground-deep border-t border-rule flex items-center gap-3 px-6">

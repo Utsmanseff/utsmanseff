@@ -1,11 +1,14 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, within } from '@testing-library/react';
 import { LocaleProvider } from '@/lib/hooks/useLocale';
 import Shell from '@/components/shell/Shell';
 import { projects } from '@/lib/data/projects';
 
 
-vi.mock('next/navigation', () => ({ useRouter: () => ({ push: vi.fn(), replace: vi.fn() }) }));
+const replace = vi.hoisted(() => vi.fn());
+vi.mock('next/navigation', () => ({ useRouter: () => ({ push: vi.fn(), replace }) }));
+
+beforeEach(() => replace.mockClear());
 
 // The gate is a page of its own now, so nothing here has to get past it. The
 // view and the seeded letter arrive as props, the way `/sistem` hands them over.
@@ -99,6 +102,45 @@ describe('Shell', () => {
 });
 
 describe('Shell · what the URL decides', () => {
+  it('offers a way back to the gate', () => {
+    // The back button already covers a visitor who came through the gate. This
+    // is for the one who was handed a link straight to /sistem and has no
+    // history to go back through.
+    renderShell();
+    // Exact: the status bar's github link reads `.../Utsmanseff`, and a loose
+    // match would pick up both.
+    expect(screen.getByRole('link', { name: 'UTSMAN' })).toHaveAttribute('href', '/');
+  });
+
+  it('writes the view it switched to into the URL', () => {
+    renderShell();
+    fireEvent.click(screen.getByRole('button', { name: 'DATAR' }));
+    expect(replace).toHaveBeenCalledWith('/sistem?tampilan=datar', { scroll: false });
+
+    fireEvent.click(screen.getByRole('button', { name: 'ISO' }));
+    expect(replace).toHaveBeenCalledWith('/sistem', { scroll: false });
+  });
+
+  it('writes the view a typed command switched to, the same way', () => {
+    renderShell();
+    const input = screen.getByLabelText(/konsol/i);
+    fireEvent.change(input, { target: { value: 'view flat' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    expect(replace).toHaveBeenCalledWith('/sistem?tampilan=datar', { scroll: false });
+  });
+
+  it('keeps the filters and the log across a view switch', () => {
+    // replace(), not push(), and the view stays local state: if the URL led,
+    // Shell would remount and take the filters and the whole log with it.
+    renderShell();
+    fireEvent.click(screen.getByRole('button', { name: 'client:bpn' }));
+    fireEvent.click(screen.getByRole('button', { name: 'DATAR' }));
+    // An active chip carries a × in its label, which is how it offers to undo
+    // itself — so the name is matched from the front, not whole.
+    expect(screen.getByRole('button', { name: /^client:bpn/ })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByText('$ filter client:bpn')).toBeInTheDocument();
+  });
+
   it('opens on the view it was handed', () => {
     renderShell({ view: 'list' });
     expect(screen.getByTestId('flat-table')).toBeInTheDocument();

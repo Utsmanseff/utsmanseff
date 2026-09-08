@@ -1,5 +1,6 @@
 "use client";
 
+import Link from 'next/link';
 import LangSwitcher from '@/components/nav/LangSwitcher';
 
 const COPY = {
@@ -14,7 +15,9 @@ export default function TopBar({ locale, view, filtering, onView }) {
   return (
     <div className="border-b border-rule px-6 py-2.5 flex items-center justify-between font-mono text-[11px] tracking-[.1em] text-muted">
       <div className="flex items-center gap-5">
-        <span className="text-ink">UTSMAN</span>
+        {/* The way back for a visitor who arrived on a shared /sistem link and
+            has no history behind them. */}
+        <Link href="/" className="text-ink">UTSMAN</Link>
         <span>FULLSTACK · BANJARBARU</span>
         <button
           type="button"

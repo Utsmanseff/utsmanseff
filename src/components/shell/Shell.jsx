@@ -26,6 +26,14 @@ export default function Shell({ systems, locale, view: initialView, seed = '', c
   const [log, setLog] = useState([{ text: '$ ls systems', kind: 'command' }]);
   const [cmd, setCmd] = useState(seed);
 
+  // The URL follows the view rather than leading it. replace(), so switching
+  // back and forth does not fill the history; and local state, because a URL
+  // that led would remount Shell and take the filters and the whole log with it.
+  const changeView = (next) => {
+    setView(next);
+    router.replace(next === 'list' ? '/sistem?tampilan=datar' : '/sistem', { scroll: false });
+  };
+
   // Ten lines, oldest dropped. The log is a record of intent, not a report:
   // it echoes what was asked for and never counts what came back.
   const say = (text, kind) => setLog((l) => [...l, { text, kind }].slice(-10));
@@ -58,7 +66,7 @@ export default function Shell({ systems, locale, view: initialView, seed = '', c
 
     if (intent.action === 'filter') { applyFilter(intent.key, intent.value); return; }
     if (intent.action === 'reset') { resetFilters(); return; }
-    if (intent.action === 'view') { setView(intent.view); say(`$ view ${intent.view === 'map' ? 'iso' : 'flat'}`, 'command'); return; }
+    if (intent.action === 'view') { changeView(intent.view); say(`$ view ${intent.view === 'map' ? 'iso' : 'flat'}`, 'command'); return; }
     if (intent.action === 'lang') { setLocale(intent.lang); say(`$ lang ${intent.lang}`, 'command'); return; }
     if (intent.action === 'list') { say('$ ls systems', 'command'); return; }
     if (intent.action === 'help') { say('$ help', 'command'); say(RESULT.help[locale], 'result'); return; }
@@ -89,7 +97,7 @@ export default function Shell({ systems, locale, view: initialView, seed = '', c
         locale={locale}
         view={view}
         filtering={isFiltering(filters)}
-        onView={setView}
+        onView={changeView}
       />
 
       <div className="grid grid-cols-[290px_1fr_270px] min-h-0">

@@ -50,6 +50,12 @@
   --font-mono: var(--font-mono), ui-monospace, monospace;
 }
 
+:root {
+  /* Jarak perpindahan halaman. Satu tempat untuk menyetelnya. */
+  --nav-slide: 22vh;
+  --nav-ease: cubic-bezier(.22, 1, .36, 1);
+}
+
 html, body {
   background: var(--color-ground);
   color: var(--color-ink);
@@ -193,10 +199,65 @@ body:has(.paper-doc) ::-webkit-scrollbar-thumb:hover,
   top: 1rem;
 }
 
+/* Perpindahan gerbang ⇄ sistem. Ruangnya tetap: gerbang di atas, sistem di
+   bawah. Naik berarti mundur, turun berarti masuk — panah di tombol KEMBALI
+   karena itu benar secara harfiah, bukan hiasan.
+   700ms dan easing ini bukan angka baru: keduanya laju "bergerak sendiri" yang
+   sudah dipakai gerbang dan FadeIn. Jaraknya satu token, sengaja jauh di bawah
+   satu layar penuh — gerak terjauh yang pernah ada di situs ini 6px. */
+@keyframes nav-leave-down {
+  to { transform: translateY(var(--nav-slide)); opacity: 0; }
+}
+
+@keyframes nav-enter-from-top {
+  from { transform: translateY(calc(var(--nav-slide) * -1)); opacity: 0; }
+}
+
+@keyframes nav-leave-up {
+  to { transform: translateY(calc(var(--nav-slide) * -1)); opacity: 0; }
+}
+
+@keyframes nav-enter-from-bottom {
+  from { transform: translateY(var(--nav-slide)); opacity: 0; }
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 700ms;
+  animation-timing-function: var(--nav-ease);
+  animation-fill-mode: both;
+  mix-blend-mode: normal;
+}
+
+html[data-nav="up"]::view-transition-old(root) {
+  animation-name: nav-leave-down;
+}
+
+html[data-nav="up"]::view-transition-new(root) {
+  animation-name: nav-enter-from-top;
+}
+
+html[data-nav="down"]::view-transition-old(root) {
+  animation-name: nav-leave-up;
+}
+
+html[data-nav="down"]::view-transition-new(root) {
+  animation-name: nav-enter-from-bottom;
+}
+
 /* Transitions are decoration; dragging is not. Keep the map usable. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+
+  /* Wajib, bukan pelengkap. Aturan di atas tidak menjangkau pseudo-element
+     view-transition — mereka hidup di elemen akar, di luar pohon biasa — jadi
+     tanpa blok ini pengunjung yang meminta gerak dikurangi tetap kena geser
+     22vh penuh. */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
     animation-duration: 0.01ms !important;
   }
 }

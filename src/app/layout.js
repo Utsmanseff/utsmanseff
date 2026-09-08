@@ -1,5 +1,13 @@
 import { Bricolage_Grotesque, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+// Named ViewTransition, not unstable_ViewTransition: with
+// experimental.viewTransition on, Next swaps the app's React for a canary build
+// (19.3.0-canary) whose export dropped the prefix. Measured, not assumed.
+//
+// This boundary is what makes the move between / and /sistem animate at all.
+// React calls startViewTransition itself once the new tree is ready; doing it by
+// hand around router.push captures the old DOM twice.
+import { ViewTransition } from "react";
 import Providers from "@/components/Providers";
 import JsonLd from "@/components/JsonLd";
 import { meta } from "@/lib/data/meta";
@@ -74,7 +82,9 @@ export default function RootLayout({ children }) {
           <style>{`[data-fade]{opacity:1 !important;transform:none !important}`}</style>
         </noscript>
         <JsonLd />
-        <Providers>{children}</Providers>
+        <ViewTransition>
+          <Providers>{children}</Providers>
+        </ViewTransition>
       </body>
     </html>
   );

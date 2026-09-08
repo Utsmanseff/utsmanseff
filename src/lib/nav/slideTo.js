@@ -4,30 +4,26 @@
 // in, and the direction is written on the root element because the
 // ::view-transition-* pseudo-elements live there, not inside the React tree.
 //
-// Measured in Chrome 148 before this was written: calling router.push inside
-// startViewTransition by hand captures the OLD DOM twice — React renders after
-// the snapshot is taken. What makes the capture correct is the <ViewTransition>
-// boundary in the root layout, which lets React drive the transition itself.
-// This function still calls the API directly so the direction is set and a
-// browser without the boundary still navigates.
+// This function does NOT call startViewTransition. Measured in Chrome 148:
+// wrapping router.push in it by hand captures the OLD DOM twice, because React
+// renders after the snapshot is taken — the animation then runs between two
+// pictures of the same page. What drives the transition instead is the
+// <ViewTransition> boundary in the root layout: React calls the API itself,
+// once the new tree is ready.
+//
+// So the whole job here is to say which way we are going, early enough for the
+// CSS to pick a keyframe, and then navigate.
 
 const DIRECTIONS = ['up', 'down'];
 
 export function slideTo(router, href, direction) {
   const known = DIRECTIONS.includes(direction);
 
-  const go = () => router.push(href);
-
-  if (!known || typeof document.startViewTransition !== 'function') {
-    // No animation to run: a browser without the API, or a caller with a
-    // direction we have no keyframes for. Navigating plainly is the right
-    // answer to both — the page still changes, it just cuts.
-    return go();
+  // No keyframes for an unknown direction, and nothing to animate in a browser
+  // without the API. Both navigate plainly — the page still changes, it cuts.
+  if (known && typeof document.startViewTransition === 'function') {
+    document.documentElement.dataset.nav = direction;
   }
 
-  // Written before the transition starts. The pseudo-elements are created the
-  // moment startViewTransition runs, and a direction set afterwards arrives
-  // after the keyframes have already been chosen.
-  document.documentElement.dataset.nav = direction;
-  return document.startViewTransition(go);
+  return router.push(href);
 }

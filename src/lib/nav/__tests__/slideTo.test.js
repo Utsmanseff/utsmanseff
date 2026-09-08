@@ -39,24 +39,25 @@ describe('slideTo', () => {
     expect(document.documentElement.dataset.nav).toBe('down');
   });
 
-  it('hands the navigation to the browser when it can animate it', () => {
-    const run = vi.fn((cb) => { cb(); return { finished: Promise.resolve() }; });
+  it('leaves the transition itself to React, and only navigates', () => {
+    // Calling startViewTransition here would capture the old DOM twice: React
+    // renders after the snapshot. The <ViewTransition> boundary in the root
+    // layout is what drives the animation.
+    const run = vi.fn();
     document.startViewTransition = run;
     slideTo(router, '/', 'up');
-    expect(run).toHaveBeenCalled();
+    expect(run).not.toHaveBeenCalled();
     expect(push).toHaveBeenCalledWith('/');
   });
 
-  it('sets the direction before the transition starts, not after', () => {
-    // The pseudo-elements are created the moment startViewTransition runs. A
-    // direction written afterwards arrives too late and the wrong keyframe runs.
+  it('sets the direction before it navigates, not after', () => {
+    // The keyframe is chosen when the transition starts, and the transition
+    // starts from the render this push causes.
     const seen = { nav: null };
-    document.startViewTransition = (cb) => {
-      seen.nav = document.documentElement.dataset.nav;
-      cb();
-      return { finished: Promise.resolve() };
-    };
+    push.mockImplementation(() => { seen.nav = document.documentElement.dataset.nav; });
+    canAnimate();
     slideTo(router, '/', 'up');
+    push.mockReset();
     expect(seen.nav).toBe('up');
   });
 

@@ -30,6 +30,20 @@ describe('SystemsDocument', () => {
     expect(screen.getByText('SIGAP')).toBeInTheDocument();
   });
 
+  it('opens with the identity band, not the old one-line head', () => {
+    renderDoc();
+    expect(screen.getByText('Utsman')).toBeInTheDocument();
+    expect(screen.getByTestId('paper-stack')).toBeInTheDocument();
+  });
+
+  it('keeps the desktop note, at the foot where it belongs', () => {
+    const { container } = renderDoc();
+    const note = screen.getByText(/Buka di desktop/);
+    const firstYear = container.querySelector('[data-year]');
+    // Node.DOCUMENT_POSITION_FOLLOWING === 4: the note comes after the years.
+    expect(firstYear.compareDocumentPosition(note) & 4).toBeTruthy();
+  });
+
   it('states no counts anywhere', () => {
     const { container } = renderDoc();
     expect(container.textContent).not.toMatch(/\b8 (sistem|systems)\b/i);

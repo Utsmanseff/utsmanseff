@@ -1,11 +1,10 @@
 "use client";
 
 import { meta } from '@/lib/data/meta';
-import LangSwitcher from '@/components/nav/LangSwitcher';
+import PaperHead from './PaperHead';
 import YearGroup from './YearGroup';
 
 const COPY = {
-  head: { id: 'UTSMAN · FULLSTACK', en: 'UTSMAN · FULLSTACK' },
   note: {
     id: 'Buka di desktop untuk peta isometrik dan konsolnya. Semuanya juga bisa dibaca di sini.',
     en: 'Open on desktop for the isometric map and console. Everything is readable here too.',
@@ -19,15 +18,11 @@ export default function SystemsDocument({ systems, locale, dimmed }) {
 
   return (
     <main className="paper-doc min-h-screen flex flex-col px-5 pt-6 pb-24">
-      <div className="flex items-center justify-between font-mono text-[10.5px] text-paper-muted">
-        <span>{COPY.head[locale]}</span>
-        <LangSwitcher />
-      </div>
-      <div className="border-t border-paper-ink mt-3" />
+      <PaperHead systems={systems} locale={locale} />
 
-      <p className="font-mono text-[11px] text-paper-muted mt-4 mb-6">
-        {meta.location[locale]}
-      </p>
+      {/* The first YearGroup draws its own rule across the top; a second one in
+          PaperHead would sit right against it. This is just the gap. */}
+      <div className="mt-7" />
 
       {years.map((year) => (
         <YearGroup
@@ -39,7 +34,13 @@ export default function SystemsDocument({ systems, locale, dimmed }) {
         />
       ))}
 
-      <dl className="grid grid-cols-[64px_1fr] mt-10 font-mono text-[11px]">
+      {/* At the foot, not the head: a reader who has already been through the
+          work is the one this is useful to. */}
+      <p className="font-mono text-[10.5px] text-paper-muted mt-10 mb-0">
+        {COPY.note[locale]}
+      </p>
+
+      <dl className="grid grid-cols-[64px_1fr] mt-4 font-mono text-[11px]">
         {[
           ['EMAIL', meta.email, `mailto:${meta.email}`],
           ['WA', meta.whatsapp, meta.whatsappLink],

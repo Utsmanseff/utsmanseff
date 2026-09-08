@@ -10,6 +10,12 @@
 
 **Dasar sebelum mulai:** 142 test hijau, 21 berkas.
 
+> **Selesai 2026-09-09, 145 test hijau, 22 berkas.** Dikerjakan dengan **Task 2
+> lebih dulu**: test Task 1 menuntut prop `view` dan `seed` yang baru dibuat Task
+> 2. Urutan sebenarnya: 2 → 1 → 3 → 4 → 5 → 6. Pertanyaan terbuka terjawab —
+> `useSearchParams` di dalam `Suspense` **tidak** memaksa render dinamis;
+> `npm run build` mendaftarkan `/sistem` sebagai `○ (Static)`.
+
 **Lanjutan dari:** `docs/superpowers/specs/2026-09-08-gerbang-hero-design.md`
 
 ---
@@ -52,7 +58,7 @@ Gerbang berhenti jadi lapisan dan jadi halaman. Tidak ada lagi yang bersembunyi 
 - Create: `src/app/sistem/page.jsx`
 - Test: `src/app/sistem/__tests__/page.test.jsx`
 
-- [ ] **Step 1: Tulis test yang gagal**
+- [x] **Step 1: Tulis test yang gagal**
 
 Buat `src/app/sistem/__tests__/page.test.jsx`:
 
@@ -119,7 +125,7 @@ describe('/sistem', () => {
 });
 ```
 
-- [ ] **Step 2: Jalankan, pastikan gagal**
+- [x] **Step 2: Jalankan, pastikan gagal**
 
 ```bash
 npx vitest run src/app/sistem
@@ -127,7 +133,7 @@ npx vitest run src/app/sistem
 
 Expected: FAIL — `Failed to resolve import "@/app/sistem/page"`.
 
-- [ ] **Step 3: Tulis route-nya**
+- [x] **Step 3: Tulis route-nya**
 
 Buat `src/app/sistem/page.jsx`. `useSearchParams` wajib dibungkus `Suspense` di
 App Router; tanpa itu seluruh route dipaksa render dinamis.
@@ -178,13 +184,13 @@ export default function Sistem() {
 }
 ```
 
-- [ ] **Step 4: Pisahkan dokumen kertas supaya dua route bisa memakainya**
+- [x] **Step 4: Pisahkan dokumen kertas supaya dua route bisa memakainya**
 
 `/` dan `/sistem` sama-sama merender dokumen di lebar sempit. Pindahkan blok itu
 dari `src/app/page.jsx` ke `src/components/document/PaperFallback.jsx` — dokumen,
 filter sheet dan bottom bar beserta state filternya — lalu pakai di keduanya.
 
-- [ ] **Step 5: Jalankan, pastikan hijau**
+- [x] **Step 5: Jalankan, pastikan hijau**
 
 ```bash
 npx vitest run src/app/sistem
@@ -192,7 +198,7 @@ npx vitest run src/app/sistem
 
 Expected: PASS, 5 test.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/app/sistem src/components/document/PaperFallback.jsx src/app/page.jsx
@@ -209,7 +215,7 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 - Modify: `src/components/shell/Shell.jsx`
 - Modify: `src/components/shell/__tests__/Shell.test.jsx`
 
-- [ ] **Step 1: Ubah test lebih dulu**
+- [x] **Step 1: Ubah test lebih dulu**
 
 Buang seluruh `describe('Shell · the gate')` dan `beforeEach` yang menulis
 `sessionStorage`. Ganti `renderShell` jadi:
@@ -247,7 +253,7 @@ describe('Shell · what the URL decides', () => {
 });
 ```
 
-- [ ] **Step 2: Jalankan, pastikan gagal**
+- [x] **Step 2: Jalankan, pastikan gagal**
 
 ```bash
 npx vitest run src/components/shell/__tests__/Shell.test.jsx
@@ -255,7 +261,7 @@ npx vitest run src/components/shell/__tests__/Shell.test.jsx
 
 Expected: FAIL — `view` dan `seed` belum jadi prop.
 
-- [ ] **Step 3: Sederhanakan `Shell`**
+- [x] **Step 3: Sederhanakan `Shell`**
 
 Buang: impor `Gate` dan `useGatePassed`, state `passed` / `leaving` / `focusToken`,
 fungsi `enter`, wrapper `<div className="contents" inert={...}>` beserta
@@ -280,7 +286,7 @@ sebelumnya dengan menghapus prop itu dan efek fokusnya.
 `className` elemen terluar kehilangan `relative` — tidak ada lagi yang
 di-absolute-kan di atasnya.
 
-- [ ] **Step 4: Jalankan, pastikan hijau**
+- [x] **Step 4: Jalankan, pastikan hijau**
 
 ```bash
 npx vitest run src/components/shell
@@ -288,7 +294,7 @@ npx vitest run src/components/shell
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/components/shell
@@ -307,7 +313,7 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 - Modify: `src/components/shell/Gate.jsx`
 - Modify: `src/components/shell/__tests__/Gate.test.jsx`
 
-- [ ] **Step 1: Ubah test `Gate` lebih dulu**
+- [x] **Step 1: Ubah test `Gate` lebih dulu**
 
 `onEnter(view, seed)` diganti `onEnter(href)`. Yang berubah di
 `Gate.test.jsx` — ganti tiap ekspektasi:
@@ -353,7 +359,7 @@ Dan di `describe('Gate · dismissal')`:
 
 Buang test `fades out when it is told it is leaving` — tidak ada lagi `leaving`.
 
-- [ ] **Step 2: Jalankan, pastikan gagal**
+- [x] **Step 2: Jalankan, pastikan gagal**
 
 ```bash
 npx vitest run src/components/shell/__tests__/Gate.test.jsx
@@ -361,7 +367,7 @@ npx vitest run src/components/shell/__tests__/Gate.test.jsx
 
 Expected: FAIL pada semua ekspektasi `onEnter`.
 
-- [ ] **Step 3: Ubah `Gate`**
+- [x] **Step 3: Ubah `Gate`**
 
 Buang prop `leaving` dan seluruh `style` fade-nya. Tambahkan pembangun tujuan:
 
@@ -382,7 +388,7 @@ pengunjung reduced-motion berarti tabel datar.
 
 `URLSearchParams` yang meng-escape huruf; jangan menyambung string sendiri.
 
-- [ ] **Step 4: Ubah `/`**
+- [x] **Step 4: Ubah `/`**
 
 `src/app/page.jsx` merender `Gate` kalau `useShellEligible()`, `PaperFallback`
 kalau tidak. `onEnter` memanggil `router.push(href)`.
@@ -390,13 +396,13 @@ kalau tidak. `onEnter` memanggil `router.push(href)`.
 Test `page.test.jsx` disesuaikan: `/` di desktop menampilkan gerbang, bukan
 `shell`; `/` di lebar sempit tetap `.paper-doc`.
 
-- [ ] **Step 5: Jalankan, pastikan hijau**
+- [x] **Step 5: Jalankan, pastikan hijau**
 
 ```bash
 npx vitest run
 ```
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add -A
@@ -413,7 +419,7 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 - Modify: `src/components/shell/TopBar.jsx`
 - Modify: `src/components/shell/__tests__/Shell.test.jsx`
 
-- [ ] **Step 1: Tulis test yang gagal**
+- [x] **Step 1: Tulis test yang gagal**
 
 ```jsx
   it('offers a way back to the gate', () => {
@@ -422,13 +428,13 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
   });
 ```
 
-- [ ] **Step 2: Jalankan, pastikan gagal**
+- [x] **Step 2: Jalankan, pastikan gagal**
 
 ```bash
 npx vitest run src/components/shell/__tests__/Shell.test.jsx
 ```
 
-- [ ] **Step 3: Implementasi**
+- [x] **Step 3: Implementasi**
 
 `UTSMAN` di `TopBar` jadi `<Link href="/">`. Tombol kembali browser sudah
 bekerja tanpa ini; tautan ini untuk pengunjung yang mendarat langsung di
@@ -439,13 +445,13 @@ menumpuk riwayat dan tanpa me-mount ulang `Shell`. `view` tetap state lokal;
 `replace` yang menyusul, bukan yang memimpin — kalau URL yang memimpin, filter
 dan log ikut ter-reset.
 
-- [ ] **Step 4: Jalankan, pastikan hijau**
+- [x] **Step 4: Jalankan, pastikan hijau**
 
 ```bash
 npx vitest run
 ```
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add -A
@@ -462,7 +468,7 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 - Modify: `src/app/sitemap.js`
 - Create: metadata di `src/app/sistem/page.jsx` atau `layout.js`-nya
 
-- [ ] **Step 1: `canonical`**
+- [x] **Step 1: `canonical`**
 
 `/sistem` memasang `alternates: { canonical: '/' }`. Di lebar HP kedua URL
 merender isi yang sama persis, dan tanpa ini mesin pencari melihat halaman ganda.
@@ -470,13 +476,13 @@ merender isi yang sama persis, dan tanpa ini mesin pencari melihat halaman ganda
 Route `"use client"` tidak bisa mengekspor `metadata`; buat
 `src/app/sistem/layout.js` yang mengekspornya.
 
-- [ ] **Step 2: Sitemap**
+- [x] **Step 2: Sitemap**
 
 `/sistem` **tidak** ditambahkan ke sitemap — canonical-nya menunjuk `/`, dan
 mendaftarkan keduanya membatalkan maksud canonical itu. Komentar di
 `sitemap.js` yang berbunyi "The homepage is a canvas" sudah basi; perbarui.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add -A
@@ -489,9 +495,9 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 
 ### Task 6: Verifikasi browser dan catatan
 
-- [ ] **Step 1: `npm run build`** — harus sukses, `/sistem` ikut terdaftar.
+- [x] **Step 1: `npm run build`** — harus sukses, `/sistem` ikut terdaftar.
 
-- [ ] **Step 2: Alur di browser**, viewport diemulasi ≥1024px:
+- [x] **Step 2: Alur di browser**, viewport diemulasi ≥1024px:
 
 1. `/` → gerbang. Klik `PETA` → URL jadi `/sistem`, peta tampil.
 2. Tombol kembali browser → `/`, gerbang lagi. **Ini yang diminta Utsman.**
@@ -503,7 +509,7 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 6. Klik `UTSMAN` → kembali ke `/`.
 7. Lebar 375px: `/` dan `/sistem` sama-sama dokumen kertas, tanpa gerbang.
 
-- [ ] **Step 3: Tanpa JavaScript**
+- [x] **Step 3: Tanpa JavaScript**
 
 ```bash
 curl -s http://localhost:3000/ | grep -c "kerja/"
@@ -511,10 +517,10 @@ curl -s http://localhost:3000/ | grep -c "kerja/"
 
 Harus tetap memuat lima tautan `/kerja/*`.
 
-- [ ] **Step 4: Perbarui `docs/PROGRESS.md`**
+- [x] **Step 4: Perbarui `docs/PROGRESS.md`**
 
 Tabel "Bentuk sekarang" dapat baris `/sistem`. Catat bahwa `useGatePassed` dan
 `sessionStorage` sudah tidak ada — sesi berikutnya tidak boleh mencarinya. Hitung
 ulang jumlah test dari hasil `npx vitest run` yang sungguhan.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**

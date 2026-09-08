@@ -5,9 +5,9 @@
 **Branch:** `portfolio-canvas-redesign` (bercabang dari `main`, belum di-merge)
 **Posisi sekarang:** Rencana `2026-09-03-shell-dan-dokumen.md` **selesai, Task 1–17**,
 lalu `2026-09-08-gerbang-hero.md` **selesai, Task 1–8**, plus penyetelan gerbang
-setelah Utsman melihatnya.
-Rencana `2026-09-08-gerbang-punya-url.md` **sudah ditulis, belum dikerjakan** —
-itu yang berikutnya.
+setelah Utsman melihatnya, lalu `2026-09-08-gerbang-punya-url.md`
+**selesai, Task 1–6** (dikerjakan dengan Task 2 lebih dulu — lihat catatan di
+bawah).
 Belum di-merge ke `main`, dan belum di-deploy.
 
 ## Bentuk sekarang
@@ -15,25 +15,29 @@ Belum di-merge ke `main`, dan belum di-deploy.
 Kanvas simpul sudah dihapus dari repo. Yang ada sekarang dua bentuk di atas satu
 sumber data, plus halaman baca:
 
-| Lebar | Bentuk | Warna |
-|-------|--------|-------|
-| ≥1024px, JS hidup | Gerbang, lalu cangkang: peta isometrik + konsol perintah | Gelap |
-| Selain itu (termasuk tanpa JS) | Dokumen: pita identitas + spine tahun + filter sheet | Kertas |
-| `/kerja/<slug>` | Halaman baca, semua lebar | Gelap |
-| `/kontak` | Halaman kontak | Gelap |
+| URL | Lebar | Bentuk | Warna |
+|-----|-------|--------|-------|
+| `/` | ≥1024px, JS hidup | Gerbang, sendirian di halamannya | Gelap |
+| `/sistem` | ≥1024px, JS hidup | Cangkang: peta isometrik + konsol perintah | Gelap |
+| `/sistem?tampilan=datar` | sama | Cangkang, mendarat di tabel datar | Gelap |
+| `/` dan `/sistem` | selain itu (termasuk tanpa JS) | Dokumen: pita identitas + spine tahun + filter sheet | Kertas |
+| `/kerja/<slug>` | semua lebar | Halaman baca | Gelap |
+| `/kontak` | semua lebar | Halaman kontak | Gelap |
 
-Server selalu merender **dokumen**. Cangkang menumpuk di atasnya setelah mount,
-dan hanya kalau kedua syarat `useShellEligible` terpenuhi — lebar dan JS. Gerak
-yang dikurangi **bukan lagi** salah satunya.
+Server selalu merender **dokumen** (`PaperFallback`) di kedua URL. Gerbang atau
+cangkang menggantikannya setelah mount, dan hanya kalau kedua syarat
+`useShellEligible` terpenuhi — lebar dan JS. Gerak yang dikurangi **bukan lagi**
+salah satunya.
 
-Gerbang menutupi cangkang sampai dilewati: nama, peran, lokasi, rentang tahun,
-daftar stack, dan dua tombol yang menyebut tujuannya (`PETA` / `DAFTAR`). Sekali
-per tab, diingat lewat `sessionStorage`. Di lebar HP tidak ada gerbang — cuma
-pita identitas kecil di atas dokumen, memakai teks yang sama persis.
+Gerbang berdiri di `/` sebagai halaman penuh, bukan lapisan: nama, peran, lokasi,
+rentang tahun, daftar stack, dan dua tombol yang menyebut tujuannya
+(`PETA` / `DAFTAR`). Menekan tombol, huruf apa pun, atau menggulir ke bawah
+memanggil `router.push` ke `/sistem`. Di lebar HP tidak ada gerbang — cuma pita
+identitas kecil di atas dokumen, memakai teks yang sama persis.
 
-**Ingatan `sessionStorage` itu berumur pendek.** Rencana `gerbang-punya-url`
-menggantinya dengan URL: `/` gerbang, `/sistem` cangkang. Jangan bangun apa pun
-baru di atas `useGatePassed`.
+**`useGatePassed` dan `sessionStorage` sudah tidak ada.** Jangan dicari, jangan
+dibangkitkan lagi. Yang mengingat sekarang URL, dan itulah yang membuat tombol
+kembali browser bekerja.
 
 ## Di mana isinya
 
@@ -44,8 +48,9 @@ baru di atas `useGatePassed`.
 | Tabel perintah konsol | `src/lib/shell/commands.js` |
 | Geometri plate & skala | `src/lib/shell/layout.js` |
 | Kosakata stack | `src/lib/data/tech.js` |
-| Gerbang desktop | `src/components/shell/Gate.jsx` |
-| Ingatan gerbang | `src/lib/hooks/useGatePassed.js` |
+| Gerbang, halaman `/` | `src/app/page.jsx` + `src/components/shell/Gate.jsx` |
+| Cangkang, halaman `/sistem` | `src/app/sistem/page.jsx` (+ `layout.js` untuk canonical) |
+| Lapis kertas, dipakai dua route | `src/components/document/PaperFallback.jsx` |
 | Pita identitas HP | `src/components/document/PaperHead.jsx` |
 | Cangkang desktop | `src/components/shell/` |
 | Dokumen HP | `src/components/document/` |
@@ -53,15 +58,19 @@ baru di atas `useGatePassed`.
 | Rencana 17 task (selesai) | `docs/superpowers/plans/2026-09-03-shell-dan-dokumen.md` |
 | Spec desain | `docs/superpowers/specs/2026-09-03-shell-dan-dokumen-design.md` |
 | Rencana gerbang, 8 task (selesai) | `docs/superpowers/plans/2026-09-08-gerbang-hero.md` |
+| Rencana URL gerbang, 6 task (selesai) | `docs/superpowers/plans/2026-09-08-gerbang-punya-url.md` |
 | Spec gerbang | `docs/superpowers/specs/2026-09-08-gerbang-hero-design.md` |
 | Seluruh teks tampil, dua bahasa | `docs/superpowers/notes/2026-09-03-seluruh-isi-tulisan.md` |
 | Teks yang dibuang, diarsipkan | `docs/superpowers/notes/2026-09-03-arsip-bagian-sulit.md` |
 
-Keadaan: **142 test hijau, 21 berkas**, `npx eslint src --max-warnings=0` bersih,
-`npm run build` sukses dengan lima halaman `/kerja/*`.
+Keadaan: **145 test hijau, 22 berkas**, `npx eslint src --max-warnings=0` bersih,
+`npm run build` sukses: `/sistem` terdaftar **statis** (`○`), bersama `/`,
+`/kontak` dan lima halaman `/kerja/*`.
 
 Jumlah test turun dari 165 ke 92 di Task 15 karena 73 test kanvas ikut dihapus
-bersama kodenya. Itu bukan regresi. Naik ke 142 lewat rencana gerbang.
+bersama kodenya. Itu bukan regresi. Naik ke 142 lewat rencana gerbang, lalu
+sempat turun ke 130 waktu 10 test lapisan gerbang dan 6 test `useGatePassed`
+ikut dibuang, lalu naik lagi ke 145.
 
 ## Larangan yang tidak bisa ditawar
 
@@ -94,8 +103,9 @@ bersama kodenya. Itu bukan regresi. Naik ke 142 lewat rencana gerbang.
   sengaja tidak punya `transition`); yang bergerak sendiri memudar 700ms
   `cubic-bezier(.22, 1, .36, 1)`; warna 180ms; `prefers-reduced-motion`
   memangkas ke 1ms. Sejak 2026-09-08 ia **tidak lagi** menahan cangkang.
-- **Tanpa JavaScript `/` harus tetap utuh.** Sudah diverifikasi lewat `curl`:
-  HTML server memuat delapan sistem dan lima tautan `/kerja/*`.
+- **Tanpa JavaScript `/` **dan** `/sistem` harus tetap utuh.** Sudah diverifikasi
+  lewat `curl`: HTML server keduanya memuat delapan sistem dan lima tautan
+  `/kerja/*`. Server merender `PaperFallback`, bukan gerbang.
 - **Satu tautan kembali saja di halaman baca.** Kepala yang memegangnya; kaki
   dulu punya tautan kedua ke tujuan yang sama, dan dua tautan dengan nama
   aksesibel identik itu kebisingan di daftar tautan.
@@ -104,10 +114,24 @@ bersama kodenya. Itu bukan regresi. Naik ke 142 lewat rencana gerbang.
   cuma memilih view awal (`list` bukan `map`), dan gerbang membiarkan pilihan itu
   ditolak lewat tombol `PETA`. Menahan cangkang berarti mengurangi antarmuka,
   padahal yang diminta pengunjung adalah gerak yang dikurangi.
-- **Gerbang wajib membawa `inert`.** Selama gerbang naik, keempat baris cangkang
-  dibungkus `<div className="contents" inert>`; tanpa itu `Tab` dan pembaca layar
-  berjalan lurus ke konsol di belakangnya. `inert` dilepas begitu `leaving` menyala,
-  supaya huruf yang membuka gerbang bisa mendarat di konsol.
+- **Gerbang tidak lagi butuh `inert`.** Dulu wajib, waktu ia lapisan di atas
+  cangkang. Sekarang ia halaman sendiri: tidak ada apa pun di belakangnya yang
+  perlu ditutup dari `Tab` atau pembaca layar. Wrapper `display:contents` yang
+  membawanya sudah hilang bersama state `leaving` dan `setTimeout(700)`.
+- **URL yang mengingat, bukan `sessionStorage`.** `/` gerbang, `/sistem`
+  cangkang, `?tampilan=datar` tabel datar, `?ketik=<huruf>` benih konsol yang
+  langsung dihapus dari URL begitu terbaca. Ini yang membuat tombol kembali
+  browser mengembalikan pengunjung ke gerbang.
+- **View adalah state lokal; URL mengikuti, bukan memimpin.** `changeView`
+  memanggil `router.replace` (bukan `push`) supaya `ISO / DATAR` tidak menumpuk
+  riwayat. Kalau URL yang memimpin, `Shell` mount ulang dan filter serta seluruh
+  rail log ikut hilang tiap ganti view.
+- **`?ketik=` dibangun `URLSearchParams`, jangan disambung sendiri.** Huruf
+  seperti `&` akan memotong query jadi dua. Ada test yang menjaga `%26`.
+- **`/sistem` canonical-nya `/`, dan tidak masuk sitemap.** Di lebar HP kedua URL
+  merender isi yang sama persis. Mendaftarkan keduanya membatalkan canonical itu.
+  Route `"use client"` tidak bisa mengekspor `metadata`; `sistem/layout.js` yang
+  memegangnya.
 - **`PaperHead` tidak menggambar garis penutup.** `YearGroup` sudah punya
   `border-t border-paper-ink` di atas judul tahunnya.
 - **Parallax gerbang: `36 / 21 / 46 / 12`, `VERTICAL = 0.9`, ke arah kursor.**
@@ -125,45 +149,58 @@ kosong yang memang dirancang untuk itu.
 
 ### Antrean berikutnya, urut
 
-**1. `gerbang-punya-url` — rencananya sudah ditulis, tinggal dikerjakan.**
-`docs/superpowers/plans/2026-09-08-gerbang-punya-url.md`, enam task. `/` jadi
-gerbang, `/sistem` jadi cangkang, `?tampilan=datar` untuk tabel datar. Membuang
-`useGatePassed`, `sessionStorage`, wrapper `inert`, state `leaving` dan
-`setTimeout(700)` — lebih banyak hilang daripada bertambah. Satu hal yang belum
-terbukti: apakah `useSearchParams` + `Suspense` memaksa `/sistem` jadi render
-dinamis waktu `npm run build`.
-
-**2. Gaya scrollbar.** Belum dispec. Dua tempat: `<ul>` di `LogRail` dan pane
+**1. Gaya scrollbar.** Belum dispec. Dua tempat: `<ul>` di `LogRail` dan pane
 `FlatTable`. Utsman mengirim screenshot dan menyebutnya "sangat jelek" —
 scrollbar bawaan Windows di atas lapis gelap. `::-webkit-scrollbar` +
 `scrollbar-color` di `globals.css`. Pekerjaan kecil, berdiri sendiri.
 
-**3. Peta lebih interaktif.** Belum dispec, dan ini yang paling besar. Empat hal
+**2. Peta lebih interaktif.** Belum dispec, dan ini yang paling besar. Empat hal
 yang diminta Utsman:
 
   - **Klik badan plate, bukan cuma labelnya.** Sekarang cuma
     `<button data-plate-label>` yang klikable; lapisannya mati. Tombol harus
     tetap ada untuk keyboard.
-  - **Roda memutar kamera.** `onWheel` → `setRotZ`. Bergantung pada keputusan
-    URL di atas: kalau halaman tidak pernah menggulir, roda bebas dipakai.
+  - **Roda memutar kamera.** `onWheel` → `setRotZ`. Keputusan URL sudah jatuh dan
+    `/sistem` tidak pernah menggulir, jadi roda bebas dipakai. Catatan: di
+    gerbang roda sudah punya arti sendiri — gulir ke bawah membuka `/sistem`.
   - **Lapisan lebih bernyawa.** `Plate.jsx` sekarang ramp lima warna datar.
     Ingat: desain ini **tanpa bayangan** — kedalaman dari lapisan dan warna tepi.
   - **Zoom masuk ke halaman baca, zoom keluar waktu kembali.** View Transitions
     API. Chrome/Edge/Safari 18 dapat animasinya, Firefox navigasi biasa. Zoom
     keluar butuh `rotZ`/`scale`/`selected` peta bertahan waktu kembali.
 
-**4. Teks legenda dan catatan rail.** Utsman menyebut keduanya kurang
+**3. Teks legenda dan catatan rail.** Utsman menyebut keduanya kurang
 informatif: `AxisLegend` (`KEDALAMAN tahun · TINGGI stack` dst) dan catatan di
 kaki `LogRail` ("Sistem yang diredupkan tetap di peta…").
 
-**5. Kontras label tahun di peta.** `#4C555A` di atas ground ±2.3:1. Palet
+**4. Kontras label tahun di peta.** `#4C555A` di atas ground ±2.3:1. Palet
 handoff, informasinya juga ada di legenda dan rail, jadi dibiarkan — tapi belum
 pernah ditawarkan ke Utsman untuk dinaikkan.
 
-**6. Screenshot** `hris.png` dan `psb.png` → `public/assets/img/`. Sensor dulu
+**5. Screenshot** `hris.png` dan `psb.png` → `public/assets/img/`. Sensor dulu
 kalau memuat data pegawai atau pasien asli.
 
-**7. Merge ke `main` dan deploy.**
+**6. Merge ke `main` dan deploy.**
+
+### Gerbang punya URL — **selesai 2026-09-09**
+
+Enam task, dikerjakan dengan **Task 2 lebih dulu**: test Task 1 (`/sistem`)
+menuntut `Shell` sudah menerima prop `view` dan `seed`, yang justru baru ada di
+Task 2. Rencana yang menaruh route di depan komponennya tidak bisa hijau di
+langkahnya sendiri. Urutan yang dipakai: 2 → 1 → 3 → 4 → 5 → 6.
+
+Diverifikasi di browser sungguhan pada 1280×800, dibaca lewat `javascript_tool`:
+`/` gerbang → klik `PETA` → `/sistem` peta → **tombol kembali → `/` gerbang lagi**;
+tekan `f` di gerbang → `/sistem?ketik=f` yang langsung bersih jadi `/sistem`
+dengan konsol berisi `f` dan fokus; pasang filter lalu `DATAR` → `/sistem?tampilan=datar`,
+chip tetap `aria-pressed="true"` dan baris `$ filter client:bpn` masih di rail;
+`ISO` kembali → `/sistem`, filter dan log tetap; satu kali tombol kembali dari
+tabel datar mendarat di `/`, bukan di `/sistem` — `replace` memang tidak menumpuk.
+Di 375px `/` dan `/sistem` sama-sama dokumen kertas.
+
+**`useSearchParams` + `Suspense` tidak memaksa render dinamis.** Ini yang belum
+terbukti waktu rencana ditulis. `npm run build` mendaftarkan `/sistem` sebagai
+`○ (Static)`.
 
 ### Nasib reduced-motion — **selesai 2026-09-08**
 
@@ -204,7 +241,15 @@ dulu `/` selalu mendarat di dokumen kertas — plate tidak bergeser sama sekali,
   (`page.jsx` mengembalikan dokumen sampai `useMediaQuery` bilang lebar), jadi
   gerbang tidak pernah ikut hidrasi dan `useState(read)` aman.
 - **Elemen `display:contents` bisa membawa `inert`** tanpa merusak grid — cara
-  termurah menutup satu subtree tanpa membungkusnya jadi kotak baru.
+  termurah menutup satu subtree tanpa membungkusnya jadi kotak baru. Tidak lagi
+  dipakai di sini, tapi tetap benar.
+- **Fungsi yang dipakai di dalam `useEffect` butuh `useCallback`.** `destination`
+  di `Gate` dipanggil oleh listener keydown; tanpa `useCallback`, ESLint menuntut
+  ia masuk daftar dependensi, dan begitu masuk, listener dibongkar-pasang tiap
+  render.
+- **Gerbang `absolute inset-0` butuh induk yang seukuran viewport.** Waktu ia
+  lapisan, `Shell` yang `relative` menyediakannya. Sebagai halaman sendiri,
+  `page.jsx` harus membungkusnya `relative h-[100dvh] overflow-hidden`.
 
 ### Tentang menguji
 
@@ -230,6 +275,17 @@ dulu `/` selalu mendarat di dokumen kertas — plate tidak bergeser sama sekali,
   handler memanggilnya.
 - **Dua `border-t` bersebelahan itu benar secara DOM.** Garis dobel `PaperHead` +
   `YearGroup` cuma kelihatan di browser.
+- **Rencana bisa menaruh route sebelum komponennya.** Test `/sistem` di Task 1
+  menuntut prop yang baru dibuat Task 2. Baca test sebuah task sampai habis
+  sebelum mulai; kalau ia menyebut sesuatu yang belum ada, urutannya yang salah,
+  bukan implementasinya.
+- **Test yang tidak menyetel locale mendapat bahasa `navigator`.** happy-dom
+  menjawab `en-US`, jadi label konsol jadi `Command console`. Di berkas route
+  (yang memakai `useLocale`, bukan prop `locale`) cocokkan dua bahasa sekaligus.
+- **Nama aksesibel bisa bertabrakan lintas komponen.** `getByRole('link', { name: /UTSMAN/ })`
+  menangkap juga tautan GitHub `Utsmanseff` di `StatusBar`. Cocokkan persis.
+- **Chip filter yang aktif membawa `×` di labelnya.** `{ name: 'client:bpn' }`
+  gagal setelah chip menyala; pakai `/^client:bpn/`.
 
 ### Tentang alat browser (mahal, berulang)
 
@@ -277,9 +333,9 @@ dulu `/` selalu mendarat di dokumen kertas — plate tidak bergeser sama sekali,
 ## Cara lanjut
 
 1. `git checkout portfolio-canvas-redesign`
-2. `npx vitest run` — harus 142 hijau, `npx eslint src --max-warnings=0` bersih
-3. Antrean ada di bagian **"Antrean berikutnya, urut"** di atas. Mulai dari
-   nomor 1: rencananya sudah tertulis dan belum disentuh.
+2. `npx vitest run` — harus 145 hijau, `npx eslint src --max-warnings=0` bersih
+3. Antrean ada di bagian **"Antrean berikutnya, urut"** di atas. Nomor 1 sekarang
+   gaya scrollbar — pekerjaan kecil yang berdiri sendiri dan belum dispec.
 
 Aturan kerja yang berlaku di sesi ini dan sebaiknya diteruskan: TDD (test dulu,
 lihat gagal, baru implementasi), commit tiap task, verifikasi di browser

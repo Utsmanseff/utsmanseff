@@ -155,7 +155,7 @@ export function useGatePassed() {
 npx vitest run src/lib/hooks/__tests__/useGatePassed.test.jsx
 ```
 
-Expected: PASS, 7 test.
+Expected: PASS, 7 test (Task 3 dan 6 menambah sisanya).
 
 - [ ] **Step 5: Commit**
 
@@ -242,6 +242,78 @@ describe('Gate', () => {
       <Gate systems={projects} locale="id" calm={false} leaving onEnter={vi.fn()} />,
     );
     expect(screen.getByTestId('gate')).toHaveStyle({ opacity: '0' });
+  });
+});
+
+describe('Gate · dismissal', () => {
+  it('closes on Enter, using the default view', () => {
+    const { onEnter } = renderGate();
+    fireEvent.keyDown(window, { key: 'Enter' });
+    expect(onEnter).toHaveBeenCalledWith(null, null);
+  });
+
+  it('closes on Escape', () => {
+    const { onEnter } = renderGate();
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(onEnter).toHaveBeenCalledWith(null, null);
+  });
+
+  it('closes on a letter and hands that letter on to the console', () => {
+    const { onEnter } = renderGate();
+    fireEvent.keyDown(window, { key: 'f' });
+    expect(onEnter).toHaveBeenCalledWith(null, 'f');
+  });
+
+  it('does not treat a space as a letter worth keeping', () => {
+    const { onEnter } = renderGate();
+    fireEvent.keyDown(window, { key: ' ' });
+    expect(onEnter).toHaveBeenCalledWith(null, null);
+  });
+
+  it('swallows the keystroke it hands on, so the letter arrives once', () => {
+    // fireEvent returns false when the handler called preventDefault. Without
+    // it a real browser also delivers this keystroke to the console it is about
+    // to focus, and `f` lands as `ff` — something happy-dom cannot show, since
+    // it never performs the default text insertion.
+    const { onEnter } = renderGate();
+    expect(fireEvent.keyDown(window, { key: 'f' })).toBe(false);
+    expect(onEnter).toHaveBeenCalledWith(null, 'f');
+  });
+
+  it('does not swallow Tab — the browser still needs it', () => {
+    renderGate();
+    expect(fireEvent.keyDown(window, { key: 'Tab' })).toBe(true);
+  });
+
+  it('leaves Tab alone, so the two buttons stay reachable', () => {
+    const { onEnter } = renderGate();
+    fireEvent.keyDown(window, { key: 'Tab' });
+    expect(onEnter).not.toHaveBeenCalled();
+  });
+
+  it('ignores keys that are not text and not a decision', () => {
+    const { onEnter } = renderGate();
+    fireEvent.keyDown(window, { key: 'ArrowDown' });
+    fireEvent.keyDown(window, { key: 'Shift' });
+    expect(onEnter).not.toHaveBeenCalled();
+  });
+
+  it('ignores a letter pressed with a modifier — that is a browser shortcut', () => {
+    const { onEnter } = renderGate();
+    fireEvent.keyDown(window, { key: 'r', ctrlKey: true });
+    expect(onEnter).not.toHaveBeenCalled();
+  });
+
+  it('closes when the visitor scrolls down', () => {
+    const { onEnter } = renderGate();
+    fireEvent.wheel(screen.getByTestId('gate'), { deltaY: 40 });
+    expect(onEnter).toHaveBeenCalledWith(null, null);
+  });
+
+  it('stays put when the visitor scrolls up', () => {
+    const { onEnter } = renderGate();
+    fireEvent.wheel(screen.getByTestId('gate'), { deltaY: -40 });
+    expect(onEnter).not.toHaveBeenCalled();
   });
 });
 ```
@@ -508,7 +580,7 @@ Dan tambahkan handler roda di elemen terluar — sisipkan `onWheel` tepat setela
 npx vitest run src/components/shell/__tests__/Gate.test.jsx
 ```
 
-Expected: PASS, 16 test.
+Expected: PASS, 18 test.
 
 - [ ] **Step 5: Commit**
 
@@ -736,6 +808,19 @@ Terakhir, teruskan `focusToken` ke konsol:
       />
 ```
 
+- [ ] **Step 4b: Taruh cangkang di luar jangkauan selama gerbang naik**
+
+Tanpa ini gerbang cuma gambar gerbang: `Tab` dan pembaca layar berjalan lurus ke
+konsol dan rail di belakangnya. Bungkus keempat baris grid dengan satu wrapper
+`display:contents` yang membawa `inert`, dan lepaskan begitu gerbang mulai pergi
+supaya huruf yang membukanya bisa mendarat di konsol:
+
+```jsx
+      <div className="contents" inert={!passed && !leaving}>
+        {/* TopBar, baris tengah, Console, StatusBar */}
+      </div>
+```
+
 - [ ] **Step 5: Tulis implementasi `Console`**
 
 Di `src/components/shell/Console.jsx`, ubah tanda tangan:
@@ -760,7 +845,7 @@ Dan tambahkan efek kedua tepat setelah efek `"/"` yang sudah ada:
 npx vitest run src/components/shell/__tests__/Shell.test.jsx
 ```
 
-Expected: PASS — sembilan test lama plus delapan test gerbang.
+Expected: PASS — 11 test lama plus 10 test gerbang, 21 seluruhnya.
 
 - [ ] **Step 7: Jalankan seluruh suite**
 
@@ -1062,7 +1147,7 @@ Dan tambahkan ini di badan komponen, setelah efek keyboard:
 npx vitest run src/components/shell/__tests__/Gate.test.jsx
 ```
 
-Expected: PASS, 19 test.
+Expected: PASS, 21 test.
 
 - [ ] **Step 5: Commit**
 

@@ -35,8 +35,15 @@ export default function Gate({ systems, locale, calm, leaving = false, onEnter }
     const onKey = (e) => {
       if (e.key === 'Tab') return;
       if (e.ctrlKey || e.metaKey || e.altKey) return;
-      if (e.key === 'Enter' || e.key === 'Escape') { onEnter(null, null); return; }
+      if (e.key === 'Enter' || e.key === 'Escape') {
+        e.preventDefault();
+        onEnter(null, null);
+        return;
+      }
       if (e.key.length !== 1) return;
+      // The console is focused a moment from now, and without this the browser
+      // delivers this very keystroke to it as well — the letter arrives twice.
+      e.preventDefault();
       onEnter(null, e.key === ' ' ? null : e.key);
     };
     window.addEventListener('keydown', onKey);

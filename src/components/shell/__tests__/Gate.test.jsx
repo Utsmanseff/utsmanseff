@@ -89,6 +89,21 @@ describe('Gate · dismissal', () => {
     expect(onEnter).toHaveBeenCalledWith(null, null);
   });
 
+  it('swallows the keystroke it hands on, so the letter arrives once', () => {
+    // fireEvent returns false when the handler called preventDefault. Without
+    // it a real browser also delivers this keystroke to the console it is about
+    // to focus, and `f` lands as `ff` — something happy-dom cannot show, since
+    // it never performs the default text insertion.
+    const { onEnter } = renderGate();
+    expect(fireEvent.keyDown(window, { key: 'f' })).toBe(false);
+    expect(onEnter).toHaveBeenCalledWith(null, 'f');
+  });
+
+  it('does not swallow Tab — the browser still needs it', () => {
+    renderGate();
+    expect(fireEvent.keyDown(window, { key: 'Tab' })).toBe(true);
+  });
+
   it('leaves Tab alone, so the two buttons stay reachable', () => {
     const { onEnter } = renderGate();
     fireEvent.keyDown(window, { key: 'Tab' });

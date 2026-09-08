@@ -18,7 +18,7 @@ const COPY = {
 
 export default function FlatTable({ systems, locale, selected, dimmed, onSelect }) {
   return (
-    <div className="overflow-y-auto p-10">
+    <div data-testid="flat-table" className="overflow-y-auto p-10">
       <h1 className="font-display text-[32px] font-extrabold tracking-[-.03em] text-ink-bright m-0">
         {COPY.title[locale]}
       </h1>

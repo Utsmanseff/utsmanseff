@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { projects } from '@/lib/data/projects';
 import { useLocale } from '@/lib/hooks/useLocale';
 import { useShellEligible } from '@/lib/hooks/useShellEligible';
+import { useMediaQuery } from '@/lib/hooks/useMediaQuery';
 import { EMPTY_FILTERS, isShown, toggleFilter, isFiltering } from '@/lib/shell/filters';
 import SystemsDocument from '@/components/document/SystemsDocument';
 import FilterSheet from '@/components/document/FilterSheet';
@@ -13,10 +14,13 @@ import Shell from '@/components/shell/Shell';
 export default function Home() {
   const { locale } = useLocale();
   const shell = useShellEligible();
+  // Asked once, here, so the shell and the gate are handed an answer rather
+  // than each going to the browser for it.
+  const calm = useMediaQuery('(prefers-reduced-motion: reduce)');
   const [filters, setFilters] = useState(EMPTY_FILTERS);
   const [sheetOpen, setSheetOpen] = useState(false);
 
-  if (shell) return <Shell systems={projects} locale={locale} />;
+  if (shell) return <Shell systems={projects} locale={locale} calm={calm} />;
 
   const dimmed = new Set(projects.filter((p) => !isShown(p, filters)).map((p) => p.slug));
 

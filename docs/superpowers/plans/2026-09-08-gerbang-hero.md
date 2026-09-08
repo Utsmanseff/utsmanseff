@@ -895,9 +895,10 @@ vi.mock('@/lib/hooks/useShellEligible', () => ({
   useShellEligible: () => eligible.value,
 }));
 
-// page.jsx now asks the browser about motion directly. happy-dom answers, but
-// stubbing it keeps the answer in this file rather than in the environment.
+// page.jsx now asks the browser about motion directly. Stubbing matchMedia keeps
+// that answer in this file rather than in whatever the environment happens to say.
 const calm = { value: false };
+
 beforeEach(() => {
   eligible.value = false;
   calm.value = false;
@@ -922,12 +923,16 @@ describe('/', () => {
     expect(screen.getByTestId('shell')).toBeInTheDocument();
   });
 
-  it('gives a reduced-motion visitor the shell, not the paper document', () => {
+  // useShellEligible is mocked in this file, so whether a calm visitor reaches
+  // the shell at all is not something these tests can decide — that lives in
+  // useShellEligible's own test. What this one proves is the wiring: `calm`
+  // travels from the page into the shell and picks the starting view.
+  it('starts a reduced-motion visitor on the flat table', () => {
     eligible.value = true;
     calm.value = true;
+    window.sessionStorage.setItem('gate', '1');
     render(<Home />, { wrapper: LocaleProvider });
-    expect(document.querySelector('.paper-doc')).toBeNull();
-    expect(screen.getByTestId('gate')).toBeInTheDocument();
+    expect(screen.getByTestId('flat-table')).toBeInTheDocument();
   });
 });
 ```
@@ -938,7 +943,56 @@ describe('/', () => {
 npx vitest run src/app/__tests__/page.test.jsx
 ```
 
-Expected: FAIL pada test ketiga — `page.jsx` belum meneruskan `calm`, jadi gerbang belum ada. (Dua test pertama tetap hijau.)
+Expected: FAIL pada test terakhir — `page.jsx` belum meneruskan `calm`.
+
+Perhatikan jebakan di sini: `useShellEligible` di-mock di berkas ini, jadi test
+apa pun di dalamnya **tidak bisa** membuktikan bahwa pengunjung reduced-motion
+sampai ke cangkang. Itu urusan test hook-nya sendiri, di Step 2b.
+
+- [ ] **Step 2b: Tulis test untuk hook-nya, yang tidak di-mock**
+
+Buat `src/lib/hooks/__tests__/useShellEligible.test.jsx`:
+
+```jsx
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { renderHook } from '@testing-library/react';
+import { useShellEligible } from '@/lib/hooks/useShellEligible';
+
+const answers = { wide: false, calm: false };
+
+beforeEach(() => {
+  answers.wide = false;
+  answers.calm = false;
+  window.matchMedia = vi.fn((query) => ({
+    matches: query.includes('prefers-reduced-motion') ? answers.calm : answers.wide,
+    addEventListener: () => {},
+    removeEventListener: () => {},
+  }));
+});
+
+describe('useShellEligible', () => {
+  it('needs room', () => {
+    expect(renderHook(() => useShellEligible()).result.current).toBe(false);
+    answers.wide = true;
+    expect(renderHook(() => useShellEligible()).result.current).toBe(true);
+  });
+
+  // Reduced motion used to be a third condition here, and it cost that visitor
+  // the console, the rail and the panel — an interface reduced, when what they
+  // asked for was motion reduced. See Task 1 in docs/PROGRESS.md.
+  it('does not care whether the visitor asked for less motion', () => {
+    answers.wide = true;
+    answers.calm = true;
+    expect(renderHook(() => useShellEligible()).result.current).toBe(true);
+  });
+});
+```
+
+```bash
+npx vitest run src/lib/hooks/__tests__/useShellEligible.test.jsx
+```
+
+Expected: FAIL — hook masih menolak pengunjung yang gerak-nya dikurangi.
 
 - [ ] **Step 3: Lepas syarat `calm` dari kelayakan**
 
@@ -981,7 +1035,7 @@ Dan di badan komponen:
 npx vitest run src/app/__tests__/page.test.jsx
 ```
 
-Expected: PASS, 3 test.
+Expected: PASS — 3 test di `page.test.jsx`, 2 di `useShellEligible.test.jsx`.
 
 - [ ] **Step 6: Jalankan seluruh suite dan ESLint**
 

@@ -2,12 +2,14 @@
 
 import { useMediaQuery } from './useMediaQuery';
 
-// Three conditions, all of them honest defaults: the shell needs room, it needs
-// JavaScript, and it must not run for someone who asked for less motion. The
-// server answers false for all three, so the document is what gets rendered and
-// the page is complete before a single script arrives.
+// Two conditions, not three: the shell needs room, and it needs JavaScript. The
+// server answers false, so the document is what gets rendered and the page is
+// complete before a single script arrives.
+//
+// Reduced motion used to be the third, and it cost that visitor the console, the
+// rail and the panel — an interface reduced, when what they asked for was motion
+// reduced. The gate asks them instead and starts them on the still view. See
+// Task 1 in docs/PROGRESS.md.
 export function useShellEligible() {
-  const wide = useMediaQuery('(min-width: 1024px)');
-  const calm = useMediaQuery('(prefers-reduced-motion: reduce)');
-  return wide && !calm;
+  return useMediaQuery('(min-width: 1024px)');
 }

@@ -20,21 +20,21 @@ const COPY = {
 // to the other. Four different numbers is the whole effect: equal ones read as a
 // single sheet sliding.
 //
-// Twice tuned by eye. 34/20/46/12 was the first try and read as shoving — though
-// the offsets were also negated then, which is most of why. 15/9/20/5 was the
-// correction and went too far the other way: at 8px of travel nobody notices it
-// without being told to look.
+// Tuned by eye, four passes. 34/20/46/12 read as shoving — though the offsets
+// were negated then, which is most of why. 15/9/20/5 overcorrected: 8px of drift
+// goes unnoticed unless you are told to look. 28/16/36/9 was visible but still
+// short. These are the settled numbers.
 const PLATES = [
-  { width: 168, height: 100, right: 172, top: 44, bg: '#1D2428', edge: '#333C41', pull: 28 },
-  { width: 196, height: 116, right: 78, top: 132, bg: '#252E33', edge: '#4A545A', pull: 16 },
-  { width: 146, height: 88, right: 200, top: 244, bg: '#27302F', edge: '#C97B3F', pull: 36 },
-  { width: 112, height: 68, right: 24, top: 28, bg: '#1D2428', edge: '#333C41', pull: 9 },
+  { width: 168, height: 100, right: 172, top: 44, bg: '#1D2428', edge: '#333C41', pull: 36 },
+  { width: 196, height: 116, right: 78, top: 132, bg: '#252E33', edge: '#4A545A', pull: 21 },
+  { width: 146, height: 88, right: 200, top: 244, bg: '#27302F', edge: '#C97B3F', pull: 46 },
+  { width: 112, height: 68, right: 24, top: 28, bg: '#1D2428', edge: '#333C41', pull: 12 },
 ];
 
 // The gate is wider than it is tall, so an unscaled vertical pull travels a
 // larger share of the axis it moves along. 0.6 damped it so far that the up-down
-// drift was the part nobody could see.
-const VERTICAL = 0.85;
+// drift was the part nobody could see; 0.9 keeps a little of that damping.
+const VERTICAL = 0.9;
 
 export default function Gate({ systems, locale, calm, leaving = false, onEnter }) {
   const gateRef = useRef(null);

@@ -55,8 +55,11 @@ describe('ProjectView', () => {
   });
 
   it('always offers a way back to all systems', () => {
+    // /sistem, not /. Since the gate moved onto `/`, a link labelled "all
+    // systems" that landed there showed a name and two buttons instead of the
+    // systems it promised.
     render(<ProjectView project={project} prev={null} next={null} />);
-    expect(screen.getByRole('link', { name: /SEMUA SISTEM/ })).toHaveAttribute('href', '/');
+    expect(screen.getByRole('link', { name: /SEMUA SISTEM/ })).toHaveAttribute('href', '/sistem');
   });
 
   it('numbers its three sections and links back to all systems', () => {

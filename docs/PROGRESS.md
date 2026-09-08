@@ -91,16 +91,43 @@ bersama kodenya. Itu bukan regresi.
 Sampai masuk, `image: null` dan halaman menampilkan keadaan kosong yang
 dirancang. Sensor dulu kalau memuat data pegawai atau pasien asli.
 
-**Satu ambiguitas spec yang belum diputuskan user.** Spec §7 menulis
-`prefers-reduced-motion` membuat `/` "mendarat di tabel datar, bukan peta",
-sedangkan §2 menulis cangkang hanya menyusul kalau gerak **tidak** dikurangi.
-Implementasi mengikuti §2: gerak dikurangi → dokumen (daftar datar berbasis
-tahun), bukan `FlatTable` di dalam cangkang. Kalau yang dimaksud `FlatTable`,
-`useShellEligible` perlu diubah supaya cangkang tetap mount dengan `view='list'`.
+### Tugas 1 — pengunjung reduced-motion di desktop (belum diputuskan)
 
-**Kontras label tahun di peta rendah.** `#4C555A` di atas ground ±2.3:1.
-Itu palet handoff, informasinya juga ada di legenda dan rail, jadi dibiarkan —
-tapi belum pernah ditawarkan ke user untuk dinaikkan.
+**Ditemukan 2026-09-08.** Animasi Windows di mesin Utsman sempat mati
+(`ClientAreaAnimation = False`), dan Chromium menerjemahkan itu jadi
+`prefers-reduced-motion: reduce`. Akibatnya `/` selalu mendarat di dokumen dan
+peta seolah tidak pernah ada. Setelah animasi dinyalakan, **peta jalan normal
+di browser Utsman** — jadi tidak ada bug di peta.
+
+Yang tersisa keputusan produk: pengunjung lain yang animasinya mati akan dapat
+dokumen, bukan cangkang. Mereka kehilangan peta, konsol, dan rail log.
+
+Spec bertabrakan dengan dirinya sendiri di sini:
+
+| Spec | Bunyinya |
+|------|----------|
+| §2 | cangkang menyusul hanya kalau lebar ≥1024 **dan** gerak tidak dikurangi |
+| §7 | `prefers-reduced-motion` membuat `/` "mendarat di tabel datar, bukan peta" |
+
+Implementasi sekarang mengikuti §2 (→ dokumen). **Rekomendasi yang sudah
+diajukan ke Utsman dan belum dijawab:** ikuti §7 — cangkang tetap mount,
+tapi mendarat di `FlatTable`. Alasannya, yang diminta pengunjung itu gerak
+yang dikurangi, bukan antarmuka yang dikurangi; konsol, rail, panel dan tabel
+datar sama sekali tidak bergerak, dan tombol `ISO` tetap ada kalau mereka mau
+melihat peta atas kemauan sendiri.
+
+Kalau dipilih, perubahannya kecil:
+
+- `src/lib/hooks/useShellEligible.js` → cukup `wide`, syarat `calm` dilepas
+- `src/components/shell/Shell.jsx` → terima `calm`, view awal `calm ? 'list' : 'map'`
+- test: `page.test.jsx` (mount cangkang saat calm) dan `Shell.test.jsx` (view awal)
+- verifikasi browser: matikan animasi Windows sekali lagi untuk mengeceknya
+
+### Tugas 2 — kontras label tahun di peta (belum ditawarkan)
+
+`#4C555A` di atas ground ±2.3:1. Itu palet handoff, dan informasinya juga ada
+di legenda dan rail, jadi dibiarkan apa adanya — tapi belum pernah ditawarkan
+ke Utsman untuk dinaikkan.
 
 ## Pelajaran yang mahal (jangan diulang)
 
@@ -151,10 +178,12 @@ tapi belum pernah ditawarkan ke user untuk dinaikkan.
   `"Enter"`. Nama tombol `/` ditulis `"/"`, bukan `"slash"`.
 - **Badge devtools Next menutupi pojok kiri bawah**, tepat di atas tombol
   `⌃ FILTER`. Sembunyikan `nextjs-portal` sebelum menguji di sana.
-- **Panel browser ini selalu melaporkan `prefers-reduced-motion: reduce`.**
-  Akibatnya cangkang tidak pernah mount di `/`, dan semua transisi terbaca
-  `1e-05s`. Untuk melihat cangkang, render `Shell` lewat route probe sementara;
-  jangan simpulkan cangkang rusak.
+- **`prefers-reduced-motion` ikut setelan OS, bukan cuma browser.** Sepanjang
+  sesi 2026-09-08 panel browser melaporkan `reduce` dan cangkang tidak pernah
+  mount di `/` — penyebabnya "Animation effects" Windows yang mati
+  (`HKCU:\Control Panel\Desktop\UserPreferencesMask`, bit `0x02` pada byte 0).
+  Semua transisi juga terbaca `1e-05s`. Sebelum menyimpulkan cangkang rusak,
+  periksa setelan itu, dan render `Shell` lewat route probe sementara.
 - **Buffer console lintas sesi.** Error 404 dan WebSocket dari server yang sudah
   dimatikan tetap muncul di pembacaan berikutnya. Periksa daftar network sebelum
   mempercayainya.
@@ -162,6 +191,13 @@ tapi belum pernah ditawarkan ke user untuk dinaikkan.
 ## Cara lanjut
 
 1. `git checkout portfolio-canvas-redesign`
-2. `npm test` — harus 92 hijau
-3. Rencana sudah habis. Yang tersisa: jawab dua pertanyaan terbuka di atas,
-   masukkan dua screenshot, lalu putuskan merge dan deploy.
+2. `npm test` — harus 92 hijau, `npx eslint src --max-warnings=0` bersih
+3. Rencana 17 task sudah habis. Antrean berikutnya, urut:
+   1. **Tugas 1** di atas — putuskan nasib pengunjung reduced-motion.
+   2. **Tugas 2** — tawarkan kontras label tahun.
+   3. Masukkan `hris.png` dan `psb.png` (sensor dulu).
+   4. Baru merge ke `main` dan deploy.
+
+Aturan kerja yang berlaku di sesi ini dan sebaiknya diteruskan: TDD (test dulu,
+lihat gagal, baru implementasi), commit tiap task, verifikasi di browser
+sungguhan bukan cuma test, jangan mengarang angka dampak.

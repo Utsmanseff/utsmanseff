@@ -3,7 +3,8 @@
 > Dibaca di awal sesi baru. Menggantikan catatan kanvas simpul, yang sudah tidak berlaku sejak 2026-09-03.
 
 **Branch:** `portfolio-canvas-redesign` (bercabang dari `main`, belum di-merge)
-**Posisi sekarang:** Rencana `2026-09-03-shell-dan-dokumen.md` **selesai, Task 1–17.**
+**Posisi sekarang:** Rencana `2026-09-03-shell-dan-dokumen.md` **selesai, Task 1–17**,
+lalu rencana `2026-09-08-gerbang-hero.md` **selesai, Task 1–8**.
 Belum di-merge ke `main`, dan belum di-deploy.
 
 ## Bentuk sekarang
@@ -13,13 +14,19 @@ sumber data, plus halaman baca:
 
 | Lebar | Bentuk | Warna |
 |-------|--------|-------|
-| ≥1024px, JS hidup, gerak tidak dikurangi | Cangkang: peta isometrik + konsol perintah | Gelap |
-| Selain itu (termasuk tanpa JS) | Dokumen: spine tahun + filter sheet | Kertas |
+| ≥1024px, JS hidup | Gerbang, lalu cangkang: peta isometrik + konsol perintah | Gelap |
+| Selain itu (termasuk tanpa JS) | Dokumen: pita identitas + spine tahun + filter sheet | Kertas |
 | `/kerja/<slug>` | Halaman baca, semua lebar | Gelap |
 | `/kontak` | Halaman kontak | Gelap |
 
 Server selalu merender **dokumen**. Cangkang menumpuk di atasnya setelah mount,
-dan hanya kalau ketiga syarat `useShellEligible` terpenuhi.
+dan hanya kalau kedua syarat `useShellEligible` terpenuhi — lebar dan JS. Gerak
+yang dikurangi **bukan lagi** salah satunya.
+
+Gerbang menutupi cangkang sampai dilewati: nama, peran, lokasi, rentang tahun,
+daftar stack, dan dua tombol yang menyebut tujuannya (`PETA` / `DAFTAR`). Sekali
+per tab, diingat lewat `sessionStorage`. Di lebar HP tidak ada gerbang — cuma
+pita identitas kecil di atas dokumen, memakai teks yang sama persis.
 
 ## Di mana isinya
 
@@ -30,19 +37,24 @@ dan hanya kalau ketiga syarat `useShellEligible` terpenuhi.
 | Tabel perintah konsol | `src/lib/shell/commands.js` |
 | Geometri plate & skala | `src/lib/shell/layout.js` |
 | Kosakata stack | `src/lib/data/tech.js` |
+| Gerbang desktop | `src/components/shell/Gate.jsx` |
+| Ingatan gerbang | `src/lib/hooks/useGatePassed.js` |
+| Pita identitas HP | `src/components/document/PaperHead.jsx` |
 | Cangkang desktop | `src/components/shell/` |
 | Dokumen HP | `src/components/document/` |
 | Halaman baca | `src/components/work/` |
 | Rencana 17 task (selesai) | `docs/superpowers/plans/2026-09-03-shell-dan-dokumen.md` |
 | Spec desain | `docs/superpowers/specs/2026-09-03-shell-dan-dokumen-design.md` |
+| Rencana gerbang, 8 task (selesai) | `docs/superpowers/plans/2026-09-08-gerbang-hero.md` |
+| Spec gerbang | `docs/superpowers/specs/2026-09-08-gerbang-hero-design.md` |
 | Seluruh teks tampil, dua bahasa | `docs/superpowers/notes/2026-09-03-seluruh-isi-tulisan.md` |
 | Teks yang dibuang, diarsipkan | `docs/superpowers/notes/2026-09-03-arsip-bagian-sulit.md` |
 
-Keadaan: **92 test hijau**, `npx eslint src --max-warnings=0` bersih,
+Keadaan: **140 test hijau, 21 berkas**, `npx eslint src --max-warnings=0` bersih,
 `npm run build` sukses dengan lima halaman `/kerja/*`.
 
 Jumlah test turun dari 165 ke 92 di Task 15 karena 73 test kanvas ikut dihapus
-bersama kodenya. Itu bukan regresi.
+bersama kodenya. Itu bukan regresi. Naik ke 140 lewat rencana gerbang.
 
 ## Larangan yang tidak bisa ditawar
 
@@ -74,13 +86,23 @@ bersama kodenya. Itu bukan regresi.
 - **Kontrak gerak terbelah.** Yang digerakkan jari 1:1 tanpa easing (grup peta
   sengaja tidak punya `transition`); yang bergerak sendiri memudar 700ms
   `cubic-bezier(.22, 1, .36, 1)`; warna 180ms; `prefers-reduced-motion`
-  memangkas ke 1ms **dan** menahan cangkang supaya tidak mount.
+  memangkas ke 1ms. Sejak 2026-09-08 ia **tidak lagi** menahan cangkang.
 - **Tanpa JavaScript `/` harus tetap utuh.** Sudah diverifikasi lewat `curl`:
   HTML server memuat delapan sistem dan lima tautan `/kerja/*`.
 - **Satu tautan kembali saja di halaman baca.** Kepala yang memegangnya; kaki
   dulu punya tautan kedua ke tujuan yang sama, dan dua tautan dengan nama
   aksesibel identik itu kebisingan di daftar tautan.
 - **`LangSwitcher` tidak punya prop `tone` lagi.** Satu lapis.
+- **Cangkang mount untuk semua lebar ≥1024, apa pun setelan geraknya.** `calm`
+  cuma memilih view awal (`list` bukan `map`), dan gerbang membiarkan pilihan itu
+  ditolak lewat tombol `PETA`. Menahan cangkang berarti mengurangi antarmuka,
+  padahal yang diminta pengunjung adalah gerak yang dikurangi.
+- **Gerbang wajib membawa `inert`.** Selama gerbang naik, keempat baris cangkang
+  dibungkus `<div className="contents" inert>`; tanpa itu `Tab` dan pembaca layar
+  berjalan lurus ke konsol di belakangnya. `inert` dilepas begitu `leaving` menyala,
+  supaya huruf yang membuka gerbang bisa mendarat di konsol.
+- **`PaperHead` tidak menggambar garis penutup.** `YearGroup` sudah punya
+  `border-t border-paper-ink` di atas judul tahunnya.
 
 ## Yang belum dikerjakan
 
@@ -91,43 +113,34 @@ bersama kodenya. Itu bukan regresi.
 Sampai masuk, `image: null` dan halaman menampilkan keadaan kosong yang
 dirancang. Sensor dulu kalau memuat data pegawai atau pasien asli.
 
-### Tugas 1 — pengunjung reduced-motion di desktop (belum diputuskan)
-
-**Ditemukan 2026-09-08.** Animasi Windows di mesin Utsman sempat mati
-(`ClientAreaAnimation = False`), dan Chromium menerjemahkan itu jadi
-`prefers-reduced-motion: reduce`. Akibatnya `/` selalu mendarat di dokumen dan
-peta seolah tidak pernah ada. Setelah animasi dinyalakan, **peta jalan normal
-di browser Utsman** — jadi tidak ada bug di peta.
-
-Yang tersisa keputusan produk: pengunjung lain yang animasinya mati akan dapat
-dokumen, bukan cangkang. Mereka kehilangan peta, konsol, dan rail log.
-
-Spec bertabrakan dengan dirinya sendiri di sini:
-
-| Spec | Bunyinya |
-|------|----------|
-| §2 | cangkang menyusul hanya kalau lebar ≥1024 **dan** gerak tidak dikurangi |
-| §7 | `prefers-reduced-motion` membuat `/` "mendarat di tabel datar, bukan peta" |
-
-Implementasi sekarang mengikuti §2 (→ dokumen). **Rekomendasi yang sudah
-diajukan ke Utsman dan belum dijawab:** ikuti §7 — cangkang tetap mount,
-tapi mendarat di `FlatTable`. Alasannya, yang diminta pengunjung itu gerak
-yang dikurangi, bukan antarmuka yang dikurangi; konsol, rail, panel dan tabel
-datar sama sekali tidak bergerak, dan tombol `ISO` tetap ada kalau mereka mau
-melihat peta atas kemauan sendiri.
-
-Kalau dipilih, perubahannya kecil:
-
-- `src/lib/hooks/useShellEligible.js` → cukup `wide`, syarat `calm` dilepas
-- `src/components/shell/Shell.jsx` → terima `calm`, view awal `calm ? 'list' : 'map'`
-- test: `page.test.jsx` (mount cangkang saat calm) dan `Shell.test.jsx` (view awal)
-- verifikasi browser: matikan animasi Windows sekali lagi untuk mengeceknya
-
-### Tugas 2 — kontras label tahun di peta (belum ditawarkan)
+### Tugas 1 — kontras label tahun di peta (belum ditawarkan)
 
 `#4C555A` di atas ground ±2.3:1. Itu palet handoff, dan informasinya juga ada
 di legenda dan rail, jadi dibiarkan apa adanya — tapi belum pernah ditawarkan
 ke Utsman untuk dinaikkan.
+
+### Antrean yang sudah dibicarakan, belum dispec
+
+Diajukan Utsman 2026-09-08 bersama gerbang, sengaja dipisah:
+
+1. **Gaya scrollbar** — rail `<ul>` dan pane tabel datar. Pekerjaan CSS kecil.
+2. **Peta lebih interaktif** — klik badan plate (sekarang cuma labelnya yang
+   klikable), roda memutar kamera, lapisan yang lebih bernyawa, zoom masuk ke
+   halaman baca lewat View Transitions. Yang terakhir: Chrome/Edge/Safari 18
+   dapat animasinya, Firefox navigasi biasa.
+3. **Teks legenda sumbu dan catatan rail** yang kurang informatif.
+
+### Nasib reduced-motion — **selesai 2026-09-08**
+
+Dulu spec bertabrakan: §2 menahan cangkang saat `calm`, §7 bilang `/` harus
+"mendarat di tabel datar". Implementasi mengikuti §2, jadi pengunjung itu
+kehilangan konsol, rail dan panel.
+
+Sekarang §7 yang berlaku, lewat gerbang. Diverifikasi di browser sungguhan
+dengan animasi Windows dimatikan (`byte0 = 0x90`, Chromium melaporkan
+`reduce`, semua transisi terbaca `1e-05s`): gerbang **muncul** di 1280px —
+dulu `/` selalu mendarat di dokumen kertas — plate tidak bergeser sama sekali,
+`Enter` mendarat di tabel datar, dan tombol `ISO` tetap ada.
 
 ## Pelajaran yang mahal (jangan diulang)
 
@@ -151,6 +164,12 @@ ke Utsman untuk dinaikkan.
 - **`useRouter` butuh mock di setiap berkas test yang merender komponennya**,
   bukan cuma di test komponen itu sendiri. `Shell.test.jsx` hijau sementara
   `page.test.jsx` pecah.
+- **ESLint juga menolak `setState` di efek untuk membaca `sessionStorage`.**
+  Jalan keluarnya bukan menyiasati lint: `Shell` tidak pernah dirender di server
+  (`page.jsx` mengembalikan dokumen sampai `useMediaQuery` bilang lebar), jadi
+  gerbang tidak pernah ikut hidrasi dan `useState(read)` aman.
+- **Elemen `display:contents` bisa membawa `inert`** tanpa merusak grid — cara
+  termurah menutup satu subtree tanpa membungkusnya jadi kotak baru.
 
 ### Tentang menguji
 
@@ -164,6 +183,18 @@ ke Utsman untuk dinaikkan.
 - **Baca ulang setelah navigasi.** Pembacaan `location.pathname` 900ms setelah
   klik sempat melaporkan URL lama dan membuat navigasi yang berhasil terlihat
   seperti bug.
+- **Test di berkas yang mem-mock hook-nya tidak bisa menguji hook itu.**
+  `page.test.jsx` mem-mock `useShellEligible`, jadi test "pengunjung
+  reduced-motion dapat cangkang" di sana hijau sebelum perubahan apa pun. Guard
+  yang sebenarnya ada di `useShellEligible.test.jsx`. Kalau sebuah test hijau
+  sebelum implementasinya ditulis, itu bukan kabar baik.
+- **`happy-dom` tidak menjalankan perilaku bawaan ketikan.** Gerbang menyerahkan
+  huruf `f` ke konsol dan browser mengirim ketikan yang sama sekali lagi —
+  konsol berisi `ff`. Tidak ada test yang bisa melihatnya. Yang bisa dites cuma
+  `preventDefault`-nya: `fireEvent.keyDown(...)` mengembalikan `false` kalau
+  handler memanggilnya.
+- **Dua `border-t` bersebelahan itu benar secara DOM.** Garis dobel `PaperHead` +
+  `YearGroup` cuma kelihatan di browser.
 
 ### Tentang alat browser (mahal, berulang)
 
@@ -187,16 +218,27 @@ ke Utsman untuk dinaikkan.
 - **Buffer console lintas sesi.** Error 404 dan WebSocket dari server yang sudah
   dimatikan tetap muncul di pembacaan berikutnya. Periksa daftar network sebelum
   mempercayainya.
+- **Panel browser di sesi 2026-09-08 cuma 559px.** Di bawah 1024, jadi cangkang
+  tidak pernah mount di ukuran asli panel. Supaya muncul harus diemulasi
+  1280×800 — dan begitu emulasi melebihi panel, `hover` dan `click` berbasis
+  koordinat mendarat di tempat lain (nol event, tanpa error) **dan** screenshot
+  tidak bisa dipercaya untuk menilai ukuran. Verifikasi cangkang di sini lewat
+  `javascript_tool`: `dispatchEvent` + baca `style.transform` / `getBoundingClientRect`.
+  Penilaian rasa gerakan tetap harus di browser Utsman sendiri.
+- **`hover` butuh screenshot lebih dulu.** Tanpa satu `computer{action:"screenshot"}`
+  di batch yang sama, `hover` berbasis koordinat langsung error.
 
 ## Cara lanjut
 
 1. `git checkout portfolio-canvas-redesign`
-2. `npm test` — harus 92 hijau, `npx eslint src --max-warnings=0` bersih
-3. Rencana 17 task sudah habis. Antrean berikutnya, urut:
-   1. **Tugas 1** di atas — putuskan nasib pengunjung reduced-motion.
-   2. **Tugas 2** — tawarkan kontras label tahun.
-   3. Masukkan `hris.png` dan `psb.png` (sensor dulu).
-   4. Baru merge ke `main` dan deploy.
+2. `npx vitest run` — harus 140 hijau, `npx eslint src --max-warnings=0` bersih
+3. Dua rencana sudah habis. Antrean berikutnya, urut:
+   1. Spec + kerjakan **gaya scrollbar** — paling kecil, berdiri sendiri.
+   2. Spec + kerjakan **peta lebih interaktif** — paling besar.
+   3. **Teks legenda dan catatan rail.**
+   4. **Tugas 1** di atas — tawarkan kontras label tahun.
+   5. Masukkan `hris.png` dan `psb.png` (sensor dulu).
+   6. Baru merge ke `main` dan deploy.
 
 Aturan kerja yang berlaku di sesi ini dan sebaiknya diteruskan: TDD (test dulu,
 lihat gagal, baru implementasi), commit tiap task, verifikasi di browser

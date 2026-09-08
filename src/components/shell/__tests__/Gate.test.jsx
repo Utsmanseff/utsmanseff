@@ -163,6 +163,25 @@ describe('Gate · the drifting plates', () => {
     expect(plate(0).style.transform).toMatch(/skewY\(-16deg\)/);
   });
 
+  // The direction had no guard, and it was backwards: the plates fled the
+  // cursor instead of leaning toward it.
+  it('leans them toward the cursor, not away from it', () => {
+    flushFrames();
+    renderGate();
+    const gate = screen.getByTestId('gate');
+    // happy-dom lays nothing out: the gate's box is 0x0, so the offsets come
+    // out absurdly large. Only the sign means anything here — how far the
+    // plates travel is a browser question, and this file cannot answer it.
+    fireEvent.mouseMove(gate, { clientX: 400, clientY: 300 });
+
+    const [x, y] = plate(0).style.transform
+      .match(/translate\(([-\d.]+)px, ([-\d.]+)px\)/)
+      .slice(1)
+      .map(Number);
+    expect(x).toBeGreaterThan(0);
+    expect(y).toBeGreaterThan(0);
+  });
+
   it('gives them no transition — a cursor is dragged, and dragging is 1:1', () => {
     flushFrames();
     renderGate();

@@ -180,8 +180,13 @@ Empat `<div>` plate kosong di paruh kanan gerbang, palet plate yang sudah ada
 amber), miring `skewY(-16deg)` supaya sebentuk dengan plate di peta.
 
 Satu `mousemove` di elemen gerbang, di-throttle `requestAnimationFrame`, menulis
-`transform: translate(...)` ke keempatnya dengan faktor beda: `34 / 20 / 46 /
-12` px. Hanya `transform`; `left`/`top` tidak disentuh, jadi tidak ada relayout.
+`transform: translate(...)` ke keempatnya dengan faktor beda: `15 / 9 / 20 / 5`
+px, **ke arah** kursor. Hanya `transform`; `left`/`top` tidak disentuh, jadi
+tidak ada relayout.
+
+Angka pertama yang dicoba — `34 / 20 / 46 / 12`, menjauhi kursor — ditolak Utsman
+setelah melihatnya: terlalu berat, dan arah menjauh terbaca seperti plate didorong,
+bukan seperti kedalaman yang menjawab tangan.
 
 Bentuknya sengaja sama dengan yang ada di balik gerbang: gerbang menjanjikan
 isi, bukan memasang dekorasi.

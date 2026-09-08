@@ -16,13 +16,15 @@ const COPY = {
 
 // Four empty plates, the same shape as the ones behind the gate. The gate
 // promises the contents rather than decorating over them.
-// `pull` is how far each one answers the cursor, in pixels. Four different
-// numbers is the whole effect: equal ones read as a single sheet sliding.
+// `pull` is how far each one answers the cursor, in pixels across the full width
+// of the gate. Four different numbers is the whole effect: equal ones read as a
+// single sheet sliding. Kept small on purpose — at 34/20/46/12 the plates read
+// as a thing being shoved around rather than depth answering a hand.
 const PLATES = [
-  { width: 168, height: 100, right: 172, top: 44, bg: '#1D2428', edge: '#333C41', pull: 34 },
-  { width: 196, height: 116, right: 78, top: 132, bg: '#252E33', edge: '#4A545A', pull: 20 },
-  { width: 146, height: 88, right: 200, top: 244, bg: '#27302F', edge: '#C97B3F', pull: 46 },
-  { width: 112, height: 68, right: 24, top: 28, bg: '#1D2428', edge: '#333C41', pull: 12 },
+  { width: 168, height: 100, right: 172, top: 44, bg: '#1D2428', edge: '#333C41', pull: 15 },
+  { width: 196, height: 116, right: 78, top: 132, bg: '#252E33', edge: '#4A545A', pull: 9 },
+  { width: 146, height: 88, right: 200, top: 244, bg: '#27302F', edge: '#C97B3F', pull: 20 },
+  { width: 112, height: 68, right: 24, top: 28, bg: '#1D2428', edge: '#333C41', pull: 5 },
 ];
 
 export default function Gate({ systems, locale, calm, leaving = false, onEnter }) {
@@ -73,7 +75,9 @@ export default function Gate({ systems, locale, calm, leaving = false, onEnter }
         const y = (e.clientY - box.top) / (box.height || 1) - 0.5;
         gate.querySelectorAll('[data-gate-plate]').forEach((node) => {
           const { pull } = PLATES[Number(node.dataset.gatePlate)];
-          node.style.transform = `skewY(-16deg) translate(${(-x * pull).toFixed(1)}px, ${(-y * pull * 0.6).toFixed(1)}px)`;
+          // Toward the cursor, not away from it. Away reads as the plates
+          // being pushed; toward reads as them leaning to look.
+          node.style.transform = `skewY(-16deg) translate(${(x * pull).toFixed(1)}px, ${(y * pull * 0.6).toFixed(1)}px)`;
         });
       });
     };

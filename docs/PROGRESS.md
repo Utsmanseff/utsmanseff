@@ -4,7 +4,10 @@
 
 **Branch:** `portfolio-canvas-redesign` (bercabang dari `main`, belum di-merge)
 **Posisi sekarang:** Rencana `2026-09-03-shell-dan-dokumen.md` **selesai, Task 1–17**,
-lalu rencana `2026-09-08-gerbang-hero.md` **selesai, Task 1–8**.
+lalu `2026-09-08-gerbang-hero.md` **selesai, Task 1–8**, plus penyetelan gerbang
+setelah Utsman melihatnya.
+Rencana `2026-09-08-gerbang-punya-url.md` **sudah ditulis, belum dikerjakan** —
+itu yang berikutnya.
 Belum di-merge ke `main`, dan belum di-deploy.
 
 ## Bentuk sekarang
@@ -28,6 +31,10 @@ daftar stack, dan dua tombol yang menyebut tujuannya (`PETA` / `DAFTAR`). Sekali
 per tab, diingat lewat `sessionStorage`. Di lebar HP tidak ada gerbang — cuma
 pita identitas kecil di atas dokumen, memakai teks yang sama persis.
 
+**Ingatan `sessionStorage` itu berumur pendek.** Rencana `gerbang-punya-url`
+menggantinya dengan URL: `/` gerbang, `/sistem` cangkang. Jangan bangun apa pun
+baru di atas `useGatePassed`.
+
 ## Di mana isinya
 
 | Apa | Di mana |
@@ -50,11 +57,11 @@ pita identitas kecil di atas dokumen, memakai teks yang sama persis.
 | Seluruh teks tampil, dua bahasa | `docs/superpowers/notes/2026-09-03-seluruh-isi-tulisan.md` |
 | Teks yang dibuang, diarsipkan | `docs/superpowers/notes/2026-09-03-arsip-bagian-sulit.md` |
 
-Keadaan: **140 test hijau, 21 berkas**, `npx eslint src --max-warnings=0` bersih,
+Keadaan: **142 test hijau, 21 berkas**, `npx eslint src --max-warnings=0` bersih,
 `npm run build` sukses dengan lima halaman `/kerja/*`.
 
 Jumlah test turun dari 165 ke 92 di Task 15 karena 73 test kanvas ikut dihapus
-bersama kodenya. Itu bukan regresi. Naik ke 140 lewat rencana gerbang.
+bersama kodenya. Itu bukan regresi. Naik ke 142 lewat rencana gerbang.
 
 ## Larangan yang tidak bisa ditawar
 
@@ -103,32 +110,60 @@ bersama kodenya. Itu bukan regresi. Naik ke 140 lewat rencana gerbang.
   supaya huruf yang membuka gerbang bisa mendarat di konsol.
 - **`PaperHead` tidak menggambar garis penutup.** `YearGroup` sudah punya
   `border-t border-paper-ink` di atas judul tahunnya.
+- **Parallax gerbang: `36 / 21 / 46 / 12`, `VERTICAL = 0.9`, ke arah kursor.**
+  Empat kali disetel dengan mata. `34/20/46/12` menjauhi kursor terasa seperti
+  plate didorong; `15/9/20/5` tidak kelihatan kecuali diperhatikan. Yang salah
+  di percobaan pertama ternyata **tandanya**, bukan besarannya — mendatar angka
+  sekarang praktis sama dengan yang pertama.
+- **Panah di tombol gerbang `aria-hidden`.** Nama aksesibelnya
+  `LIHAT SISTEM · PETA`, tanpa "panah ke kanan" di belakang tiap label.
 
 ## Yang belum dikerjakan
 
-- **Merge ke `main` dan deploy.** Belum dilakukan sama sekali.
-- Screenshot HRIS → `public/assets/img/hris.png`
-- Screenshot PSB → `public/assets/img/psb.png`
+Sampai screenshot masuk, `image: null` dan halaman baca menampilkan keadaan
+kosong yang memang dirancang untuk itu.
 
-Sampai masuk, `image: null` dan halaman menampilkan keadaan kosong yang
-dirancang. Sensor dulu kalau memuat data pegawai atau pasien asli.
+### Antrean berikutnya, urut
 
-### Tugas 1 — kontras label tahun di peta (belum ditawarkan)
+**1. `gerbang-punya-url` — rencananya sudah ditulis, tinggal dikerjakan.**
+`docs/superpowers/plans/2026-09-08-gerbang-punya-url.md`, enam task. `/` jadi
+gerbang, `/sistem` jadi cangkang, `?tampilan=datar` untuk tabel datar. Membuang
+`useGatePassed`, `sessionStorage`, wrapper `inert`, state `leaving` dan
+`setTimeout(700)` — lebih banyak hilang daripada bertambah. Satu hal yang belum
+terbukti: apakah `useSearchParams` + `Suspense` memaksa `/sistem` jadi render
+dinamis waktu `npm run build`.
 
-`#4C555A` di atas ground ±2.3:1. Itu palet handoff, dan informasinya juga ada
-di legenda dan rail, jadi dibiarkan apa adanya — tapi belum pernah ditawarkan
-ke Utsman untuk dinaikkan.
+**2. Gaya scrollbar.** Belum dispec. Dua tempat: `<ul>` di `LogRail` dan pane
+`FlatTable`. Utsman mengirim screenshot dan menyebutnya "sangat jelek" —
+scrollbar bawaan Windows di atas lapis gelap. `::-webkit-scrollbar` +
+`scrollbar-color` di `globals.css`. Pekerjaan kecil, berdiri sendiri.
 
-### Antrean yang sudah dibicarakan, belum dispec
+**3. Peta lebih interaktif.** Belum dispec, dan ini yang paling besar. Empat hal
+yang diminta Utsman:
 
-Diajukan Utsman 2026-09-08 bersama gerbang, sengaja dipisah:
+  - **Klik badan plate, bukan cuma labelnya.** Sekarang cuma
+    `<button data-plate-label>` yang klikable; lapisannya mati. Tombol harus
+    tetap ada untuk keyboard.
+  - **Roda memutar kamera.** `onWheel` → `setRotZ`. Bergantung pada keputusan
+    URL di atas: kalau halaman tidak pernah menggulir, roda bebas dipakai.
+  - **Lapisan lebih bernyawa.** `Plate.jsx` sekarang ramp lima warna datar.
+    Ingat: desain ini **tanpa bayangan** — kedalaman dari lapisan dan warna tepi.
+  - **Zoom masuk ke halaman baca, zoom keluar waktu kembali.** View Transitions
+    API. Chrome/Edge/Safari 18 dapat animasinya, Firefox navigasi biasa. Zoom
+    keluar butuh `rotZ`/`scale`/`selected` peta bertahan waktu kembali.
 
-1. **Gaya scrollbar** — rail `<ul>` dan pane tabel datar. Pekerjaan CSS kecil.
-2. **Peta lebih interaktif** — klik badan plate (sekarang cuma labelnya yang
-   klikable), roda memutar kamera, lapisan yang lebih bernyawa, zoom masuk ke
-   halaman baca lewat View Transitions. Yang terakhir: Chrome/Edge/Safari 18
-   dapat animasinya, Firefox navigasi biasa.
-3. **Teks legenda sumbu dan catatan rail** yang kurang informatif.
+**4. Teks legenda dan catatan rail.** Utsman menyebut keduanya kurang
+informatif: `AxisLegend` (`KEDALAMAN tahun · TINGGI stack` dst) dan catatan di
+kaki `LogRail` ("Sistem yang diredupkan tetap di peta…").
+
+**5. Kontras label tahun di peta.** `#4C555A` di atas ground ±2.3:1. Palet
+handoff, informasinya juga ada di legenda dan rail, jadi dibiarkan — tapi belum
+pernah ditawarkan ke Utsman untuk dinaikkan.
+
+**6. Screenshot** `hris.png` dan `psb.png` → `public/assets/img/`. Sensor dulu
+kalau memuat data pegawai atau pasien asli.
+
+**7. Merge ke `main` dan deploy.**
 
 ### Nasib reduced-motion — **selesai 2026-09-08**
 
@@ -229,18 +264,22 @@ dulu `/` selalu mendarat di dokumen kertas — plate tidak bergeser sama sekali,
   Penilaian rasa gerakan tetap harus di browser Utsman sendiri.
 - **`hover` butuh screenshot lebih dulu.** Tanpa satu `computer{action:"screenshot"}`
   di batch yang sama, `hover` berbasis koordinat langsung error.
+- **`requestAnimationFrame` tidak jalan waktu panel browser tersembunyi.** Skrip
+  yang menunggu rAF menggantung sampai timeout 45 detik. Untuk menguji kode
+  ber-rAF, ganti dulu: `window.requestAnimationFrame = cb => setTimeout(cb, 0)`.
+  Jangan pakai override **sinkron** (`cb => { cb(); return 1 }`) — callback jalan
+  sebelum `frame = requestAnimationFrame(...)` selesai di-assign, jadi `frame`
+  tinggal terisi dan `if (frame) return` memblokir semua event berikutnya. Dua
+  pembacaan pertama saya salah gara-gara ini.
+- **Satu rAF yang tergantung meracuni sisa sesi halaman itu.** Setelah skrip
+  ber-rAF timeout, muat ulang halaman sebelum mengukur lagi.
 
 ## Cara lanjut
 
 1. `git checkout portfolio-canvas-redesign`
-2. `npx vitest run` — harus 140 hijau, `npx eslint src --max-warnings=0` bersih
-3. Dua rencana sudah habis. Antrean berikutnya, urut:
-   1. Spec + kerjakan **gaya scrollbar** — paling kecil, berdiri sendiri.
-   2. Spec + kerjakan **peta lebih interaktif** — paling besar.
-   3. **Teks legenda dan catatan rail.**
-   4. **Tugas 1** di atas — tawarkan kontras label tahun.
-   5. Masukkan `hris.png` dan `psb.png` (sensor dulu).
-   6. Baru merge ke `main` dan deploy.
+2. `npx vitest run` — harus 142 hijau, `npx eslint src --max-warnings=0` bersih
+3. Antrean ada di bagian **"Antrean berikutnya, urut"** di atas. Mulai dari
+   nomor 1: rencananya sudah tertulis dan belum disentuh.
 
 Aturan kerja yang berlaku di sesi ini dan sebaiknya diteruskan: TDD (test dulu,
 lihat gagal, baru implementasi), commit tiap task, verifikasi di browser

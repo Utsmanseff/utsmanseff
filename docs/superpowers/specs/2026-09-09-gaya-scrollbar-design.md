@@ -118,13 +118,42 @@ persis berkas yang terkena.
 
 ## Risiko
 
+- **Chrome mengabaikan `::-webkit-scrollbar` kalau `scrollbar-color` disetel pada
+  elemen yang sama — terukur, bukan dugaan.** Waktu spec ini pertama ditulis ini
+  masih klaim dari ingatan. Diukur di Chrome 148.0.7778.280 (Windows), lebar
+  batang pada elemen uji yang sama:
+
+  | Aturan | Lebar |
+  |--------|-------|
+  | tanpa aturan sama sekali | 15px |
+  | `::-webkit-scrollbar { width: 8px }` saja | 8px |
+  | keduanya berdampingan | **10px** |
+  | `scrollbar-width: thin` + `scrollbar-color` saja | 10px |
+
+  Keduanya berdampingan menghasilkan angka yang persis sama dengan standar-saja:
+  blok webkit-nya diabaikan seluruhnya. Karena itu properti standar **wajib**
+  dibungkus `@supports not selector(::-webkit-scrollbar)`. Penjaganya sendiri
+  sudah diperiksa: `CSS.supports('selector(::-webkit-scrollbar)')` menjawab
+  `true` di Chrome, jadi Chrome melewati blok itu dan blok webkit-nya utuh.
+
+  **Belum terukur:** sisi Firefox. Tidak ada Firefox di mesin ini, jadi yang
+  terbukti baru bahwa Chrome melewati blok tersebut. Bahwa Firefox
+  mendapatkannya masih mengikuti dari cara `@supports` bekerja, bukan dari
+  pengamatan.
+
+- **Scrollbar jendela digambar dari elemen akar, dan kombinator keturunan tidak
+  menjangkaunya.** Ditemukan waktu implementasi. `html:has(.paper-doc) ::-webkit-scrollbar-thumb`
+  — dengan spasi — cuma mengenai scrollbar milik anak-anak `html`. Terukur di
+  `/` lebar 900: `html` masih `#2E3539` sementara `body` dan isi dokumen sudah
+  `#D9D0BC`. Perbaikannya menambahkan varian tanpa spasi
+  (`html:has(.paper-doc)::-webkit-scrollbar-thumb`). Ini bentuk lain dari
+  pelajaran `body:has(...)` yang sudah tercatat di PROGRESS.
+
 - **Kontras 1.4:1 mungkin terlalu samar.** Sudah dibahas dan diterima sebagai
-  titik awal; jalan mundurnya satu baris.
-- **Chrome menghormati `::-webkit-scrollbar` hanya kalau `scrollbar-color` tidak
-  disetel pada elemen yang sama.** Sejak Chrome 121, `scrollbar-color` yang
-  bernilai selain `auto` mematikan seluruh gaya `::-webkit-scrollbar` pada elemen
-  itu. Karena itu properti standar dan blok webkit **tidak boleh menyasar elemen
-  yang sama tanpa penjaga**: properti standar dipasang di dalam
-  `@supports not selector(::-webkit-scrollbar)`, sehingga Firefox mendapatnya dan
-  Chrome tidak. Ini yang paling mudah salah, dan gejalanya diam — scrollbar
-  kembali ke bawaan tanpa error apa pun.
+  titik awal; jalan mundurnya satu baris — naikkan warna diam ke
+  `--color-muted-deep`.
+
+- **Warna hover belum terukur, dan tidak bisa diukur dari sini.**
+  `::-webkit-scrollbar-thumb:hover` bukan elemen DOM: tidak ada yang bisa disasar
+  `dispatchEvent`, dan `getComputedStyle` tidak menerima `:hover`. Yang terbukti
+  cuma aturannya ada di berkas. Penilaiannya jatuh ke mata Utsman.

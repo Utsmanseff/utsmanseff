@@ -139,6 +139,14 @@ ikut dibuang, lalu naik lagi ke 145.
   plate didorong; `15/9/20/5` tidak kelihatan kecuali diperhatikan. Yang salah
   di percobaan pertama ternyata **tandanya**, bukan besarannya — mendatar angka
   sekarang praktis sama dengan yang pertama.
+- **Scrollbar 8px, samar, dan kontrasnya memang rendah.** Thumb
+  `--color-rule` (`#2E3539`) yang naik ke `--color-muted-deep` (`#4C555A`) saat
+  hover; di kertas `--color-paper-rule` → `--color-paper-rule-edge`. Track
+  transparan, radius 0, tombol panah `display: none`. Kontras diam 1.4:1 di atas
+  ground **disengaja** — ia indikator posisi, bukan kontrol, dan menggulir tetap
+  lewat roda, keyboard dan sentuh. Kalau nanti terasa terlalu hilang, jalan
+  mundurnya menaikkan warna diam ke `--color-muted-deep`, bukan menambah lebar
+  atau memberi track warna.
 - **Panah di tombol gerbang `aria-hidden`.** Nama aksesibelnya
   `LIHAT SISTEM · PETA`, tanpa "panah ke kanan" di belakang tiap label.
 
@@ -149,12 +157,7 @@ kosong yang memang dirancang untuk itu.
 
 ### Antrean berikutnya, urut
 
-**1. Gaya scrollbar.** Belum dispec. Dua tempat: `<ul>` di `LogRail` dan pane
-`FlatTable`. Utsman mengirim screenshot dan menyebutnya "sangat jelek" —
-scrollbar bawaan Windows di atas lapis gelap. `::-webkit-scrollbar` +
-`scrollbar-color` di `globals.css`. Pekerjaan kecil, berdiri sendiri.
-
-**2. Peta lebih interaktif.** Belum dispec, dan ini yang paling besar. Empat hal
+**1. Peta lebih interaktif.** Belum dispec, dan ini yang paling besar. Empat hal
 yang diminta Utsman:
 
   - **Klik badan plate, bukan cuma labelnya.** Sekarang cuma
@@ -169,18 +172,18 @@ yang diminta Utsman:
     API. Chrome/Edge/Safari 18 dapat animasinya, Firefox navigasi biasa. Zoom
     keluar butuh `rotZ`/`scale`/`selected` peta bertahan waktu kembali.
 
-**3. Teks legenda dan catatan rail.** Utsman menyebut keduanya kurang
+**2. Teks legenda dan catatan rail.** Utsman menyebut keduanya kurang
 informatif: `AxisLegend` (`KEDALAMAN tahun · TINGGI stack` dst) dan catatan di
 kaki `LogRail` ("Sistem yang diredupkan tetap di peta…").
 
-**4. Kontras label tahun di peta.** `#4C555A` di atas ground ±2.3:1. Palet
+**3. Kontras label tahun di peta.** `#4C555A` di atas ground ±2.3:1. Palet
 handoff, informasinya juga ada di legenda dan rail, jadi dibiarkan — tapi belum
 pernah ditawarkan ke Utsman untuk dinaikkan.
 
-**5. Screenshot** `hris.png` dan `psb.png` → `public/assets/img/`. Sensor dulu
+**4. Screenshot** `hris.png` dan `psb.png` → `public/assets/img/`. Sensor dulu
 kalau memuat data pegawai atau pasien asli.
 
-**6. Merge ke `main` dan deploy.**
+**5. Merge ke `main` dan deploy.**
 
 ### Gerbang punya URL — **selesai 2026-09-09**
 
@@ -330,6 +333,29 @@ dulu `/` selalu mendarat di dokumen kertas — plate tidak bergeser sama sekali,
   sebelum `frame = requestAnimationFrame(...)` selesai di-assign, jadi `frame`
   tinggal terisi dan `if (frame) return` memblokir semua event berikutnya. Dua
   pembacaan pertama saya salah gara-gara ini.
+- **`scrollbar-color` mematikan seluruh blok `::-webkit-scrollbar` di elemen yang
+  sama.** Diukur di Chrome 148: elemen uji yang sama memberi 15px tanpa aturan,
+  8px dengan webkit saja, tapi **10px** kalau keduanya ditulis berdampingan —
+  persis angka standar-saja. Gejalanya diam, tanpa error. Karena itu properti
+  standar di `globals.css` dibungkus `@supports not selector(::-webkit-scrollbar)`:
+  Chrome menjawab `CSS.supports('selector(::-webkit-scrollbar)')` dengan `true`
+  dan melewatinya, Firefox menjawab `false` dan mendapatkannya. Sisi Firefox
+  belum pernah diukur — tidak ada Firefox di mesin ini.
+- **Scrollbar jendela digambar dari elemen akar.** `html:has(x) ::-webkit-scrollbar-thumb`
+  dengan spasi cuma mengenai scrollbar milik anak-anak `html`, jadi batang yang
+  benar-benar dilihat pengunjung tidak ikut berubah. Terukur di `/` lebar 900:
+  `html` masih `#2E3539` sementara `body` dan isi dokumen sudah `#D9D0BC`.
+  Butuh varian tanpa spasi juga. Bentuk lain dari pelajaran `body:has(...)` di
+  atas.
+- **Hover pada scrollbar tidak bisa diukur dari alat ini.**
+  `::-webkit-scrollbar-thumb:hover` bukan elemen DOM — tidak ada yang bisa
+  disasar `dispatchEvent`, dan `getComputedStyle` tidak menerima `:hover`. Yang
+  bisa dibuktikan cuma aturannya ada di berkas.
+- **Pane cangkang tidak menggulir di layar tinggi normal.** Di 1280×800 rail log
+  dan panel kanan muat seluruhnya, jadi `scrollable: false` dan `barWidth: 0` —
+  itu benar, bukan aturan yang gagal. Untuk mengukurnya, kecilkan tinggi viewport
+  (1280×420 cukup). Dan `offsetWidth - clientWidth` pada `<aside>` panel kanan
+  melaporkan **1**, itu `border-l`-nya, bukan scrollbar.
 - **Satu rAF yang tergantung meracuni sisa sesi halaman itu.** Setelah skrip
   ber-rAF timeout, muat ulang halaman sebelum mengukur lagi.
 

@@ -17,6 +17,8 @@ const calm = { value: false };
 
 beforeEach(() => {
   push.mockClear();
+  delete document.startViewTransition;
+  delete document.documentElement.dataset.nav;
   eligible.value = false;
   calm.value = false;
   window.matchMedia = vi.fn((query) => ({
@@ -51,6 +53,26 @@ describe('/', () => {
   // the gate at all is not something these tests can decide — that lives in
   // useShellEligible's own test. What this one proves is the wiring: `calm`
   // travels from the page into the gate and picks the door it defaults to.
+  it('marks every way in as going down', () => {
+    // All five ways into the shell — both buttons, Enter, Escape, any letter,
+    // and the wheel — funnel through this one handler, so this covers them all.
+    // The API has to be stood up first: happy-dom has none, and slideTo leaves
+    // the direction off when it cannot animate anyway.
+    document.startViewTransition = (cb) => { cb(); return { finished: Promise.resolve() }; };
+    eligible.value = true;
+    render(<Home />, { wrapper: LocaleProvider });
+    fireEvent.click(screen.getByRole('button', { name: /PETA|MAP/ }));
+    expect(document.documentElement.dataset.nav).toBe('down');
+    expect(push).toHaveBeenCalledWith('/sistem');
+  });
+
+  it('still goes in when the browser cannot animate it', () => {
+    eligible.value = true;
+    render(<Home />, { wrapper: LocaleProvider });
+    fireEvent.keyDown(window, { key: 'Enter' });
+    expect(push).toHaveBeenCalledWith('/sistem');
+  });
+
   it('sends a reduced-motion visitor to the flat table', () => {
     eligible.value = true;
     calm.value = true;

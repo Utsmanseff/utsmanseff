@@ -30,8 +30,16 @@ sampai, itu yang ditulis — bukan "kelihatannya jalan".
 
 **Sebelum tiap pengukuran, cache Turbopack harus dibuang.** `globals.css` persis
 berkas yang terkena. Server dev dijalankan Utsman sendiri di port 3000, jadi
-jangan menjalankan server baru — minta Utsman menjalankan `rm -rf .next` lalu
-`npm run dev` di terminalnya, dan tunggu konfirmasinya.
+jangan menjalankan server baru. Utsman memakai **Windows/PowerShell**, jadi
+perintahnya bukan `rm -rf`:
+
+```powershell
+Remove-Item -Recurse -Force .next
+```
+
+Urutannya mengikat: **hentikan `npm run dev` dulu** (Ctrl+C), baru hapus. Selama
+server hidup Windows mengunci berkas di dalam `.next` dan penghapusan gagal
+separuh jalan. Setelah itu `npm run dev` lagi. Tunggu konfirmasi Utsman.
 
 **Panel browser sesi ini lebih sempit dari 1024px.** Cangkang tidak akan mount di
 ukuran asli panel. Emulasi 1280×800 lebih dulu, dan verifikasi lewat
@@ -167,8 +175,9 @@ beserta kurung penutupnya dan biarkan isinya di tingkat atas.
 
 - [ ] **Step 2: Minta Utsman membuang cache dan menjalankan ulang server**
 
-`rm -rf .next`, lalu `npm run dev`. Tunggu sampai Utsman bilang server sudah
-hidup. Jangan menjalankan server sendiri.
+Ctrl+C di terminal server, lalu `Remove-Item -Recurse -Force .next`, lalu
+`npm run dev`. Tunggu sampai Utsman bilang server sudah hidup. Jangan
+menjalankan server sendiri.
 
 - [ ] **Step 3: Ukur rail log dan panel kanan**
 
@@ -268,7 +277,7 @@ kurung penutupnya di sini juga, persis seperti di Task 2.
 
 - [ ] **Step 2: Minta Utsman membuang cache dan menjalankan ulang server lagi**
 
-`rm -rf .next`, lalu `npm run dev`. Tunggu konfirmasi.
+Ctrl+C, `Remove-Item -Recurse -Force .next`, `npm run dev`. Tunggu konfirmasi.
 
 - [ ] **Step 3: Ukur dokumen kertas**
 

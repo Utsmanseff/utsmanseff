@@ -219,7 +219,10 @@ dulu `/` selalu mendarat di dokumen kertas — plate tidak bergeser sama sekali,
 ### Tentang kode
 
 - **Cache Turbopack menyajikan token basi.** Setelah mengubah `globals.css`,
-  hapus `.next` dan jalankan ulang server.
+  hapus `.next` dan jalankan ulang server. Di Windows perintahnya
+  `Remove-Item -Recurse -Force .next` di PowerShell — `rm -rf` tidak ada di sana —
+  dan server harus dihentikan lebih dulu, karena Windows mengunci berkas di dalam
+  `.next` selama ia hidup.
 - **Regex multi-baris menelan data.** Hapus properti per baris, lalu hitung
   ulang jumlah entri. Waktu membuang `position`/`cluster`/`related` di Task 15,
   yang dihitung: tepat 8+8+8 baris hilang, 8 slug tetap.

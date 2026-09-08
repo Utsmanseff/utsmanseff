@@ -47,6 +47,13 @@ describe('Gate', () => {
     expect(onEnter).toHaveBeenCalledWith('list', null);
   });
 
+  it('keeps the arrow out of the accessible name', () => {
+    renderGate();
+    // The arrow is decoration; a screen reader announcing "arrow pointing
+    // right" after every button label is noise.
+    expect(screen.getByRole('button', { name: 'LIHAT SISTEM · PETA' })).toBeInTheDocument();
+  });
+
   it('speaks English when asked to', () => {
     renderGate({ locale: 'en' });
     expect(screen.getByRole('button', { name: /SEE SYSTEMS · MAP/ })).toBeInTheDocument();

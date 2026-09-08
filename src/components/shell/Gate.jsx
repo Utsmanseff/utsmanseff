@@ -9,8 +9,8 @@ const EASE = 'cubic-bezier(.22, 1, .36, 1)';
 const COPY = {
   label: { id: 'Gerbang', en: 'Gate' },
   role: { id: 'FULLSTACK DEVELOPER', en: 'FULLSTACK DEVELOPER' },
-  map: { id: 'LIHAT SISTEM · PETA →', en: 'SEE SYSTEMS · MAP →' },
-  list: { id: 'LIHAT SISTEM · DAFTAR →', en: 'SEE SYSTEMS · LIST →' },
+  map: { id: 'LIHAT SISTEM · PETA', en: 'SEE SYSTEMS · MAP' },
+  list: { id: 'LIHAT SISTEM · DAFTAR', en: 'SEE SYSTEMS · LIST' },
   hint: { id: '↓ ATAU TEKAN APA SAJA', en: '↓ OR PRESS ANY KEY' },
 };
 
@@ -35,6 +35,32 @@ const PLATES = [
 // larger share of the axis it moves along. 0.6 damped it so far that the up-down
 // drift was the part nobody could see; 0.9 keeps a little of that damping.
 const VERTICAL = 0.9;
+
+// Colour moves at 180ms, the rate the rest of the shell uses. The arrow is the
+// one thing that travels, and it is decoration — hidden from the accessible
+// name, and stopped by the reduced-motion rule in globals.css like everything
+// else that moves on its own.
+function GateButton({ primary = false, onClick, children }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`group font-mono text-[11.5px] tracking-[.08em] border px-4 min-h-[44px] flex items-center gap-2.5 transition-colors duration-[180ms] ${
+        primary
+          ? 'text-amber border-amber hover:bg-amber hover:text-ground focus-visible:bg-amber focus-visible:text-ground'
+          : 'text-muted border-rule hover:text-ink hover:border-ink focus-visible:text-ink focus-visible:border-ink'
+      }`}
+    >
+      <span>{children}</span>
+      <span
+        aria-hidden="true"
+        className="transition-transform duration-[180ms] group-hover:translate-x-1 group-focus-visible:translate-x-1"
+      >
+        →
+      </span>
+    </button>
+  );
+}
 
 export default function Gate({ systems, locale, calm, leaving = false, onEnter }) {
   const gateRef = useRef(null);
@@ -150,20 +176,12 @@ export default function Gate({ systems, locale, calm, leaving = false, onEnter }
         </p>
 
         <div className="flex gap-3 mt-8">
-          <button
-            type="button"
-            onClick={() => onEnter('map', null)}
-            className="font-mono text-[11.5px] tracking-[.08em] text-amber border border-amber px-4 min-h-[44px]"
-          >
+          <GateButton onClick={() => onEnter('map', null)} primary>
             {COPY.map[locale]}
-          </button>
-          <button
-            type="button"
-            onClick={() => onEnter('list', null)}
-            className="font-mono text-[11.5px] tracking-[.08em] text-muted border border-rule px-4 min-h-[44px]"
-          >
+          </GateButton>
+          <GateButton onClick={() => onEnter('list', null)}>
             {COPY.list[locale]}
-          </button>
+          </GateButton>
         </div>
       </div>
 

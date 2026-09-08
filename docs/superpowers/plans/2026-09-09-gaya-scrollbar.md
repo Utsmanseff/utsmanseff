@@ -12,6 +12,13 @@
 
 **Dari spec:** `docs/superpowers/specs/2026-09-09-gaya-scrollbar-design.md`
 
+> **Selesai 2026-09-09.** Task 1 menjawab cabang kedua: di Chrome 148, keduanya
+> berdampingan memberi 10px, bukan 8px — penjaga `@supports` wajib. Task 3
+> menemukan bug yang tidak ada di rencana: kombinator keturunan tidak menjangkau
+> scrollbar elemen akar, jadi batang jendela di dokumen kertas masih gelap
+> (`html` `#2E3539` sementara `body` sudah `#D9D0BC`). Diperbaiki dengan varian
+> selektor tanpa spasi. 145 test hijau, 22 berkas — tidak berubah, sesuai rencana.
+
 ---
 
 ## Catatan penting sebelum Task 1
@@ -60,12 +67,12 @@ ditebak.
 
 **Files:** tidak ada yang diubah. Ini pengukuran.
 
-- [ ] **Step 1: Emulasi viewport dan buka halaman di lapis gelap**
+- [x] **Step 1: Emulasi viewport dan buka halaman di lapis gelap**
 
 Pakai `resize_window` `{ width: 1280, height: 800 }`, lalu `navigate` ke
 `http://localhost:3000/sistem`.
 
-- [ ] **Step 2: Suntikkan elemen uji dan ukur lebar scrollbar-nya**
+- [x] **Step 2: Suntikkan elemen uji dan ukur lebar scrollbar-nya**
 
 Jalankan lewat `javascript_tool`. Elemen dibuat, diukur, lalu dibuang lagi —
 tidak ada yang tertinggal di halaman.
@@ -95,7 +102,7 @@ const standardOnly = mk('SEL { scrollbar-width: thin; scrollbar-color: #2E3539 t
 ({ bare, webkitOnly, both, standardOnly, ua: (navigator.userAgent.match(/Chrome\/\d+/) || [])[0] });
 ```
 
-- [ ] **Step 3: Baca hasilnya dan pilih bentuk CSS-nya**
+- [x] **Step 3: Baca hasilnya dan pilih bentuk CSS-nya**
 
 - `both === 8` → keduanya bisa hidup berdampingan. **Tulis polos, tanpa
   `@supports`.** Spec dikoreksi di Task 4.
@@ -107,7 +114,7 @@ const standardOnly = mk('SEL { scrollbar-width: thin; scrollbar-color: #2E3539 t
 Catat keempat angkanya. Angka ini yang dikutip di Task 4 waktu memperbarui spec
 dan PROGRESS — jangan mengarang, jangan membulatkan.
 
-- [ ] **Step 4: Tidak ada commit**
+- [x] **Step 4: Tidak ada commit**
 
 Task ini tidak mengubah berkas.
 
@@ -118,7 +125,7 @@ Task ini tidak mengubah berkas.
 **Files:**
 - Modify: `src/app/globals.css`
 
-- [ ] **Step 1: Tulis bloknya**
+- [x] **Step 1: Tulis bloknya**
 
 Sisipkan tepat **sebelum** komentar `/* Selection */` di `src/app/globals.css`.
 Bentuk di bawah ini untuk kasus **`@supports` diperlukan** (Task 1 cabang kedua).
@@ -173,13 +180,13 @@ beserta kurung penutupnya dan biarkan isinya di tingkat atas.
 }
 ```
 
-- [ ] **Step 2: Minta Utsman membuang cache dan menjalankan ulang server**
+- [x] **Step 2: Minta Utsman membuang cache dan menjalankan ulang server**
 
 Ctrl+C di terminal server, lalu `Remove-Item -Recurse -Force .next`, lalu
 `npm run dev`. Tunggu sampai Utsman bilang server sudah hidup. Jangan
 menjalankan server sendiri.
 
-- [ ] **Step 3: Ukur rail log dan panel kanan**
+- [x] **Step 3: Ukur rail log dan panel kanan**
 
 Emulasi 1280×800, `navigate` ke `http://localhost:3000/sistem`, lalu:
 
@@ -199,7 +206,7 @@ Expected: `barWidth` **8** di tiap pane yang `scrollable: true`. Pane yang
 `scrollable: false` melaporkan `barWidth: 0` — itu benar, bukan kegagalan; catat
 mana yang mana.
 
-- [ ] **Step 4: Ukur pane tabel datar**
+- [x] **Step 4: Ukur pane tabel datar**
 
 ```js
 const wait = ms => new Promise(r => setTimeout(r, ms));
@@ -212,7 +219,7 @@ const flat = document.querySelector('[data-testid="flat-table"]');
 
 Expected: `barWidth` **8** kalau `scrollable: true`.
 
-- [ ] **Step 5: Ukur jendela halaman baca**
+- [x] **Step 5: Ukur jendela halaman baca**
 
 `navigate` ke `http://localhost:3000/kerja/hris-nirwana`, lalu:
 
@@ -227,7 +234,7 @@ await new Promise(r => setTimeout(r, 600));
 
 Expected: `barWidth` **8**, `scrollable: true`, `rule` **#2E3539**.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/app/globals.css
@@ -243,7 +250,7 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 **Files:**
 - Modify: `src/app/globals.css`
 
-- [ ] **Step 1: Tulis bloknya**
+- [x] **Step 1: Tulis bloknya**
 
 Sisipkan **tepat di bawah** blok gelap dari Task 2. Selektornya mengikuti pola
 yang sudah dipakai berkas ini untuk warna latar: elemen `html` tidak ikut berubah
@@ -275,11 +282,11 @@ body:has(.paper-doc) ::-webkit-scrollbar-thumb:hover,
 Kalau Task 1 menjawab `both === 8`, buang `@supports not selector(...)` beserta
 kurung penutupnya di sini juga, persis seperti di Task 2.
 
-- [ ] **Step 2: Minta Utsman membuang cache dan menjalankan ulang server lagi**
+- [x] **Step 2: Minta Utsman membuang cache dan menjalankan ulang server lagi**
 
 Ctrl+C, `Remove-Item -Recurse -Force .next`, `npm run dev`. Tunggu konfirmasi.
 
-- [ ] **Step 3: Ukur dokumen kertas**
+- [x] **Step 3: Ukur dokumen kertas**
 
 `resize_window` `{ width: 375, height: 812 }`, `navigate` ke
 `http://localhost:3000/`, lalu:
@@ -303,7 +310,7 @@ scrollbar melayang di luar jangkauan CSS, jadi `barWidth` bisa saja **0** walau
 aturannya benar-benar terpasang. Itu bukan kegagalan. Yang membuktikan aturannya
 sampai adalah langkah berikutnya.
 
-- [ ] **Step 4: Buktikan aturan kertas menang atas aturan gelap**
+- [x] **Step 4: Buktikan aturan kertas menang atas aturan gelap**
 
 Masih di halaman yang sama. Ini yang memisahkan "aturannya terpasang" dari
 "aturannya kebetulan tidak kelihatan":
@@ -327,12 +334,12 @@ sengaja tidak diberi properti standar.
 Kalau `barWidth` bukan 8 di sini, aturan kertas tidak sampai. Laporkan, jangan
 ditambal dengan `!important`.
 
-- [ ] **Step 5: Kembalikan viewport**
+- [x] **Step 5: Kembalikan viewport**
 
 `resize_window` `{ preset: "desktop" }`, supaya sesi berikutnya tidak mewarisi
 emulasi.
 
-- [ ] **Step 6: Test dan lint tetap harus hijau**
+- [x] **Step 6: Test dan lint tetap harus hijau**
 
 ```bash
 npx vitest run
@@ -347,7 +354,7 @@ npx eslint src --max-warnings=0
 
 Expected: bersih.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add src/app/globals.css
@@ -364,14 +371,14 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 - Modify: `docs/superpowers/specs/2026-09-09-gaya-scrollbar-design.md`
 - Modify: `docs/PROGRESS.md`
 
-- [ ] **Step 1: Koreksi spec dengan angka Task 1**
+- [x] **Step 1: Koreksi spec dengan angka Task 1**
 
 Bagian **Risiko** di spec menulis perilaku Chrome sebagai fakta, padahal waktu
 ditulis itu belum diukur. Ganti dengan hasil Task 1 yang sebenarnya, sebutkan
 versi Chrome dari `navigator.userAgent`, dan sebutkan bentuk CSS mana yang
 akhirnya dipakai — dengan atau tanpa `@supports`.
 
-- [ ] **Step 2: Perbarui `docs/PROGRESS.md`**
+- [x] **Step 2: Perbarui `docs/PROGRESS.md`**
 
 Tiga tempat:
 
@@ -389,7 +396,7 @@ Jangan menaikkan atau menurunkan jumlah test di PROGRESS: rencana ini tidak
 menambah test. Angkanya tetap **145 hijau, 22 berkas** kecuali `npx vitest run`
 di Task 3 Step 6 mengatakan lain — kalau begitu, tulis yang dikatakannya.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add docs

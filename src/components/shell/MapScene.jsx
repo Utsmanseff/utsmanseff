@@ -61,12 +61,9 @@ export default function MapScene({ systems, locale, selected, dimmed, onSelect }
             className="absolute inset-0"
             style={{
               transformStyle: 'preserve-3d',
+              // Tanpa transition, dengan sengaja: kamera ini cuma digerakkan
+              // jari, dan tidak ada lagi yang menariknya pulang sendiri.
               transform: `rotateX(56deg) rotateZ(${camera.rotZ}deg)`,
-              // Nol easing selama jari menempel; 700ms hanya waktu mesin yang
-              // menarik kamera pulang ke salah satu dari tiga sudutnya.
-              transition: camera.settling
-                ? 'transform 700ms var(--nav-ease)'
-                : 'none',
             }}
             role="group"
             aria-label={locale === 'id'

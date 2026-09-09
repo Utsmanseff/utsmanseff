@@ -9,7 +9,6 @@ export const PLATE = {
 };
 const GAP = 80;
 const LAYER_STEP = 7;
-export const CAMERA_ANGLES = [-55, -40, -25];
 
 // Rows are laid out left to right, each plate advancing the cursor by its own
 // width. Multiplying an index by a fixed stride put a small plate inside the
@@ -45,11 +44,4 @@ export function fitScale(pane) {
     1,
   );
   return Number.isFinite(k) ? Math.max(0.4, k) : 0.4;
-}
-
-export function snapRotation(deg) {
-  return CAMERA_ANGLES.reduce(
-    (best, a) => (Math.abs(a - deg) < Math.abs(best - deg) ? a : best),
-    CAMERA_ANGLES[0],
-  );
 }

@@ -1,24 +1,32 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
+import { useState } from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import { useMapCamera } from '@/lib/shell/useMapCamera';
-import { CAMERA_ANGLES } from '@/lib/shell/layout';
 
 // Probe: hook ini tidak menggambar apa pun sendiri, jadi yang diuji adalah
 // angka yang dikeluarkannya, bukan rupa apa pun.
 function Probe() {
   const camera = useMapCamera();
+  // dragged() dibaca di dalam onClick, sama seperti MapScene membacanya. Membaca
+  // saat render melaporkan angka basi: menekan pointer tidak memicu render, jadi
+  // reset-nya belum terlihat di pohon walau ref-nya sudah nol.
+  const [lastAsked, setLastAsked] = useState(null);
   return (
     <div data-testid="pane" {...camera.handlers}>
       <output data-testid="rot">{camera.rotZ.toFixed(2)}</output>
-      <output data-testid="settling">{String(camera.settling)}</output>
-      <output data-testid="dragged">{String(camera.dragged())}</output>
+      <button type="button" data-testid="ask" onClick={() => setLastAsked(camera.dragged())}>
+        ask
+      </button>
+      <output data-testid="dragged">{String(lastAsked)}</output>
     </div>
   );
 }
 
 const rot = () => Number(screen.getByTestId('rot').textContent);
-const settling = () => screen.getByTestId('settling').textContent === 'true';
-const dragged = () => screen.getByTestId('dragged').textContent === 'true';
+const dragged = () => {
+  fireEvent.click(screen.getByTestId('ask'));
+  return screen.getByTestId('dragged').textContent === 'true';
+};
 
 describe('useMapCamera', () => {
   afterEach(() => {
@@ -44,22 +52,22 @@ describe('useMapCamera', () => {
     expect(rot()).toBe(-40);
   });
 
-  it('snaps to one of the three camera angles when the pointer lifts', () => {
+  it('leaves the camera where the pointer left it', () => {
     render(<Probe />);
     const pane = screen.getByTestId('pane');
     fireEvent.pointerDown(pane, { clientX: 200 });
     fireEvent.pointerMove(pane, { clientX: 260 });
     fireEvent.pointerUp(pane);
-    expect(CAMERA_ANGLES).toContain(rot());
+    expect(rot()).toBeCloseTo(-40 + 60 * 0.22, 5);
   });
 
-  it('snaps the same way when the pointer is cancelled', () => {
+  it('leaves it there too when the pointer is cancelled', () => {
     render(<Probe />);
     const pane = screen.getByTestId('pane');
     fireEvent.pointerDown(pane, { clientX: 200 });
     fireEvent.pointerMove(pane, { clientX: 260 });
     fireEvent.pointerCancel(pane);
-    expect(CAMERA_ANGLES).toContain(rot());
+    expect(rot()).toBeCloseTo(-40 + 60 * 0.22, 5);
   });
 
   it('turns the camera with the wheel, one to one', () => {
@@ -94,55 +102,23 @@ describe('useMapCamera', () => {
     expect(rot()).toBeCloseTo(-40 + 24, 5);
   });
 
-  it('holds the angle the wheel left it on until the wheel goes quiet', () => {
+  it('holds the angle the wheel left it on, however long it goes quiet', () => {
     vi.useFakeTimers();
     render(<Probe />);
     fireEvent.wheel(screen.getByTestId('pane'), { deltaY: 100, deltaX: 0 });
-    act(() => { vi.advanceTimersByTime(100); });
+    act(() => { vi.advanceTimersByTime(5000); });
     expect(rot()).toBeCloseTo(-28, 5);
   });
 
-  it('snaps once the wheel has been quiet long enough', () => {
-    vi.useFakeTimers();
-    render(<Probe />);
-    fireEvent.wheel(screen.getByTestId('pane'), { deltaY: 100, deltaX: 0 });
-    act(() => { vi.advanceTimersByTime(180); });
-    expect(CAMERA_ANGLES).toContain(rot());
-  });
-
-  it('starts the quiet count again on every notch', () => {
+  it('keeps every notch, so scrolling twice goes twice as far', () => {
     vi.useFakeTimers();
     render(<Probe />);
     const pane = screen.getByTestId('pane');
     fireEvent.wheel(pane, { deltaY: 100, deltaX: 0 });
-    act(() => { vi.advanceTimersByTime(170); });
+    act(() => { vi.advanceTimersByTime(1000); });
     fireEvent.wheel(pane, { deltaY: 100, deltaX: 0 });
-    act(() => { vi.advanceTimersByTime(170); });
+    act(() => { vi.advanceTimersByTime(1000); });
     expect(rot()).toBeCloseTo(-16, 5);
-  });
-
-  it('says it is settling only while the snap runs', () => {
-    vi.useFakeTimers();
-    render(<Probe />);
-    const pane = screen.getByTestId('pane');
-    expect(settling()).toBe(false);
-    fireEvent.wheel(pane, { deltaY: 100, deltaX: 0 });
-    expect(settling()).toBe(false);
-    act(() => { vi.advanceTimersByTime(180); });
-    expect(settling()).toBe(true);
-    act(() => { vi.advanceTimersByTime(700); });
-    expect(settling()).toBe(false);
-  });
-
-  it('settles the moment the pointer lifts, without waiting', () => {
-    vi.useFakeTimers();
-    render(<Probe />);
-    const pane = screen.getByTestId('pane');
-    fireEvent.pointerDown(pane, { clientX: 200 });
-    fireEvent.pointerMove(pane, { clientX: 260 });
-    fireEvent.pointerUp(pane);
-    expect(settling()).toBe(true);
-    expect(CAMERA_ANGLES).toContain(rot());
   });
 
   it('does not call a small wobble a drag', () => {

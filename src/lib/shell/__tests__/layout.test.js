@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { SCENE, platePositions, fitScale, snapRotation } from '@/lib/shell/layout';
+import { SCENE, platePositions, fitScale } from '@/lib/shell/layout';
 
 const systems = [
   { slug: 'a', year: '2025', tier: 'full', tech: ['x', 'y', 'z'] },
@@ -53,13 +53,5 @@ describe('fitScale', () => {
 
   it('survives a pane that has not been measured yet', () => {
     expect(fitScale({ width: 0, height: 0 })).toBe(0.4);
-  });
-});
-
-describe('snapRotation', () => {
-  it('snaps to the nearest camera angle on release', () => {
-    expect(snapRotation(-38)).toBe(-40);
-    expect(snapRotation(-52)).toBe(-55);
-    expect(snapRotation(-10)).toBe(-25);
   });
 });

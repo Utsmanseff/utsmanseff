@@ -77,7 +77,7 @@ kembali browser bekerja.
 | Seluruh teks tampil, dua bahasa | `docs/superpowers/notes/2026-09-03-seluruh-isi-tulisan.md` |
 | Teks yang dibuang, diarsipkan | `docs/superpowers/notes/2026-09-03-arsip-bagian-sulit.md` |
 
-Keadaan: **201 test hijau, 27 berkas**, `npx eslint src --max-warnings=0` bersih,
+Keadaan: **197 test hijau, 27 berkas**, `npx eslint src --max-warnings=0` bersih,
 `npm run build` sukses: `/sistem` terdaftar **statis** (`○`), bersama `/`,
 `/kontak` dan lima halaman `/kerja/*`.
 
@@ -86,7 +86,8 @@ bersama kodenya. Itu bukan regresi. Naik ke 142 lewat rencana gerbang, lalu
 sempat turun ke 130 waktu 10 test lapisan gerbang dan 6 test `useGatePassed`
 ikut dibuang, lalu naik ke 145 lewat gaya scrollbar, ke 156 lewat perpindahan
 naik-turun, dan ke 201 lewat peta hidup (`shading` 7, `useMapCamera` 19,
-`MapScene` 3, sisanya `Plate`).
+`MapScene` 3, sisanya `Plate`), lalu turun ke 197 waktu snap kamera dibuang —
+tiga test snap dan satu test `settling` hilang bersama fiturnya. Bukan regresi.
 
 ## Larangan yang tidak bisa ditawar
 
@@ -119,12 +120,17 @@ naik-turun, dan ke 201 lewat peta hidup (`shading` 7, `useMapCamera` 19,
   bergerak sendiri memudar 700ms `cubic-bezier(.22, 1, .36, 1)`; warna 180ms;
   `prefers-reduced-motion` memangkas ke 1ms. Sejak 2026-09-08 ia **tidak lagi**
   menahan cangkang.
-- **Grup peta punya `transition` hanya selama `camera.settling`.** Dulu ia
-  sengaja tidak punya sama sekali, dan itu benar selama jari menempel. Tapi snap
-  bukan jari — itu mesin yang bergerak sendiri, jadi ia dapat 700ms seperti gerak
-  mandiri lainnya. `useMapCamera` menyalakan `settling` selama snap saja dan
-  mematikannya lagi, supaya seretan berikutnya tetap nol easing. Jangan
-  memasangnya permanen.
+- **Kamera peta tidak pernah bergerak sendiri, dan tidak punya sudut tetap.**
+  Roda dan seret sama-sama berhenti persis di tempat jari melepasnya. Grup peta
+  karena itu tidak punya `transition` sama sekali — tidak ada yang perlu
+  dianimasikan.
+  `snapRotation()` dan `CAMERA_ANGLES` **sudah dihapus dari `layout.js`**, bukan
+  sekadar tidak dipakai. Dulu kamera menyentak ke `-55/-40/-25` waktu dilepas;
+  Utsman melihatnya berjalan pada 2026-09-09 dan menolaknya — kalau gulirannya
+  balik lagi, gulirannya tidak ada gunanya. Alasan yang sama berlaku untuk seret,
+  jadi keduanya dibebaskan sekaligus; membebaskan roda saja akan membuat seret
+  kecil sesudah menggulir jauh menarik kamera balik dengan lompatan besar.
+  Jangan dikembalikan tanpa alasan baru.
 - **Tanpa JavaScript `/` **dan** `/sistem` harus tetap utuh.** Sudah diverifikasi
   lewat `curl`: HTML server keduanya memuat delapan sistem dan lima tautan
   `/kerja/*`. Server merender `PaperFallback`, bukan gerbang.
@@ -253,20 +259,23 @@ mount. `layout.js` tidak disentuh sama sekali.
 
 **Terukur di browser sungguhan pada 1280×800, lewat `javascript_tool`:** plate
 adalah `BUTTON` tanpa tombol bersarang dan kliknya mengisi panel; seret 100px
-memberi `rotZ -18` (`-40 + 100 × 0.22`) lalu snap `-25`; roda `deltaY 100`
+memberi `rotZ -18` (`-40 + 100 × 0.22`); roda `deltaY 100`
 memberi `+12°` dan `deltaX 100` dengan `deltaY 8` memberi hal yang sama — sumbu
 dominan menang; dua elemen bergulir di cangkang tidak ikut bergerak waktu roda
-dipakai di peta; grup peta `transition: none` selama roda dan
-`transform 700ms var(--nav-ease)` selama snap, lalu `none` lagi; tumpukan naik
+dipakai di peta; tumpukan naik
 **5,49px** di layar waktu membuka; sisi terang tepi berpindah kiri → bawah waktu
-kamera memutar 84°; seret lalu klik meninggalkan panel kosong sementara tekan
+kamera memutar 84°; sesudah snap dibuang, roda membawa `-40` ke `-28` dan seret
+membawanya ke `-12.6` dan keduanya **tinggal di situ** tiga detik kemudian;
+seret lalu klik meninggalkan panel kosong sementara tekan
 tanpa geser memilih sistem; `transition-delay` lapis terbaca
 `0 / 0.04 / 0.08 / 0.12 / 0.16s`.
 
 **Belum terukur, dan jangan diklaim sudah:** rasa geraknya. Panel browser
 `document.hidden`, jadi easing 700ms tidak pernah berjalan di sana. Tiga angka
 menunggu mata Utsman: `WHEEL_PER_UNIT = 0.12`, `STAGGER_MS = 40`,
-`STEP_OPEN = 11`. Sisi `prefers-reduced-motion` untuk `transition-delay` juga
+`STEP_OPEN = 11`. **Sudah dilihat Utsman dan disetujui pada 2026-09-09**, kecuali
+satu hal: snap kamera, yang dibuang sesudah itu (lihat "Keputusan yang mahal").
+Sisi `prefers-reduced-motion` untuk `transition-delay` juga
 belum diuji — aturannya terbukti ada di stylesheet, tapi jalurnya tidak aktif
 waktu diperiksa.
 
@@ -505,7 +514,7 @@ dulu `/` selalu mendarat di dokumen kertas — plate tidak bergeser sama sekali,
 ## Cara lanjut
 
 1. `git checkout portfolio-canvas-redesign`
-2. `npx vitest run` — harus 201 hijau, `npx eslint src --max-warnings=0` bersih
+2. `npx vitest run` — harus 197 hijau, `npx eslint src --max-warnings=0` bersih
 3. Antrean ada di bagian **"Antrean berikutnya, urut"** di atas. Nomor 1 sekarang
    zoom masuk/keluar halaman baca lewat View Transitions — belum dispec, dan
    satu-satunya sisa dari "peta lebih interaktif".

@@ -11,12 +11,14 @@ function Probe() {
     <div data-testid="pane" {...camera.handlers}>
       <output data-testid="rot">{camera.rotZ.toFixed(2)}</output>
       <output data-testid="settling">{String(camera.settling)}</output>
+      <output data-testid="dragged">{String(camera.dragged())}</output>
     </div>
   );
 }
 
 const rot = () => Number(screen.getByTestId('rot').textContent);
 const settling = () => screen.getByTestId('settling').textContent === 'true';
+const dragged = () => screen.getByTestId('dragged').textContent === 'true';
 
 describe('useMapCamera', () => {
   afterEach(() => {
@@ -141,5 +143,43 @@ describe('useMapCamera', () => {
     fireEvent.pointerUp(pane);
     expect(settling()).toBe(true);
     expect(CAMERA_ANGLES).toContain(rot());
+  });
+
+  it('does not call a small wobble a drag', () => {
+    render(<Probe />);
+    const pane = screen.getByTestId('pane');
+    fireEvent.pointerDown(pane, { clientX: 200 });
+    fireEvent.pointerMove(pane, { clientX: 202 });
+    fireEvent.pointerUp(pane);
+    expect(dragged()).toBe(false);
+  });
+
+  it('calls a real sweep a drag', () => {
+    render(<Probe />);
+    const pane = screen.getByTestId('pane');
+    fireEvent.pointerDown(pane, { clientX: 200 });
+    fireEvent.pointerMove(pane, { clientX: 240 });
+    fireEvent.pointerUp(pane);
+    expect(dragged()).toBe(true);
+  });
+
+  it('forgets the last drag when a new press begins', () => {
+    render(<Probe />);
+    const pane = screen.getByTestId('pane');
+    fireEvent.pointerDown(pane, { clientX: 200 });
+    fireEvent.pointerMove(pane, { clientX: 240 });
+    fireEvent.pointerUp(pane);
+    fireEvent.pointerDown(pane, { clientX: 200 });
+    expect(dragged()).toBe(false);
+  });
+
+  it('counts the distance travelled, not the distance from the start', () => {
+    render(<Probe />);
+    const pane = screen.getByTestId('pane');
+    fireEvent.pointerDown(pane, { clientX: 200 });
+    fireEvent.pointerMove(pane, { clientX: 230 });
+    fireEvent.pointerMove(pane, { clientX: 200 });
+    fireEvent.pointerUp(pane);
+    expect(dragged()).toBe(true);
   });
 });

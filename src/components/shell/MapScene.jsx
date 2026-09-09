@@ -30,6 +30,12 @@ export default function MapScene({ systems, locale, selected, dimmed, onSelect }
 
   const positions = platePositions(systems);
 
+  // Seret yang kebetulan berakhir di atas plate tidak memilih sistem.
+  const select = (slug) => {
+    if (camera.dragged()) return;
+    onSelect(slug);
+  };
+
   return (
     <div className="grid grid-rows-[1fr_auto] min-h-0">
       <div
@@ -91,7 +97,7 @@ export default function MapScene({ systems, locale, selected, dimmed, onSelect }
                 rotZ={camera.rotZ}
                 selected={selected === s.slug}
                 dimmed={dimmed.has(s.slug)}
-                onSelect={onSelect}
+                onSelect={select}
               />
             ))}
           </div>

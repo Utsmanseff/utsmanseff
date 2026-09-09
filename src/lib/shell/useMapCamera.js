@@ -11,6 +11,7 @@ import { snapRotation } from './layout';
 
 const DRAG_PER_PX = 0.22;
 const WHEEL_PER_UNIT = 0.12;
+const CLICK_SLOP = 4;
 const SETTLE_MS = 180;
 const EASE_MS = 700;
 const START_ANGLE = -40;
@@ -19,6 +20,7 @@ export function useMapCamera(initial = START_ANGLE) {
   const [rotZ, setRotZ] = useState(initial);
   const [settling, setSettling] = useState(false);
   const drag = useRef(null);
+  const travelled = useRef(0);
   const quiet = useRef(null);
   const done = useRef(null);
 
@@ -42,11 +44,16 @@ export function useMapCamera(initial = START_ANGLE) {
     clearTimeout(quiet.current);
     clearTimeout(done.current);
     setSettling(false);
-    drag.current = { x: e.clientX, rot: rotZ };
+    travelled.current = 0;
+    drag.current = { x: e.clientX, last: e.clientX, rot: rotZ };
   };
 
   const onPointerMove = (e) => {
     if (!drag.current) return;
+    // Jarak yang ditempuh, bukan jarak dari titik awal: seret bolak-balik yang
+    // berakhir di tempat semula tetap seret.
+    travelled.current += Math.abs(e.clientX - drag.current.last);
+    drag.current.last = e.clientX;
     setRotZ(drag.current.rot + (e.clientX - drag.current.x) * DRAG_PER_PX);
   };
 
@@ -70,9 +77,14 @@ export function useMapCamera(initial = START_ANGLE) {
     quiet.current = setTimeout(settle, SETTLE_MS);
   };
 
+  // Dibaca oleh MapScene di onClick, yang menyala sesudah pointerup. Ref, bukan
+  // state: kalau ia memicu render, angkanya sudah berubah sebelum klik sampai.
+  const dragged = () => travelled.current > CLICK_SLOP;
+
   return {
     rotZ,
     settling,
+    dragged,
     handlers: {
       onPointerDown,
       onPointerMove,

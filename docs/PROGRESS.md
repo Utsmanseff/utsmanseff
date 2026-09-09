@@ -326,11 +326,59 @@ seluruhnya**, lewat `2026-09-09-peta-hidup.md` dan
 selesai**, lewat `2026-09-10-teks-dan-data-sistem.md`, dan di jalan itu ia
 melebar sampai ke data sembilan sistem dan seluruh prosa halaman baca.
 
-**1. Screenshot** `hris.png` dan `psb.png` → `public/assets/img/`. Sensor dulu
+**1. Tautan repo per project, dan baris ketersediaan di `/kontak`.** Keduanya
+lahir dari penilaian yang diminta Utsman pada 2026-09-10 (lihat "Penilaian
+jujur" di bawah). Belum dispec — brainstorm dulu, keluar spec, baru rencana.
+
+Yang sudah diputuskan Utsman soal baris ketersediaan, jadi jangan ditanya lagi:
+terbuka untuk kerja penuh waktu **dan** freelance sekaligus; bebas lokasi —
+remote, Banjarbaru, Kalsel, atau di mana pun; nadanya "open to work" atau
+"open for collaboration", bukan kalimat panjang.
+
+Untuk tautan repo, tiga syarat yang harus diperiksa sebelum satu pun tautan
+masuk, karena masing-masing justru menurunkan nilai kalau lolos:
+- **Repo privat.** Tautan yang mendarat di 404 GitHub lebih buruk daripada
+  tidak ada tautan sama sekali.
+- **Kode klien.** RME, IDRG, HRIS dan web RSU milik rumah sakit; SIMASET,
+  SIGAP, SIBENIH dan SIMBAS milik instansi. Perlu izin, dan riwayat commit
+  harus bersih dari kredensial, endpoint internal, dump database, dan data
+  pasien atau pegawai — bukan cuma commit terakhirnya.
+- **Repo tanpa README.** Recruiter membuka, melihat folder Laravel standar,
+  lalu menutupnya.
+
+Medan `repo` di `projects.js` dan tautannya di halaman baca adalah perubahan
+data **dan** tampilan, jadi ia spec sendiri, bukan tempelan.
+
+**2. Screenshot** `hris.png` dan `psb.png` → `public/assets/img/`. Sensor dulu
 kalau memuat data pegawai atau pasien asli. Ini juga dua halaman yang masih
 memakai kalimat "Screenshot menyusul".
 
-**2. Merge ke `main` dan deploy.**
+**3. Merge ke `main` dan deploy.**
+
+### Penilaian jujur, diminta Utsman 2026-09-10
+
+Pendapat, bukan pengukuran. Keseluruhan **8/10**, potensi recruiter tertarik
+**6/10**. Jaraknya disengaja oleh desainnya sendiri: sasaran porto ini engineer,
+bukan HRD.
+
+Yang menahan angka recruiter, urut:
+1. Hampir tidak ada yang bisa diperiksa orang lain — delapan dari sembilan
+   sistem tanpa URL, dan belum ada satu pun tautan repo.
+2. Cangkang cuma hidup di ≥1024px, jadi recruiter yang membuka dari ponsel
+   tidak pernah melihat kemampuan yang paling membedakan Utsman.
+3. Larangan angka dampak (yang benar dan tidak dicabut) menutup juga
+   keterangan lingkup yang sebenarnya Utsman tahu dan tidak perlu dikarang —
+   misalnya apakah sistemnya masih dipakai sampai sekarang.
+4. Statusnya tidak disebut di mana pun.
+
+Perkiraan sesudah tautan repo dan baris ketersediaan masuk: recruiter
+**6 → 7,5**, keseluruhan **8 → 8,5**. Kalau cuma dua-tiga repo yang boleh
+publik, tetap naik ke sekitar 7 — yang dicari bukan jumlahnya, cuma bukti
+bahwa ada yang bisa dibuka.
+
+Sisanya, kalau nanti mau dikejar: satu diagram alur per sistem besar (IDRG
+cukup tiga kotak: SIMRS → layanan ini → BPJS, dengan cabang SatuSehat), dan
+satu cicipan cangkang untuk pengunjung ponsel.
 
 **Kalau nanti terasa perlu, bukan sekarang:**
 

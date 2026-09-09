@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { snapRotation } from './layout';
 
 // Kamera peta, dan satu-satunya tempat yang tahu bagaimana ia digerakkan.
@@ -11,13 +11,37 @@ import { snapRotation } from './layout';
 
 const DRAG_PER_PX = 0.22;
 const WHEEL_PER_UNIT = 0.12;
+const SETTLE_MS = 180;
+const EASE_MS = 700;
 const START_ANGLE = -40;
 
 export function useMapCamera(initial = START_ANGLE) {
   const [rotZ, setRotZ] = useState(initial);
+  const [settling, setSettling] = useState(false);
   const drag = useRef(null);
+  const quiet = useRef(null);
+  const done = useRef(null);
+
+  // Snap bukan jari; itu mesin yang bergerak sendiri, jadi ia dapat 700ms
+  // seperti semua gerak lain yang tidak diseret. `settling` cuma menyala selama
+  // itu — MapScene memakainya untuk menyalakan transition, lalu mematikannya
+  // lagi supaya seretan berikutnya tetap 1:1.
+  const settle = useCallback(() => {
+    setSettling(true);
+    setRotZ((r) => snapRotation(r));
+    clearTimeout(done.current);
+    done.current = setTimeout(() => setSettling(false), EASE_MS);
+  }, []);
+
+  useEffect(() => () => {
+    clearTimeout(quiet.current);
+    clearTimeout(done.current);
+  }, []);
 
   const onPointerDown = (e) => {
+    clearTimeout(quiet.current);
+    clearTimeout(done.current);
+    setSettling(false);
     drag.current = { x: e.clientX, rot: rotZ };
   };
 
@@ -29,7 +53,8 @@ export function useMapCamera(initial = START_ANGLE) {
   const endDrag = () => {
     if (!drag.current) return;
     drag.current = null;
-    setRotZ((r) => snapRotation(r));
+    clearTimeout(quiet.current);
+    settle();
   };
 
   // Sumbu yang dominan menang: geser dua jari mendatar di trackpad mengirim
@@ -38,11 +63,16 @@ export function useMapCamera(initial = START_ANGLE) {
   // cangkang overflow-hidden jadi tidak ada gulir yang perlu dicegah.
   const onWheel = (e) => {
     const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+    clearTimeout(quiet.current);
+    clearTimeout(done.current);
+    setSettling(false);
     setRotZ((r) => r + delta * WHEEL_PER_UNIT);
+    quiet.current = setTimeout(settle, SETTLE_MS);
   };
 
   return {
     rotZ,
+    settling,
     handlers: {
       onPointerDown,
       onPointerMove,

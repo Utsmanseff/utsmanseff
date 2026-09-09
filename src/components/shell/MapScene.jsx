@@ -56,6 +56,11 @@ export default function MapScene({ systems, locale, selected, dimmed, onSelect }
             style={{
               transformStyle: 'preserve-3d',
               transform: `rotateX(56deg) rotateZ(${camera.rotZ}deg)`,
+              // Nol easing selama jari menempel; 700ms hanya waktu mesin yang
+              // menarik kamera pulang ke salah satu dari tiga sudutnya.
+              transition: camera.settling
+                ? 'transform 700ms var(--nav-ease)'
+                : 'none',
             }}
             role="group"
             aria-label={locale === 'id'

@@ -10,6 +10,7 @@ import { snapRotation } from './layout';
 // 1:1 tanpa easing.
 
 const DRAG_PER_PX = 0.22;
+const WHEEL_PER_UNIT = 0.12;
 const START_ANGLE = -40;
 
 export function useMapCamera(initial = START_ANGLE) {
@@ -31,6 +32,15 @@ export function useMapCamera(initial = START_ANGLE) {
     setRotZ((r) => snapRotation(r));
   };
 
+  // Sumbu yang dominan menang: geser dua jari mendatar di trackpad mengirim
+  // deltaX, roda tetikus mengirim deltaY, dan keduanya berarti hal yang sama di
+  // sini. Tanpa preventDefault — React memasang wheel sebagai passive, dan
+  // cangkang overflow-hidden jadi tidak ada gulir yang perlu dicegah.
+  const onWheel = (e) => {
+    const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+    setRotZ((r) => r + delta * WHEEL_PER_UNIT);
+  };
+
   return {
     rotZ,
     handlers: {
@@ -38,6 +48,7 @@ export function useMapCamera(initial = START_ANGLE) {
       onPointerMove,
       onPointerUp: endDrag,
       onPointerCancel: endDrag,
+      onWheel,
     },
   };
 }

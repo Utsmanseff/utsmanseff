@@ -53,4 +53,36 @@ describe('useMapCamera', () => {
     fireEvent.pointerCancel(pane);
     expect(CAMERA_ANGLES).toContain(rot());
   });
+
+  it('turns the camera with the wheel, one to one', () => {
+    render(<Probe />);
+    fireEvent.wheel(screen.getByTestId('pane'), { deltaY: 100, deltaX: 0 });
+    expect(rot()).toBeCloseTo(-40 + 100 * 0.12, 5);
+  });
+
+  it('turns the other way for the other direction', () => {
+    render(<Probe />);
+    fireEvent.wheel(screen.getByTestId('pane'), { deltaY: -100, deltaX: 0 });
+    expect(rot()).toBeCloseTo(-40 - 100 * 0.12, 5);
+  });
+
+  it('lets a sideways trackpad swipe win over the smaller vertical drift', () => {
+    render(<Probe />);
+    fireEvent.wheel(screen.getByTestId('pane'), { deltaX: 100, deltaY: 8 });
+    expect(rot()).toBeCloseTo(-40 + 100 * 0.12, 5);
+  });
+
+  it('keeps the wheel when the vertical delta is the larger one', () => {
+    render(<Probe />);
+    fireEvent.wheel(screen.getByTestId('pane'), { deltaX: 8, deltaY: 100 });
+    expect(rot()).toBeCloseTo(-40 + 100 * 0.12, 5);
+  });
+
+  it('adds up across several notches', () => {
+    render(<Probe />);
+    const pane = screen.getByTestId('pane');
+    fireEvent.wheel(pane, { deltaY: 100, deltaX: 0 });
+    fireEvent.wheel(pane, { deltaY: 100, deltaX: 0 });
+    expect(rot()).toBeCloseTo(-40 + 24, 5);
+  });
 });

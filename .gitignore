@@ -40,13 +40,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Claude Code worktrees + local agent settings
-.claude/worktrees/
-.claude/settings.local.json
+# local tooling & editor config
+.claude/
 .superpowers/
 
-# Catatan kerja internal: spec, rencana, PROGRESS, dan draf README repo klien.
-# Sengaja tidak ikut ke repo publik — isinya proses, penilaian internal, dan
-# catatan tentang sistem klien. Berkasnya tetap hidup di disk dan tetap dibaca
-# di awal tiap sesi; yang berubah cuma ia tidak lagi dipublikasikan.
+# working notes, not part of the app
 docs/

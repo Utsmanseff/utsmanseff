@@ -181,4 +181,24 @@ describe('projects dataset', () => {
     expect(bySlug('rme').built.id.some((l) => /Pencatatan SOAP/.test(l))).toBe(true);
   });
 
+  it('carries a repo field on every project, null where there is none', () => {
+    for (const p of projects) {
+      expect(p).toHaveProperty('repo');
+      expect(p.repo === null || typeof p.repo === 'string').toBe(true);
+    }
+  });
+
+  it('links exactly the five repos that are allowed to be public', () => {
+    const withRepo = projects.filter((p) => p.repo).map((p) => p.slug).sort();
+    expect(withRepo).toEqual(
+      ['hris-nirwana', 'sibenih', 'sigap-bpn', 'simaset', 'simbas'].sort(),
+    );
+  });
+
+  it('points every repo URL at the owner account, so a typo cannot land elsewhere', () => {
+    for (const p of projects) {
+      if (p.repo) expect(p.repo).toMatch(/^https:\/\/github\.com\/Utsmanseff\/[\w.-]+$/);
+    }
+  });
+
 });

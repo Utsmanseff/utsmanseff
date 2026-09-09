@@ -7,7 +7,8 @@
 lalu `2026-09-08-gerbang-hero.md` **selesai, Task 1–8**, plus penyetelan gerbang
 setelah Utsman melihatnya, lalu `2026-09-08-gerbang-punya-url.md`
 **selesai, Task 1–6** (dikerjakan dengan Task 2 lebih dulu — lihat catatan di
-bawah), lalu `2026-09-09-peta-hidup.md` **selesai, Task 1–11**.
+bawah), lalu `2026-09-09-peta-hidup.md` **selesai, Task 1–11**, lalu
+`2026-09-09-zoom-halaman-baca.md` **selesai, Task 1–10**.
 Belum di-merge ke `main`, dan belum di-deploy.
 
 ## Bentuk sekarang
@@ -20,6 +21,7 @@ sumber data, plus halaman baca:
 | `/` | ≥1024px, JS hidup | Gerbang, sendirian di halamannya | Gelap |
 | `/sistem` | ≥1024px, JS hidup | Cangkang: peta isometrik + konsol perintah | Gelap |
 | `/sistem?tampilan=datar` | sama | Cangkang, mendarat di tabel datar | Gelap |
+| `/sistem?pilih=<slug>&sudut=<derajat>` | sama | Cangkang, titik pulang dari halaman baca | Gelap |
 | `/` dan `/sistem` | selain itu (termasuk tanpa JS) | Dokumen: pita identitas + spine tahun + filter sheet | Kertas |
 | `/kerja/<slug>` | semua lebar | Halaman baca | Gelap |
 | `/kontak` | semua lebar | Halaman kontak | Gelap |
@@ -30,13 +32,18 @@ cangkang menggantikannya setelah mount, dan hanya kalau kedua syarat
 salah satunya.
 
 Perpindahan `/` ⇄ `/sistem` membawa arah: naik untuk mundur, turun untuk masuk,
-700ms, jarak `--nav-slide` `22vh`. Pintu lain — halaman baca, kontak — memotong
-seperti biasa, menunggu kerja zoom peta. **Utsman sudah melihatnya berjalan di
+700ms, jarak `--nav-slide` `22vh`. **Utsman sudah melihatnya berjalan di
 browsernya sendiri pada 2026-09-09: gesernya jalan dan `22vh` terasa pas.**
+
+Halaman baca **tidak lagi memotong**. Blok judul di panel kanan dan blok kepala
+halaman baca berbagi satu nama transisi, `sistem-aktif`, jadi yang satu tumbuh
+jadi yang lain dan menyusut balik waktu pengunjung kembali. `/kontak` tetap
+memotong.
 
 Peta sekarang menjawab penunjuk. Badan plate adalah tombolnya, roda memutar
 kamera, tumpukan lapis membuka waktu hover dan fokus, tepinya berubah menurut
-sudut kamera, dan lapis naik berurutan waktu peta muncul.
+sudut kamera, dan lapis naik berurutan waktu peta muncul. Kamera berhenti di mana
+pun ia dilepas — tidak ada sudut tetap yang menariknya pulang.
 
 Gerbang berdiri di `/` sebagai halaman penuh, bukan lapisan: nama, peran, lokasi,
 rentang tahun, daftar stack, dan dua tombol yang menyebut tujuannya
@@ -62,7 +69,7 @@ kembali browser bekerja.
 | Gerbang, halaman `/` | `src/app/page.jsx` + `src/components/shell/Gate.jsx` |
 | Cangkang, halaman `/sistem` | `src/app/sistem/page.jsx` (+ `layout.js` untuk canonical) |
 | Lapis kertas, dipakai dua route | `src/components/document/PaperFallback.jsx` |
-| Arah perpindahan halaman | `src/lib/nav/slideTo.js` |
+| Arah perpindahan halaman | `src/lib/nav/moveTo.js` |
 | Pita identitas HP | `src/components/document/PaperHead.jsx` |
 | Cangkang desktop | `src/components/shell/` |
 | Dokumen HP | `src/components/document/` |
@@ -74,10 +81,12 @@ kembali browser bekerja.
 | Spec gerbang | `docs/superpowers/specs/2026-09-08-gerbang-hero-design.md` |
 | Rencana peta hidup, 11 task (selesai) | `docs/superpowers/plans/2026-09-09-peta-hidup.md` |
 | Spec peta hidup | `docs/superpowers/specs/2026-09-09-peta-hidup-design.md` |
+| Rencana zoom halaman baca, 10 task (selesai) | `docs/superpowers/plans/2026-09-09-zoom-halaman-baca.md` |
+| Spec zoom halaman baca | `docs/superpowers/specs/2026-09-09-zoom-halaman-baca-design.md` |
 | Seluruh teks tampil, dua bahasa | `docs/superpowers/notes/2026-09-03-seluruh-isi-tulisan.md` |
 | Teks yang dibuang, diarsipkan | `docs/superpowers/notes/2026-09-03-arsip-bagian-sulit.md` |
 
-Keadaan: **197 test hijau, 27 berkas**, `npx eslint src --max-warnings=0` bersih,
+Keadaan: **223 test hijau, 29 berkas**, `npx eslint src --max-warnings=0` bersih,
 `npm run build` sukses: `/sistem` terdaftar **statis** (`○`), bersama `/`,
 `/kontak` dan lima halaman `/kerja/*`.
 
@@ -88,6 +97,7 @@ ikut dibuang, lalu naik ke 145 lewat gaya scrollbar, ke 156 lewat perpindahan
 naik-turun, dan ke 201 lewat peta hidup (`shading` 7, `useMapCamera` 19,
 `MapScene` 3, sisanya `Plate`), lalu turun ke 197 waktu snap kamera dibuang —
 tiga test snap dan satu test `settling` hilang bersama fiturnya. Bukan regresi.
+Naik ke 223 lewat zoom halaman baca.
 
 ## Larangan yang tidak bisa ditawar
 
@@ -106,6 +116,12 @@ tiga test snap dan satu test `settling` hilang bersama fiturnya. Bukan regresi.
 - **Vitest & ESLint mengecualikan `.claude/**`.** Jangan "diperbaiki".
 - **`meta.siteUrl` satu-satunya sumber URL kanonik.** Sudah diperiksa: tidak ada
   URL yang ditulis ulang di tempat lain.
+- **Pseudo-element view-transition harus dinolkan sendiri di blok
+  `prefers-reduced-motion`, dan yang BERNAMA butuh barisnya sendiri lagi.**
+  Selektor `*` tidak menjangkau `::view-transition-*` sama sekali, dan aturan
+  `(root)` tidak menjangkau `(sistem-aktif)`. Tiga lapis, tiga blok. Menghapus
+  salah satunya membuat pengunjung yang meminta gerak dikurangi tetap kena
+  animasi 700ms penuh, tanpa error apa pun.
 
 ## Keputusan yang mahal kalau dilupakan
 
@@ -213,6 +229,47 @@ tiga test snap dan satu test `settling` hilang bersama fiturnya. Bukan regresi.
 - **`dragged()` menghitung jarak yang ditempuh, bukan jarak dari titik awal.**
   Seret bolak-balik yang berakhir di tempat semula tetap seret, dan kliknya tetap
   harus ditelan. Ambangnya 4px, dan `MapScene` yang memakainya — bukan `Plate`.
+- **Nama transisi `sistem-aktif` dibawa blok judul `SelectedPanel`, BUKAN plate.**
+  Plate sudah dicoba dan gagal: `view-transition-name` meratakan tumpukan 3D-nya
+  dari 9,51px jadi 0, dan itu tidak bisa ditimpa — `getComputedStyle` tetap
+  melaporkan `preserve-3d` dan `contain: none` sementara anak-anaknya sudah rata,
+  dan menulis ulang `preserve-3d` di atasnya tidak mengubah apa pun. Jangan
+  dicoba lagi tanpa alasan baru.
+  Efek sampingnya menguntungkan: panel itu berdiri di **kedua** view, jadi morf
+  ikut jalan dari tabel datar.
+- **Tepat satu elemen boleh membawa satu nama transisi.** Dua pembawa membuat
+  browser membatalkan transisinya diam-diam, tanpa error. Keunikannya dijaga oleh
+  bentuk kode — panel merender blok itu hanya kalau ada sistem terpilih, dan
+  `selected` cuma menyimpan satu slug — bukan oleh kehati-hatian. Ada test untuk
+  kasus kosongnya, dan itu bukan formalitas.
+- **Titik pulang ditulis `history.replaceState`, BUKAN `router.replace`.**
+  Terukur di Chrome 148: `router.replace` menjadwalkan transisi yang belum sempat
+  commit sebelum `push` berikutnya jalan, jadi entri riwayat lama tidak pernah
+  tertimpa dan tombol kembali mendarat di `/sistem` polos. `replaceState`
+  menimpanya saat itu juga, dan ia tidak memicu render — yang justru diinginkan,
+  karena kita sedang meninggalkan halaman itu.
+- **URL ditulis sekali di pintu, bukan tiap kali peta berubah.** Memanggil
+  `replace` tiap klik roda itu berisik dan mahal. Sudut kamera sampai ke pintu
+  lewat `angleRef` yang dititipkan `Shell` ke `MapScene`; menaikkannya jadi state
+  `Shell` akan merender ulang rail, panel dan konsol tiap klik roda demi angka
+  yang cuma dibaca sekali.
+- **`zoom` satu nilai untuk dua arah.** Arah morf sudah ditentukan oleh elemen
+  mana yang membawa nama di tiap sisi, jadi `unzoom` tidak ada dan sengaja
+  ditolak `moveTo`. Itu pula yang membuat halaman baca aman menyetel
+  `data-nav="zoom"` saat mount — satu-satunya cara melayani tombol kembali
+  browser, yang tidak punya klik untuk dicegat — tanpa mengubah apa pun di tengah
+  transisi masuk yang masih berjalan.
+- **`← SEMUA SISTEM` memulihkan sistemnya, bukan sudut kameranya.** Halaman baca
+  tahu slug-nya sendiri tapi tidak tahu sudut yang ditinggalkan, dan menaruh
+  sudut di URL `/kerja/*` akan mengotori halaman yang punya canonical dan
+  metadata sendiri. Tombol kembali browser memulihkan keduanya. Perbedaan ini
+  diajukan ke Utsman pada 2026-09-09 dan tidak dipersoalkan; kalau nanti terasa
+  janggal, jalan keluarnya membuat tautan itu memanggil `history.back()` waktu
+  riwayatnya memang datang dari peta — bukan menaruh sudut di URL halaman baca.
+- **`SelectedPanel` tidak lagi memegang `router`.** Pintunya satu fungsi di
+  `Shell` (`openSystem`), dipanggil tautan panel dan `open` di konsol. Tautannya
+  tetap `<Link href>` asli dan hanya klik kiri polos yang dicegat, supaya klik
+  tengah, ctrl-klik dan "salin alamat tautan" tetap bekerja.
 
 ## Yang belum dikerjakan
 
@@ -221,30 +278,58 @@ kosong yang memang dirancang untuk itu.
 
 ### Antrean berikutnya, urut
 
-**1. Zoom masuk ke halaman baca, zoom keluar waktu kembali.** Sisa terakhir dari
-"peta lebih interaktif"; tiga butir lainnya — klik badan plate, roda memutar
-kamera, lapisan lebih bernyawa — sudah selesai lewat `2026-09-09-peta-hidup.md`.
-Belum dispec.
+**Antrean nomor 1 yang lama — "peta lebih interaktif" — sudah selesai
+seluruhnya**, lewat `2026-09-09-peta-hidup.md` dan
+`2026-09-09-zoom-halaman-baca.md`.
 
-View Transitions API. Chrome/Edge/Safari 18 dapat animasinya, Firefox navigasi
-biasa. Zoom keluar butuh `rotZ`/`scale`/`selected` peta bertahan waktu kembali,
-dan itu yang membuatnya menyeberang route — beda dari pekerjaan peta hidup yang
-seluruhnya di dalam `MapScene`/`Plate`. Kabel arahnya sudah ada di
-`src/lib/nav/slideTo.js` dan boundary `<ViewTransition>` di layout; yang belum
-ada adalah nama transisi per plate dan cara peta mengingat dirinya.
-
-**2. Teks legenda dan catatan rail.** Utsman menyebut keduanya kurang
+**1. Teks legenda dan catatan rail.** Utsman menyebut keduanya kurang
 informatif: `AxisLegend` (`KEDALAMAN tahun · TINGGI stack` dst) dan catatan di
 kaki `LogRail` ("Sistem yang diredupkan tetap di peta…").
 
-**3. Kontras label tahun di peta.** `#4C555A` di atas ground ±2.3:1. Palet
+**2. Kontras label tahun di peta.** `#4C555A` di atas ground ±2.3:1. Palet
 handoff, informasinya juga ada di legenda dan rail, jadi dibiarkan — tapi belum
 pernah ditawarkan ke Utsman untuk dinaikkan.
 
-**4. Screenshot** `hris.png` dan `psb.png` → `public/assets/img/`. Sensor dulu
+**3. Screenshot** `hris.png` dan `psb.png` → `public/assets/img/`. Sensor dulu
 kalau memuat data pegawai atau pasien asli.
 
-**5. Merge ke `main` dan deploy.**
+**4. Merge ke `main` dan deploy.**
+
+**Kalau nanti terasa perlu, bukan sekarang:** `← SEMUA SISTEM` memanggil
+`history.back()` waktu riwayatnya datang dari peta, supaya sudut kamera ikut
+pulih lewat tautan itu — bukan cuma lewat tombol kembali browser. Sudah diajukan
+ke Utsman dan tidak dipersoalkan, jadi ia menunggu keluhan sungguhan lebih dulu.
+
+### Zoom halaman baca — **selesai 2026-09-09**
+
+Sepuluh task. Task 1 sekali lagi spike, dan sekali lagi berbayar: ia **gagal**,
+dan kegagalannya memindahkan nama transisi dari plate ke panel kanan sebelum
+sembilan task menumpuk di atas asumsi yang salah.
+
+Yang berubah: `slideTo` jadi `moveTo` dengan arah ketiga `zoom`; panel kanan dan
+kepala halaman baca berbagi nama `sistem-aktif`; `← SEMUA SISTEM` membawa
+`?pilih=<slug>`; pintu menulis `/sistem?pilih=&sudut=` ke riwayat sebelum pergi;
+`/sistem` membacanya kembali waktu mount.
+
+**Terukur di browser sungguhan pada 1280×800, lewat `javascript_tool`:** nol
+pembawa nama sebelum ada yang terpilih, satu sesudahnya, satu di halaman baca,
+satu lagi sesudah tombol kembali — tidak pernah dua di sisi mana pun;
+`data-nav` terisi `"zoom"`; tombol kembali mendarat di
+`/sistem?pilih=rsu-nirwana-web&sudut=-28` dengan kamera benar-benar di `-28deg`;
+membuka `/sistem?pilih=rme&sudut=-55` langsung memberi RME terpilih dan kamera
+`-55deg`; `?sudut=abc` dan `?sudut=` kosong jatuh ke `-40`; tumpukan plate tetap
+bertumpuk (`spread` 9,51 → 15 waktu terpilih) karena namanya tidak ada di sana;
+empat aturan CSS baru benar-benar ada di stylesheet, tiga di antaranya di dalam
+blok `prefers-reduced-motion`; `curl` masih memberi lima tautan `/kerja/*` dan
+`← SEMUA SISTEM` yang sudah membawa `?pilih=` bahkan tanpa JavaScript;
+`npm run build` sukses dengan `/sistem` tetap `○ Static`.
+
+**Dilihat Utsman di browsernya sendiri, 2026-09-09:** morfnya benar dan `700ms`
+terasa pas. Tidak ada yang perlu disetel.
+
+**Belum terukur, dan jangan diklaim sudah:** sisi `prefers-reduced-motion` untuk
+pseudo-element bernama. Aturannya terbukti ada di stylesheet, tapi jalurnya tidak
+aktif waktu diperiksa — animasi Windows sedang menyala.
 
 ### Peta hidup — **selesai 2026-09-09**
 
@@ -368,6 +453,15 @@ dulu `/` selalu mendarat di dokumen kertas — plate tidak bergeser sama sekali,
   di `Gate` dipanggil oleh listener keydown; tanpa `useCallback`, ESLint menuntut
   ia masuk daftar dependensi, dan begitu masuk, listener dibongkar-pasang tiap
   render.
+- **`router.replace` lalu `router.push` tidak menimpa entri riwayat.** Yang
+  pertama menjadwalkan transisi yang belum commit waktu yang kedua jalan, jadi
+  entri lama selamat dan tombol kembali mendarat di URL tanpa parameter. Untuk
+  menstempel titik pulang sebelum pergi, pakai `window.history.replaceState` —
+  ia menimpa saat itu juga dan tidak memicu render.
+- **`view-transition-name` meratakan konteks 3D di bawahnya, diam-diam.**
+  `getComputedStyle` tetap melaporkan `transform-style: preserve-3d` dan
+  `contain: none`, dan menulis ulang `preserve-3d` di atasnya tidak menolong.
+  Jangan menaruh nama transisi di dalam pohon ber-`preserve-3d`.
 - **Gerbang `absolute inset-0` butuh induk yang seukuran viewport.** Waktu ia
   lapisan, `Shell` yang `relative` menyediakannya. Sebagai halaman sendiri,
   `page.jsx` harus membungkusnya `relative h-[100dvh] overflow-hidden`.
@@ -413,6 +507,15 @@ dulu `/` selalu mendarat di dokumen kertas — plate tidak bergeser sama sekali,
   CSSOM (`el.style.borderLeftColor`), jangan mencari substring. Kerabat pelajaran
   "assertion substring bisa lolos palsu", cuma arahnya terbalik: di sini ia
   **gagal palsu**.
+- **Test yang cuma memeriksa urutan pemanggilan mock bisa hijau di atas bug
+  navigasi yang nyata.** `replace` lalu `push` terpanggil dalam urutan benar,
+  sementara riwayat sungguhan tidak berubah sama sekali. Yang menangkapnya
+  `history.back()` di browser sungguhan, bukan test.
+- **`[role="group"]` tidak unik di cangkang.** Query untuk grup peta harus
+  dilingkupi `[data-testid="map-pane"]`, kalau tidak ia menangkap elemen lain dan
+  `getAttribute('style')` menjawab `null`.
+- **Komponen yang memuat `LangSwitcher` butuh `LocaleProvider` di test.**
+  `PaperHeader` terlihat seperti komponen sepele sampai `useLocale` melempar.
 - **Test yang membaca posisi lapis plate harus menunggu mount.** Lapis mulai rata
   di `translateZ(0)` sampai `setTimeout(…, 0)` menyalakannya. Pembacaan langsung
   sesudah `render` melaporkan keadaan sebelum masuk, bukan keadaan akhir.
@@ -514,10 +617,10 @@ dulu `/` selalu mendarat di dokumen kertas — plate tidak bergeser sama sekali,
 ## Cara lanjut
 
 1. `git checkout portfolio-canvas-redesign`
-2. `npx vitest run` — harus 197 hijau, `npx eslint src --max-warnings=0` bersih
+2. `npx vitest run` — harus 223 hijau, `npx eslint src --max-warnings=0` bersih
 3. Antrean ada di bagian **"Antrean berikutnya, urut"** di atas. Nomor 1 sekarang
-   zoom masuk/keluar halaman baca lewat View Transitions — belum dispec, dan
-   satu-satunya sisa dari "peta lebih interaktif".
+   teks legenda dan catatan rail — Utsman menyebut keduanya kurang informatif.
+   Belum dispec.
 
 Aturan kerja yang berlaku di sesi ini dan sebaiknya diteruskan: TDD (test dulu,
 lihat gagal, baru implementasi), commit tiap task, verifikasi di browser

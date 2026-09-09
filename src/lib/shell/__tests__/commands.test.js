@@ -56,7 +56,10 @@ describe('findSystem', () => {
   it('finds a system by slug prefix, short name or title', () => {
     expect(findSystem(projects, 'hris').slug).toBe('hris-nirwana');
     expect(findSystem(projects, 'rme').slug).toBe('rme');
-    expect(findSystem(projects, 'ocr').slug).toBe('rsu-nirwana-web');
+    // Bukan 'ocr' lagi: sejak halaman itu bercerita tentang situsnya, kata
+    // OCR tidak ada di nama pendek maupun judulnya, dan findSystem hanya
+    // melihat slug, shortName dan title.
+    expect(findSystem(projects, 'pendaftaran').slug).toBe('rsu-nirwana-web');
   });
 
   it('returns null when nothing matches', () => {

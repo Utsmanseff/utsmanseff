@@ -144,4 +144,41 @@ describe('projects dataset', () => {
     expect(bySlug('sigap-bpn').context.en).toMatch(/does not carry out payment/);
   });
 
+  it('never speaks in the first person', () => {
+    // Aturan Utsman: prosa halaman baca berbahasa baku dan tanpa kata "saya".
+    for (const p of projects) {
+      expect(p.context.id, p.slug).not.toMatch(/\bsaya\b/i);
+      for (const line of p.built.id) expect(line, p.slug).not.toMatch(/\bsaya\b/i);
+    }
+  });
+
+  it('never names the SIMRS the hospital happens to run', () => {
+    // Boleh disebut open source, tidak boleh disebut namanya.
+    for (const p of projects) {
+      expect(p.context.id, p.slug).not.toMatch(/khanza/i);
+      expect(p.context.en, p.slug).not.toMatch(/khanza/i);
+    }
+    expect(bySlug('rme').context.id).toMatch(/SIMRS open source/);
+  });
+
+  it('tells the whole hospital site, not only the OCR step', () => {
+    const web = bySlug('rsu-nirwana-web');
+    expect(web.title.id).toBe('Web Rumah Sakit dan Pendaftaran Pasien Baru');
+    expect(web.built.id.some((l) => /Dokter Kami/.test(l))).toBe(true);
+    expect(web.built.id.some((l) => /tombol sinkronkan/.test(l))).toBe(true);
+  });
+
+  it('seats SatuSehat where it actually sits', () => {
+    // Pengirimannya bukan dari sistem ini, tetapi datanya berasal dari coding
+    // di sini, dan pengirimannya otomatis lewat service tersendiri.
+    const idrg = bySlug('idrg-bridging');
+    expect(idrg.context.id).toMatch(/dikirim otomatis ke SatuSehat melalui service tersendiri/);
+    expect(idrg.built.id.some((l) => /SatuSehat/.test(l))).toBe(true);
+    expect(idrg.built.id.some((l) => /grouping IDRG/.test(l))).toBe(true);
+  });
+
+  it('keeps SOAP where it means a medical note, not a protocol', () => {
+    expect(bySlug('rme').built.id.some((l) => /Pencatatan SOAP/.test(l))).toBe(true);
+  });
+
 });

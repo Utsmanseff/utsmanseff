@@ -26,29 +26,45 @@ export const projects = [
     image: '/assets/img/pendaftaran.png',
     tech: ['Laravel', 'Next.js', 'MySQL', 'Google Vision', 'REST API'],
     shortName: { id: 'Web & Pendaftaran', en: 'Site & Registration' },
+    // Halaman ini bercerita tentang situsnya, dengan pembacaan KTP sebagai
+    // puncaknya — bukan tentang OCR sendirian. Fakta situs lamanya (statis,
+    // isinya hardcoded, pendaftaran yang tidak membedakan pasien baru dan
+    // lama, dan hasilnya tidak sampai ke SIMRS) datang dari Utsman.
     blurb: {
-      id: 'KTP difoto dan dibaca OCR, hasilnya masuk ke SIMRS tanpa diketik ulang di loket.',
-      en: 'A KTP is photographed and read by OCR, and the result reaches the SIMRS without being retyped at the counter.',
+      id: 'Web rumah sakit beserta pendaftaran pasien baru yang datanya diisi dari hasil pembacaan foto KTP.',
+      en: "A hospital website together with new patient registration, filled in from a scan of the patient's ID card.",
     },
     title: {
-      id: 'Pendaftaran Rumah Sakit Berbasis OCR',
-      en: 'OCR-Powered Hospital Registration',
+      id: 'Web Rumah Sakit dan Pendaftaran Pasien Baru',
+      en: 'Hospital Website and New Patient Registration',
     },
     context: {
-      id: 'Pendaftaran online yang lama hanya mengamankan kuota — pasien tetap antri di loket. Formulirnya panjang dan rawan salah ketik, terutama untuk lansia, dan resepsionis harus mengetik ulang karena data web tidak pernah masuk SIMRS.',
-      en: 'The legacy pre-registration only secured a queue slot; patients still queued at the counter. The long form was error-prone for elderly users, and receptionists retyped everything because the web flow never reached the internal SIMRS.',
+      id: 'Web rumah sakit sebelumnya bersifat statis dan modulnya belum lengkap, karena sebagian besar isinya ditulis langsung di dalam kode. Pendaftaran online yang ada juga belum membedakan pasien baru dan pasien lama, sehingga keduanya harus mengisi data diri dari awal pada setiap pendaftaran, dan data tersebut belum terhubung ke SIMRS. Web ini dibangun untuk menggantikannya. Halaman publiknya dapat diperbarui tanpa mengubah kode, pendaftarannya membedakan pasien baru dan pasien lama, data pasien baru diisi dari hasil pembacaan foto KTP, dan data pendaftaran dikirim ke registrasi SIMRS melalui API.',
+      en: "The hospital's previous website was static and its modules were incomplete, because most of its content was written directly into the code. The online registration did not distinguish between new and returning patients, so both had to enter their personal details from scratch on every registration, and that data never reached the SIMRS. This site was built to replace it. Its public pages can be updated without changing code, registration separates new patients from returning ones, new patient data is filled in from a scan of the ID card, and registration data is sent to the SIMRS registration records through an API.",
     },
     built: {
       id: [
-        'Ekstraksi nama, NIK dan alamat dari foto KTP lewat Google Cloud Vision',
-        'Sinkronisasi data pendaftaran langsung ke SIMRS internal',
-        'Bukti pendaftaran untuk verifikasi cepat di loket',
-        'Validasi sisi server di seluruh formulir',
+        'Beranda, Tentang Kami, dan Dokter Kami sebagai halaman perkenalan',
+        'Klinik Spesialis, Layanan Unggulan, dan Layanan',
+        'Informasi, tempat artikel dan pengumuman rumah sakit',
+        'Pendaftaran yang membedakan pasien baru dan pasien lama',
+        'Pendaftaran pasien baru dalam tiga langkah: identitas, data pasien, pendaftaran',
+        'Pembacaan nama, NIK, dan alamat dari foto KTP melalui Google Cloud Vision',
+        'Isian manual sebagai alternatif apabila foto KTP tidak terbaca',
+        'Data pendaftaran ditampung di web, kemudian dikirim ke registrasi SIMRS melalui API lewat tombol sinkronkan',
+        'Bukti pendaftaran untuk verifikasi di loket',
+        'Validasi sisi server pada seluruh formulir',
       ],
       en: [
-        'Name, NIK and address extracted from a KTP photo via Google Cloud Vision',
-        'Registration data synced straight into the internal SIMRS',
-        'A confirmation slip for fast verification at the counter',
+        'Home, About Us, and Our Doctors as introductory pages',
+        'Specialist Clinics, Featured Services, and Services',
+        'Information, holding hospital articles and announcements',
+        'Registration that distinguishes new patients from returning ones',
+        'New patient registration in three steps: identity, patient data, registration',
+        'Name, NIK, and address read from a photo of the ID card through Google Cloud Vision',
+        'Manual entry as an alternative when the ID card photo cannot be read',
+        'Registration data held in the site, then sent to the SIMRS registration records through an API from a sync button',
+        'A registration slip for verification at the counter',
         'Server-side validation across the whole form',
       ],
     },
@@ -68,29 +84,34 @@ export const projects = [
     tech: ['Laravel', 'JavaScript', 'MySQL', 'REST API'],
     shortName: { id: 'IDRG Bridging', en: 'IDRG Bridging' },
     blurb: {
-      id: 'Menyambungkan data klaim rumah sakit ke sistem BPJS.',
-      en: "Connects the hospital's claim data to the BPJS system.",
+      id: 'Penghubung data klaim rumah sakit dengan sistem BPJS.',
+      en: "A connector between the hospital's claim data and the BPJS system.",
     },
     title: {
       id: 'Bridging IDRG / INA-CBGs untuk Klaim BPJS',
       en: 'IDRG / INA-CBGs Bridging for BPJS Claims',
     },
+    // SatuSehat didudukkan sesuai kenyataannya: pengirimannya lewat service
+    // tersendiri, bukan dari layanan ini — tetapi data diagnosanya berasal
+    // dari coding di sini, dan itulah keterkaitannya.
     context: {
-      id: 'Klaim BPJS dikirim lewat bridging antara sistem rumah sakit dan BPJS. Ada pembaruan aturan IDRG dan integrasi diagnosa ke SatuSehat yang perlu dipenuhi, jadi saya membuat layanan penghubungnya supaya pengiriman klaim tetap berjalan.',
-      en: 'BPJS claims are submitted through a bridge between the hospital system and BPJS. An IDRG update and a SatuSehat diagnosis integration had to be met, so I built the connecting service that keeps claims going out.',
+      id: 'Klaim BPJS dikirim melalui bridging antara sistem rumah sakit dan sistem BPJS. Aturannya kemudian berubah. Sebelumnya klaim cukup melalui coding dan grouping INA-CBG, sedangkan sekarang klaim harus melalui coding dan grouping IDRG terlebih dahulu. Layanan ini menangani keduanya, kemudian mengirimkan klaimnya. Hasil coding diagnosa dari layanan ini juga dikirim otomatis ke SatuSehat melalui service tersendiri.',
+      en: 'BPJS claims are submitted through a bridge between the hospital system and the BPJS system. The rules then changed. Claims previously only went through INA-CBG coding and grouping, whereas now they must go through IDRG coding and grouping first. This service handles both, then submits the claim. The diagnosis coding it produces is also sent automatically to SatuSehat through a separate service.',
     },
     built: {
       id: [
         'Layanan penghubung antara SIMRS dan endpoint BPJS, mengikuti dokumentasi resmi',
-        'Pemetaan diagnosa dan prosedur ke grouper INA-CBG',
-        'Antrian pengiriman klaim dengan penanganan gagal-kirim',
+        'Coding dan grouping IDRG, kemudian pemetaannya ke grouper INA-CBG',
+        'Antrian pengiriman klaim beserta penanganan kegagalan pengiriman',
         'Pencatatan riwayat permintaan untuk menelusuri klaim yang ditolak',
+        'Hasil coding diagnosa dikirim otomatis ke SatuSehat melalui service tersendiri',
       ],
       en: [
-        'A connecting service between the SIMRS and the BPJS endpoints, following the official docs',
-        'Diagnosis and procedure mapping into the INA-CBG grouper',
+        'A connecting service between the SIMRS and the BPJS endpoints, following the official documentation',
+        'IDRG coding and grouping, then mapping into the INA-CBG grouper',
         'A claim submission queue with failure handling',
-        'Request history logging so rejected claims can be traced',
+        'Request history logging so that rejected claims can be traced',
+        'Diagnosis coding results sent automatically to SatuSehat through a separate service',
       ],
     },
   },
@@ -115,30 +136,30 @@ export const projects = [
       en: 'Hospital HR System',
     },
     context: {
-      id: 'Sebelumnya absensi memakai mesin absen, pengajuan cuti lewat surat, dan data pegawai tersimpan di Excel. HRIS ini menyatukannya ke satu aplikasi, dengan absensi yang memakai lokasi dan deteksi wajah serta terhubung ke jadwal shift pegawai.',
-      en: "Attendance used to run on a punch clock, leave requests on paper, and staff data in Excel. This HRIS brings them into one app, with attendance that uses location and face detection and is tied to each employee's shift.",
+      id: 'Sebelumnya absensi menggunakan mesin absen, pengajuan cuti dilakukan melalui surat, dan data pegawai disimpan di Excel. Aplikasi ini menyatukan ketiganya. Absensinya menggunakan lokasi dan deteksi wajah, serta terhubung dengan jadwal shift setiap pegawai.',
+      en: "Attendance previously ran on a punch clock, leave was requested on paper, and staff data was kept in Excel. This application brings the three together. Its attendance uses location and face detection, and is tied to each employee's shift.",
     },
     built: {
       id: [
-        'Absensi dengan deteksi wajah dan lokasi, terikat pada shift pegawai',
+        'Absensi dengan deteksi wajah dan lokasi yang terikat pada shift pegawai',
         'Pengajuan cuti dan izin',
         'Pengelolaan jadwal dan shift',
-        'Data SDM dan struktur organisasi',
+        'Data sumber daya manusia dan struktur organisasi',
         'Pencatatan inventaris',
         'Ticketing internal',
         'Notifikasi dan pengingat masa berlaku SIP/STR',
-        'Pencatatan SP dan tindakan disiplin',
-        'Berjalan sebagai PWA, bisa dipasang di ponsel pegawai',
+        'Pencatatan surat peringatan dan tindakan disiplin',
+        'Berjalan sebagai PWA yang dapat dipasang di ponsel pegawai',
       ],
       en: [
         "Attendance with face detection and location, tied to the employee's shift",
         'Leave and permission requests',
         'Schedule and shift management',
-        'Staff records and org structure',
+        'Staff records and organisational structure',
         'Inventory records',
         'Internal ticketing',
         'Notifications and SIP/STR expiry reminders',
-        'Disciplinary records and warning letters',
+        'Warning letters and disciplinary records',
         'Runs as a PWA, installable on staff phones',
       ],
     },
@@ -163,19 +184,23 @@ export const projects = [
       en: 'Electronic medical records for outpatient and inpatient care.',
     },
     title: { id: 'Rekam Medis Elektronik', en: 'Electronic Medical Records' },
+    // Nama SIMRS-nya tidak disebut. Ia memang open source dan dipakai apa
+    // adanya, tetapi namanya tidak perlu berdiri di halaman ini.
     context: {
-      id: 'Rekam medis elektronik untuk rawat jalan dan rawat inap, dipakai dokter dan perawat asisten dokter. Rumah sakit sudah memakai SIMRS Khanza, jadi RME ini dibuat sebagai aplikasi web terpisah yang menulis ke database yang sama supaya pencatatan dan laporannya tetap menyatu.',
-      en: 'Electronic medical records for outpatient and inpatient care, used by doctors and the nurses assisting them. The hospital already runs SIMRS Khanza, so this was built as a separate web app that writes into the same database, keeping records and reports in one place.',
+      id: 'Rekam medis elektronik untuk rawat jalan dan rawat inap, digunakan oleh dokter dan perawat asisten dokter. Rumah sakit sudah menggunakan SIMRS open source, sehingga rekam medis ini dibangun sebagai aplikasi web terpisah yang menulis ke basis data yang sama, agar pencatatan dan pelaporannya tetap menyatu.',
+      en: 'Electronic medical records for outpatient and inpatient care, used by doctors and the nurses assisting them. The hospital already runs an open source SIMRS, so these records were built as a separate web application that writes into the same database, so that records and reports stay together.',
     },
+    // "Pencatatan SOAP" di sini singkatan rekam medis — subjektif, objektif,
+    // asesmen, plan. Bukan protokol SOAP yang sudah keluar dari stack IDRG.
     built: {
       id: [
         'Pencatatan SOAP untuk rawat jalan dan rawat inap',
-        'Tanda-tanda vital',
+        'Pencatatan tanda-tanda vital',
         'Penegakan diagnosa dengan kode ICD',
         'Permintaan pemeriksaan laboratorium',
         'Permintaan pemeriksaan radiologi',
         'Permintaan resep',
-        'Resume medis',
+        'Penyusunan resume medis',
       ],
       en: [
         'SOAP notes for outpatient and inpatient care',
@@ -290,13 +315,15 @@ export const projects = [
     tech: ['Laravel', 'Filament', 'Livewire', 'MySQL'],
     shortName: { id: 'SIBENIH', en: 'SIBENIH' },
     blurb: {
-      id: 'Pengajuan sampai sertifikat digital untuk sertifikasi benih tanaman.',
+      id: 'Sertifikasi benih tanaman, mulai dari pengajuan hingga penerbitan sertifikat digital.',
       en: 'Plant seed certification, from application through to a digital certificate.',
     },
     title: { id: 'Aplikasi Sertifikasi Benih', en: 'Seed Certification System' },
+    // Nama panjang lembaganya hidup di sini, bukan di label plate: label itu
+    // whitespace-nowrap dan plate-nya kecil.
     context: {
-      id: 'Pendaftaran dan pemantauan sertifikasi benih tanaman, dari pengajuan sampai sertifikat digital.',
-      en: 'Plant seed certification registration and monitoring, from application through to a digital certificate.',
+      id: 'Pendaftaran dan pemantauan sertifikasi benih tanaman pada Balai Pengawasan dan Sertifikasi Benih Tanaman Pangan dan Hortikultura (BPSBTPH) Kalimantan Selatan, mulai dari pengajuan hingga penerbitan sertifikat digital.',
+      en: 'Registration and monitoring for plant seed certification at the South Kalimantan Seed Supervision and Certification Agency for Food Crops and Horticulture (BPSBTPH), from application through to a digital certificate.',
     },
     built: { id: [], en: [] },
   },
@@ -344,15 +371,15 @@ export const projects = [
       en: 'School Admissions with Computer-Based Testing',
     },
     context: {
-      id: 'Pendaftaran dan ujian masuk sebelumnya berjalan manual dan tatap muka. Sekolah ingin seluruh alurnya pindah ke digital, dari calon siswa mendaftar sampai hasil ujian keluar.',
-      en: 'Registration and the entrance exam both ran manually and face to face. The school wanted the whole flow moved online, from a prospective student registering through to results.',
+      id: 'Pendaftaran dan ujian masuk sebelumnya dilakukan secara tatap muka dan menggunakan kertas. Seluruh tahapannya kemudian dipindahkan ke satu aplikasi. Calon siswa mendaftar secara online, mengerjakan ujian langsung di browser, dan menerima pemberitahuan melalui WhatsApp pada setiap tahap hingga hasil diumumkan.',
+      en: 'Registration and the entrance exam were previously done face to face and on paper. All of the stages were then moved into one application. Prospective students register online, sit the exam directly in the browser, and receive notifications through WhatsApp at every stage until results are announced.',
     },
     built: {
       id: [
         'Pendaftaran calon siswa secara online',
-        'Ujian CBT penuh, dikerjakan langsung di browser',
+        'Ujian CBT yang dikerjakan langsung di browser',
         'Deteksi perpindahan tab selama ujian berlangsung',
-        'Notifikasi WhatsApp otomatis lewat Fonnte di setiap tahapan',
+        'Notifikasi WhatsApp otomatis melalui Fonnte pada setiap tahap',
       ],
       en: [
         'Online registration for prospective students',

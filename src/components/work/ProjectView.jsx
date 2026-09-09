@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from 'react';
+
 import { useLocale } from '@/lib/hooks/useLocale';
 import Tag from '@/components/ui/Tag';
 import FadeIn from '@/components/ui/FadeIn';
@@ -21,19 +23,31 @@ const SECTION = 'font-mono text-[10px] uppercase tracking-[.12em] text-muted mt-
 export default function ProjectView({ project, prev, next }) {
   const { locale } = useLocale();
 
+  // Tombol kembali browser tidak bisa dicegat handler klik, jadi arah disetel
+  // sekali di sini: apa pun yang meninggalkan halaman ini — tautan maupun tombol
+  // kembali — mendapat morfnya. Aman disetel saat mount justru karena zoom satu
+  // nilai untuk dua arah: ia tidak mengubah apa pun di tengah transisi masuk
+  // yang masih berjalan.
+  useEffect(() => {
+    document.documentElement.dataset.nav = 'zoom';
+  }, []);
+
   return (
     <div className="max-w-3xl mx-auto px-5 pb-20">
       <PaperHeader locale={locale} />
 
       <FadeIn as="article">
-        {/* 1 — head */}
-        <div className="font-mono text-[11px] uppercase tracking-wider text-muted">
-          {project.client} · {project.year} · {project.role[locale]}
+        {/* 1 — head. Satu blok, satu nama: ini yang ditumbuhi panel sistem
+            waktu dibuka, dan yang menyusut balik jadi panel waktu ditinggalkan. */}
+        <div style={{ viewTransitionName: 'sistem-aktif' }}>
+          <div className="font-mono text-[11px] uppercase tracking-wider text-muted">
+            {project.client} · {project.year} · {project.role[locale]}
+          </div>
+          <h1 className="font-display text-[28px] sm:text-[44px] leading-[1.15] font-extrabold tracking-[-.035em] mt-3 mb-4">
+            {project.title[locale]}
+          </h1>
+          <AccessBadge access={project.access} locale={locale} />
         </div>
-        <h1 className="font-display text-[28px] sm:text-[44px] leading-[1.15] font-extrabold tracking-[-.035em] mt-3 mb-4">
-          {project.title[locale]}
-        </h1>
-        <AccessBadge access={project.access} locale={locale} />
 
         {/* 2 — context */}
         <h2 className={SECTION}>{COPY.context[locale]}</h2>

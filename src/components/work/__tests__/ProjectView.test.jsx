@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import ProjectView from '@/components/work/ProjectView';
 
 vi.mock('@/lib/hooks/useLocale', () => ({
@@ -23,6 +23,10 @@ const project = {
 };
 
 const noShot = { ...project, image: null, access: 'none', site: null };
+
+beforeEach(() => {
+  delete document.documentElement.dataset.nav;
+});
 
 describe('ProjectView', () => {
   it('renders the five blocks in order', () => {
@@ -76,5 +80,27 @@ describe('ProjectView', () => {
     expect(container.innerHTML).not.toMatch(/text-amber-ink|bg-paper/);
   });
 
+  it('gives its head block the name the panel is looking for', () => {
+    const { container } = render(<ProjectView project={project} prev={null} next={null} />);
+    const named = [...container.querySelectorAll('*')]
+      .filter((el) => el.style.viewTransitionName === 'sistem-aktif');
+    expect(named).toHaveLength(1);
+    expect(named[0].textContent).toContain('RSU Nirwana');
+    expect(named[0].textContent).toContain('Pendaftaran Berbasis OCR');
+  });
 
+  it('marks the way out as a zoom, so the browser back button gets it too', async () => {
+    render(<ProjectView project={project} prev={null} next={null} />);
+    await waitFor(() => {
+      expect(document.documentElement.dataset.nav).toBe('zoom');
+    });
+  });
+
+  it('lets a jump to the next system cut instead', async () => {
+    const next = { slug: 'rme', shortName: { id: 'RME', en: 'RME' } };
+    render(<ProjectView project={project} prev={null} next={next} />);
+    await waitFor(() => expect(document.documentElement.dataset.nav).toBe('zoom'));
+    fireEvent.click(screen.getByRole('link', { name: /RME/ }));
+    expect(document.documentElement.dataset.nav).toBeUndefined();
+  });
 });

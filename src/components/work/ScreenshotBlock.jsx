@@ -2,9 +2,12 @@ import Image from 'next/image';
 
 // Two projects have no screenshot yet. A stated absence reads as honesty;
 // a grey placeholder box reads as a broken page.
+//
+// Tidak menyebut "sistem internal": kalimat ini juga tampil di PSB, yang
+// access-nya 'none' dan bukan sistem internal.
 const MISSING = {
-  id: 'Screenshot menyusul — sistem internal, tangkapan layar masih disensor.',
-  en: 'Screenshot to follow — internal system, captures still being redacted.',
+  id: 'Screenshot menyusul. Tangkapan layarnya masih disensor.',
+  en: 'Screenshot to follow. Captures are still being redacted.',
 };
 
 export default function ScreenshotBlock({ src, alt, locale }) {

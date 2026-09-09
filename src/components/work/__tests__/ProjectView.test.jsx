@@ -102,6 +102,14 @@ describe('ProjectView', () => {
     });
   });
 
+  it('does not call every screenshot-less system internal', () => {
+    // Kalimat ini juga tampil di PSB, yang access-nya 'none' dan bukan sistem
+    // internal.
+    render(<ProjectView project={noShot} prev={null} next={null} />);
+    expect(screen.getByText(/Screenshot menyusul/)).toBeInTheDocument();
+    expect(screen.queryByText(/sistem internal/)).toBeNull();
+  });
+
   it('lets a jump to the next system cut instead', async () => {
     const next = { slug: 'rme', shortName: { id: 'RME', en: 'RME' } };
     render(<ProjectView project={project} prev={null} next={next} />);

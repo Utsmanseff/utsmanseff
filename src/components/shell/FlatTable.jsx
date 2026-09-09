@@ -2,9 +2,13 @@
 
 const COPY = {
   title: { id: 'Semua project', en: 'All projects' },
+  // Tanpa JavaScript yang dirender PaperFallback, bukan tabel ini: FlatTable
+  // komponen cangkang dan tidak pernah muncul di sana. Yang benar tinggal
+  // separuhnya — gerak yang dikurangi memang mendarat di sini lebih dulu,
+  // lewat `calm ? 'list' : 'map'` di Shell.
   intro: {
-    id: 'Daftar datar ini data yang sama dengan peta, tanpa geometrinya. Ini juga yang dipakai kalau JavaScript mati atau gerak dikurangi.',
-    en: 'The flat list is the same data as the map, without the geometry. It is also what runs with no JavaScript, or under reduced motion.',
+    id: 'Daftar datar ini data yang sama dengan peta, tanpa geometrinya. Ini juga yang terbuka lebih dulu kalau gerak dikurangi.',
+    en: 'The flat list is the same data as the map, without the geometry. It is also what opens first under reduced motion.',
   },
   foot: {
     id: 'Klik baris untuk memilih. Sebagian punya halaman baca, sebagian ringkasan saja.',

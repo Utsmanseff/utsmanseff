@@ -221,6 +221,14 @@ body:has(.paper-doc) ::-webkit-scrollbar-thumb:hover,
   from { transform: translateY(var(--nav-slide)); opacity: 0; }
 }
 
+@keyframes nav-fade-out {
+  to { opacity: 0; }
+}
+
+@keyframes nav-fade-in {
+  from { opacity: 0; }
+}
+
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation-duration: 700ms;
@@ -245,6 +253,24 @@ html[data-nav="down"]::view-transition-new(root) {
   animation-name: nav-enter-from-bottom;
 }
 
+/* Waktu panel sistem memorf jadi kepala halamannya, akar tidak boleh ikut
+   menggeser: 22vh yang mendorong seluruh halaman melawan blok yang sedang
+   melebar. Jadi akar cuma memudar, dan morfnya yang membawa gerakan. */
+html[data-nav="zoom"]::view-transition-old(root) {
+  animation-name: nav-fade-out;
+}
+
+html[data-nav="zoom"]::view-transition-new(root) {
+  animation-name: nav-fade-in;
+}
+
+/* Morf posisi dan ukuran itu bawaan browser; yang ditetapkan di sini cuma
+   waktunya, memakai angka yang sudah jadi kontrak di proyek ini. */
+::view-transition-group(sistem-aktif) {
+  animation-duration: 700ms;
+  animation-timing-function: var(--nav-ease);
+}
+
 /* Transitions are decoration; dragging is not. Keep the map usable. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -262,6 +288,16 @@ html[data-nav="down"]::view-transition-new(root) {
      22vh penuh. */
   ::view-transition-old(root),
   ::view-transition-new(root) {
+    animation-duration: 0.01ms !important;
+  }
+
+  /* Sama sebabnya, satu lapis lebih dalam: aturan (root) di atas tidak
+     menjangkau pseudo-element yang BERNAMA. Tanpa blok ini pengunjung yang
+     meminta gerak dikurangi tetap kena morf 700ms penuh. Bentuk kesalahan yang
+     sama dengan transition-delay pada lapis plate. */
+  ::view-transition-group(sistem-aktif),
+  ::view-transition-old(sistem-aktif),
+  ::view-transition-new(sistem-aktif) {
     animation-duration: 0.01ms !important;
   }
 }

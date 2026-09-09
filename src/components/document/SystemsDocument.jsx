@@ -6,8 +6,11 @@ import YearGroup from './YearGroup';
 
 const COPY = {
   note: {
-    id: 'Buka di desktop untuk peta isometrik dan konsolnya. Semuanya juga bisa dibaca di sini.',
-    en: 'Open on desktop for the isometric map and console. Everything is readable here too.',
+    // Tidak menyebut peta isometrik dan konsol. Menamai dua hal yang tidak
+    // bisa dibuka dari sini membuat halaman ini terbaca seperti versi yang
+    // kurang, padahal isinya memang lengkap.
+    id: 'Semua isinya dapat dibaca di sini. Buka di desktop untuk tampilan yang lebih utuh.',
+    en: 'Everything is readable here. Open on desktop for the fuller view.',
   },
   cv: { id: 'CV', en: 'CV' },
 };

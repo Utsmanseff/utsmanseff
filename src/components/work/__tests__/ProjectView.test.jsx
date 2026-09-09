@@ -102,6 +102,12 @@ describe('ProjectView', () => {
     });
   });
 
+  it('sets its prose rata kanan kiri', () => {
+    const { container } = render(<ProjectView project={project} prev={null} next={null} />);
+    expect(container.querySelector('p').className).toContain('text-justify');
+    expect(container.querySelector('ul li').className).toContain('text-justify');
+  });
+
   it('does not call every screenshot-less system internal', () => {
     // Kalimat ini juga tampil di PSB, yang access-nya 'none' dan bukan sistem
     // internal.

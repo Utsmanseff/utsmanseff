@@ -51,7 +51,10 @@ export default function ProjectView({ project, prev, next }) {
 
         {/* 2 — context */}
         <h2 className={SECTION}>{COPY.context[locale]}</h2>
-        <p className="text-base leading-relaxed text-body-soft mb-10">
+        {/* Rata kanan kiri: halaman ini dibaca sebagai catatan kerja, dan
+            tepi kanan yang lurus membuatnya terbaca seperti dokumen, bukan
+            seperti postingan. */}
+        <p className="text-base leading-relaxed text-body-soft text-justify mb-10">
           {project.context[locale]}
         </p>
 
@@ -62,7 +65,7 @@ export default function ProjectView({ project, prev, next }) {
         <h2 className={SECTION}>{COPY.built[locale]}</h2>
         <ul className="flex flex-col gap-2">
           {project.built[locale].map((item) => (
-            <li key={item} className="text-sm leading-relaxed text-body-soft pl-4 border-l border-rule">
+            <li key={item} className="text-sm leading-relaxed text-body-soft text-justify pl-4 border-l border-rule">
               {item}
             </li>
           ))}

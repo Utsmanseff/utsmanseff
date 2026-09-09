@@ -41,6 +41,10 @@ describe('SystemsDocument', () => {
   it('keeps the desktop note, at the foot where it belongs', () => {
     const { container } = renderDoc();
     const note = screen.getByText(/Buka di desktop/);
+    // Tidak menyebut peta isometrik dan konsol: menamai dua hal yang tidak
+    // bisa dibuka dari sini membuat catatan ini terbaca seperti daftar yang
+    // hilang, padahal isinya memang lengkap di halaman ini.
+    expect(note.textContent).not.toMatch(/peta isometrik|konsol/i);
     const firstYear = container.querySelector('[data-year]');
     // Node.DOCUMENT_POSITION_FOLLOWING === 4: the note comes after the years.
     expect(firstYear.compareDocumentPosition(note) & 4).toBeTruthy();

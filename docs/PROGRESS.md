@@ -89,9 +89,8 @@ kembali browser bekerja.
 | Rencana teks & data, 10 task (selesai) | `docs/superpowers/plans/2026-09-10-teks-dan-data-sistem.md` |
 | Spec teks & data | `docs/superpowers/specs/2026-09-09-teks-dan-data-sistem-design.md` |
 
-Keadaan: **256 test hijau, 32 berkas**, `npx eslint src --max-warnings=0` bersih.
-Build terakhir yang benar-benar dijalankan masih yang sebelum rencana teks &
-data; lihat catatan di bagian rencana itu.
+Keadaan: **257 test hijau, 32 berkas**, `npx eslint src --max-warnings=0` bersih,
+`npm run build` sukses — dijalankan Utsman sendiri pada 2026-09-10.
 
 Jumlah test turun dari 165 ke 92 di Task 15 karena 73 test kanvas ikut dihapus
 bersama kodenya. Itu bukan regresi. Naik ke 142 lewat rencana gerbang, lalu
@@ -100,9 +99,9 @@ ikut dibuang, lalu naik ke 145 lewat gaya scrollbar, ke 156 lewat perpindahan
 naik-turun, dan ke 201 lewat peta hidup (`shading` 7, `useMapCamera` 19,
 `MapScene` 3, sisanya `Plate`), lalu turun ke 197 waktu snap kamera dibuang —
 tiga test snap dan satu test `settling` hilang bersama fiturnya. Bukan regresi.
-Naik ke 223 lewat zoom halaman baca, lalu ke 256 lewat teks & data sistem
+Naik ke 223 lewat zoom halaman baca, lalu ke 257 lewat teks & data sistem
 (`projects` 14, `AxisLegend` 4, `LogRail` 5, `layout` 4, `MapScene` 4,
-`FlatTable` 1, `ProjectView` 1).
+`FlatTable` 1, `ProjectView` 2).
 
 ## Larangan yang tidak bisa ditawar
 
@@ -378,10 +377,14 @@ ketiga label tahun di dalam layar dan tidak tertimpa apa pun.
 membuat label `2026` tertimpa label plate. Dikembalikan ke 35px, sama dengan
 sebelumnya, lalu diukur lagi.
 
-**Belum dijalankan, dan jangan diklaim sudah:** `npm run build`. Ia bentrok
-dengan dev server yang memegang `.next`, jadi ia menunggu Utsman. Yang harus
-diperiksa waktu dijalankan: sukses, `/` dan `/sistem` tetap `○ Static`, dan
-**tujuh** halaman `/kerja/*` terdaftar.
+**`npm run build` sukses**, dijalankan Utsman sendiri pada 2026-09-10.
+
+**Dua penyetelan sesudah Utsman melihatnya:** prosa halaman baca jadi rata
+kanan kiri (`text-justify` pada paragraf konteks dan butir `built`), dan
+catatan kaki dokumen HP berhenti menyebut peta isometrik dan konsol. Menamai
+dua hal yang tidak bisa dibuka dari ponsel membuat halaman itu terbaca seperti
+versi yang kurang, padahal isinya memang lengkap. Sekarang: "Semua isinya
+dapat dibaca di sini. Buka di desktop untuk tampilan yang lebih utuh."
 
 **Belum dilihat Utsman, dan itu yang tersisa:** apakah `GULIR` terasa wajar
 atau lebih baik `SCROLL`; apakah `Web & Pendaftaran` dan `PSB & CBT` enak

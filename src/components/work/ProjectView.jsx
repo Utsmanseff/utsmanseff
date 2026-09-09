@@ -7,13 +7,18 @@ import Tag from '@/components/ui/Tag';
 import FadeIn from '@/components/ui/FadeIn';
 import AccessBadge from '@/components/work/AccessBadge';
 import ScreenshotBlock from '@/components/work/ScreenshotBlock';
+import IdrgFlow from '@/components/work/IdrgFlow';
 import PaperHeader from '@/components/work/PaperHeader';
 import WorkFooterNav from '@/components/work/WorkFooterNav';
 
+// Nomornya dihitung, bukan ditulis. IDRG menyisipkan ALUR di antara konteks
+// dan daftar yang dibangun, jadi dua bagian sesudahnya bergeser satu — dan
+// nomor yang ditulis tangan akan mengulang 02 di halaman itu.
 const COPY = {
-  context: { id: '01 KONTEKS', en: '01 CONTEXT' },
-  built: { id: '02 YANG DIBANGUN', en: '02 BUILT' },
-  stack: { id: '03 STACK', en: '03 STACK' },
+  context: { id: 'KONTEKS', en: 'CONTEXT' },
+  flow: { id: 'ALUR', en: 'FLOW' },
+  built: { id: 'YANG DIBANGUN', en: 'BUILT' },
+  stack: { id: 'STACK', en: 'STACK' },
   visit: { id: 'Coba langsung ↗', en: 'Try it live ↗' },
   code: { id: 'Lihat kode ↗', en: 'View code ↗' },
 };
@@ -23,6 +28,11 @@ const SECTION = 'font-mono text-[10px] uppercase tracking-[.12em] text-muted mt-
 
 export default function ProjectView({ project, prev, next }) {
   const { locale } = useLocale();
+
+  // Satu-satunya halaman yang punya diagram. Bukan medan data: delapan halaman
+  // lain tidak menyimpan apa pun untuk ini.
+  const hasFlow = project.slug === 'idrg-bridging';
+  const n = (i) => String(i).padStart(2, '0');
 
   // Tombol kembali browser tidak bisa dicegat handler klik, jadi arah disetel
   // sekali di sini: apa pun yang meninggalkan halaman ini — tautan maupun tombol
@@ -51,7 +61,7 @@ export default function ProjectView({ project, prev, next }) {
         </div>
 
         {/* 2 — context */}
-        <h2 className={SECTION}>{COPY.context[locale]}</h2>
+        <h2 className={SECTION}>{n(1)} {COPY.context[locale]}</h2>
         {/* Rata kanan kiri: halaman ini dibaca sebagai catatan kerja, dan
             tepi kanan yang lurus membuatnya terbaca seperti dokumen, bukan
             seperti postingan. */}
@@ -62,8 +72,16 @@ export default function ProjectView({ project, prev, next }) {
         {/* 3 — screenshot */}
         <ScreenshotBlock src={project.image} size={project.imageSize} alt={project.title[locale]} locale={locale} />
 
-        {/* 4 — what I built */}
-        <h2 className={SECTION}>{COPY.built[locale]}</h2>
+        {/* 4 — alur, halaman IDRG saja */}
+        {hasFlow && (
+          <>
+            <h2 className={SECTION}>{n(2)} {COPY.flow[locale]}</h2>
+            <IdrgFlow locale={locale} />
+          </>
+        )}
+
+        {/* 5 — what I built */}
+        <h2 className={SECTION}>{n(hasFlow ? 3 : 2)} {COPY.built[locale]}</h2>
         <ul className="flex flex-col gap-2">
           {project.built[locale].map((item) => (
             <li key={item} className="text-sm leading-relaxed text-body-soft text-justify pl-4 border-l border-rule">
@@ -72,8 +90,8 @@ export default function ProjectView({ project, prev, next }) {
           ))}
         </ul>
 
-        {/* 5 — stack */}
-        <h2 className={SECTION}>{COPY.stack[locale]}</h2>
+        {/* 6 — stack */}
+        <h2 className={SECTION}>{n(hasFlow ? 4 : 3)} {COPY.stack[locale]}</h2>
         <div className="flex flex-wrap gap-2">
           {project.tech.map((t) => (
             <Tag key={t}>{t}</Tag>

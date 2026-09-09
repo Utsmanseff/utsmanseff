@@ -168,4 +168,30 @@ describe('ProjectView', () => {
     expect(img.style.maxWidth).toBe('355px');
   });
 
+  const idrg = {
+    ...project, slug: 'idrg-bridging', access: 'internal', site: null,
+    image: '/assets/img/eklaim.png', imageSize: [1652, 785],
+  };
+
+  it('draws the claim flow on the IDRG page and nowhere else', () => {
+    const { container } = render(<ProjectView project={idrg} prev={null} next={null} />);
+    expect(container.querySelector('svg[role="img"]')).toBeTruthy();
+    expect(screen.getByText('02 ALUR')).toBeInTheDocument();
+  });
+
+  it('leaves every other reading page at three numbered sections', () => {
+    const { container } = render(<ProjectView project={project} prev={null} next={null} />);
+    expect(container.querySelector('svg[role="img"]')).toBeNull();
+    expect(screen.queryByText(/ALUR/)).toBeNull();
+    expect(screen.getByText('02 YANG DIBANGUN')).toBeInTheDocument();
+    expect(screen.getByText('03 STACK')).toBeInTheDocument();
+  });
+
+  it('renumbers the sections that follow the flow, rather than repeating 02', () => {
+    render(<ProjectView project={idrg} prev={null} next={null} />);
+    expect(screen.getByText('01 KONTEKS')).toBeInTheDocument();
+    expect(screen.getByText('03 YANG DIBANGUN')).toBeInTheDocument();
+    expect(screen.getByText('04 STACK')).toBeInTheDocument();
+  });
+
 });

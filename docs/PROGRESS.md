@@ -392,10 +392,19 @@ kelima repo**: semuanya membawa README bawaan Laravel ("About Laravel ·
 Laravel Sponsors · Premium Partners"), yang persis kegagalan yang syarat itu
 jaga. Karena itu lima README ditulis lebih dulu di `docs/readme-repo/`.
 
-**1. Tempelkan lima README ke repo tujuannya.** Ini pekerjaan Utsman, bukan
-agen: repo-nya di luar porto ini dan tidak bisa didorong dari sesi kerja.
-Sampai itu terjadi, tiap tautan mendarat di teks Laravel. **Penghalang
-deploy, bukan penghalang merge.**
+**Lima README sudah ditempel Utsman dan tayang, diperiksa 2026-09-10.**
+Kelima repo tidak lagi memajang "About Laravel · Laravel Sponsors": baris
+pertamanya masing-masing `Sistem Kepegawaian Rumah Sakit`,
+`Kepegawaian dan Absensi Berbasis Lokasi`, `Manajemen Aset dan Inventaris`,
+`Aplikasi Sertifikasi Benih`, `Manajemen Bantuan Sosial`. **Syarat ketiga
+lolos, dan penghalang deploy yang dicatat di sini sudah hilang.**
+
+**Baris identitas HRIS sengaja berbeda dari empat lainnya.** HRIS berbunyi
+`RSU Nirwana · 2026`; empat sisanya masih membawa `· Pengembang tunggal`.
+Utsman yang menghapusnya, dan waktu ditanya ia memilih membiarkan
+perbedaannya. Jangan "diseragamkan" di sesi berikutnya — berkas di
+`docs/readme-repo/` dan yang tayang di GitHub sekarang sama persis, dan
+menyamakannya berarti Utsman harus menempel ulang empat repo.
 
 | Berkas di `docs/readme-repo/` | Repo tujuan |
 |---|---|
@@ -411,11 +420,12 @@ dump di dalam riwayatnya, kalau ada, belum pernah dicari. Repo-nya sudah
 publik apa adanya sebelum porto ini menautkannya, jadi tautan tidak menambah
 paparan — tetapi jangan pernah menulis di mana pun bahwa isinya sudah aman.
 
-**2. Screenshot** `hris.png` dan `psb.png` → `public/assets/img/`. Sensor dulu
+**1. Screenshot** `hris.png` dan `psb.png` → `public/assets/img/`. Sensor dulu
 kalau memuat data pegawai atau pasien asli. Ini juga dua halaman yang masih
-memakai kalimat "Screenshot menyusul".
+memakai kalimat "Screenshot menyusul". Berkas gambarnya harus disiapkan
+Utsman; agen tidak bisa mengarangnya.
 
-**3. Merge ke `main` dan deploy.**
+**2. Merge ke `main` dan deploy.**
 
 ### Penilaian jujur, diminta Utsman 2026-09-10
 

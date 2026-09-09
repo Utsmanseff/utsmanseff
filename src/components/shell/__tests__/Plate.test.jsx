@@ -112,4 +112,56 @@ describe('Plate', () => {
     const { container } = renderPlate({ selected: true });
     expect(container.firstChild.getAttribute('style')).toContain('translateZ(10px)');
   });
+
+  // Lewat CSSOM, bukan substring pada atribut style: happy-dom menggabungkan
+  // empat longhand jadi shorthand `border-color`, jadi mencari 'border-top-color'
+  // di dalam string gagal walau kodenya benar.
+  const edgesOf = (layer) => ({
+    top: layer.style.borderTopColor,
+    right: layer.style.borderRightColor,
+    bottom: layer.style.borderBottomColor,
+    left: layer.style.borderLeftColor,
+  });
+
+  it('gives each side of a layer its own edge colour', () => {
+    const { container } = renderPlate();
+    const edges = edgesOf(container.querySelector('[data-layer]'));
+    Object.values(edges).forEach((c) => expect(c).toMatch(/^#[0-9a-f]{6}$/i));
+    // Pada rotZ -40 cahaya datang dari kiri layar, jadi kiri terang dan kanan
+    // gelap. Kalau keempatnya sama, tepinya tidak bereaksi pada sudut apa pun.
+    expect(edges.left).not.toBe(edges.right);
+  });
+
+  it('redraws those edges when the camera turns', () => {
+    const { container, rerender } = renderPlate();
+    const edges = () => container.querySelector('[data-layer]').getAttribute('style');
+    const before = edges();
+    rerender(
+      <Plate
+        system={system} position={pos} locale="id" rotZ={140}
+        selected={false} dimmed={false} onSelect={vi.fn()}
+      />,
+    );
+    expect(edges()).not.toBe(before);
+  });
+
+  it('still marks a public system in amber on its top layer', () => {
+    const publicSystem = { ...system, access: 'public' };
+    const { container } = render(
+      <Plate
+        system={publicSystem} position={pos} locale="id" rotZ={-40}
+        selected={false} dimmed={false} onSelect={vi.fn()}
+      />,
+    );
+    const layers = container.querySelectorAll('[data-layer]');
+    const top = layers[layers.length - 1].getAttribute('style');
+    expect(top.toLowerCase()).toContain('#c97b3f');
+  });
+
+  it('still marks the selected plate in cream on its top layer', () => {
+    const { container } = renderPlate({ selected: true });
+    const layers = container.querySelectorAll('[data-layer]');
+    const top = layers[layers.length - 1].getAttribute('style');
+    expect(top.toLowerCase()).toContain('#e8e0d0');
+  });
 });

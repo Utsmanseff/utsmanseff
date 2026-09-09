@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from 'react';
+import { edgeTones } from '@/lib/shell/shading';
 
 const PLATE_BG = ['#1B2124', '#1D2428', '#20272B', '#252E33', '#2C3439'];
-const PLATE_EDGE = ['#333C41', '#3A4348', '#3F484D', '#4A545A', '#4A545A'];
 const EASE = 'cubic-bezier(.22, 1, .36, 1)';
 const STEP_TIGHT = 7;
 const STEP_OPEN = 11;
@@ -51,7 +51,10 @@ export default function Plate({ system, position, locale, rotZ, selected, dimmed
       {layers.map((i) => {
         const top = i === position.layers - 1;
         const bg = top && isPublic ? '#27302F' : PLATE_BG[Math.min(i, 4)];
-        const edge = top && selected ? '#E8E0D0' : (top && isPublic ? '#C97B3F' : PLATE_EDGE[Math.min(i, 4)]);
+        const tones = edgeTones({ index: i, layers: position.layers, rotZ });
+        // Makna menang atas kedalaman: amber menandai akses publik, krem
+        // menandai yang terpilih, dan keduanya menutupi seluruh tepi lapis atas.
+        const flat = top && selected ? '#E8E0D0' : (top && isPublic ? '#C97B3F' : null);
         return (
           <div
             key={i}
@@ -59,7 +62,12 @@ export default function Plate({ system, position, locale, rotZ, selected, dimmed
             className="absolute inset-0"
             style={{
               background: bg,
-              border: `${top && selected ? 2 : 1}px solid ${edge}`,
+              borderStyle: 'solid',
+              borderWidth: top && selected ? 2 : 1,
+              borderTopColor: flat ?? tones.top,
+              borderRightColor: flat ?? tones.right,
+              borderBottomColor: flat ?? tones.bottom,
+              borderLeftColor: flat ?? tones.left,
               transform: `translateZ(${i * step}px)`,
               transition: `transform 700ms ${EASE}, border-color 180ms linear`,
             }}

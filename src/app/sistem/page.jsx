@@ -19,6 +19,19 @@ function SistemInner() {
   const view = params.get('tampilan') === 'datar' ? 'list' : 'map';
   const [seed] = useState(() => params.get('ketik') ?? '');
 
+  // Titik pulang yang ditulis pintu waktu halaman baca dibuka. Dibaca sekali
+  // saat mount; sesudah itu pilihan dan view adalah state lokal, seperti biasa —
+  // URL mengikuti, bukan memimpin.
+  //
+  // Keberadaan parameternya diperiksa terpisah dari nilainya: Number('') itu 0,
+  // jadi `?sudut=` kosong akan membuka peta lurus menghadap depan.
+  const picked = params.get('pilih');
+  const rawAngle = params.get('sudut');
+  const parsedAngle = Number(rawAngle);
+  const angle = rawAngle !== null && rawAngle !== '' && Number.isFinite(parsedAngle)
+    ? parsedAngle
+    : null;
+
   // The carried letter is spent the moment it is read. Left in the URL it would
   // be typed again on every reload, and it would travel in a shared link.
   useEffect(() => {
@@ -31,7 +44,17 @@ function SistemInner() {
 
   if (!shell) return <PaperFallback />;
 
-  return <Shell systems={projects} locale={locale} view={view} calm={calm} seed={seed} />;
+  return (
+    <Shell
+      systems={projects}
+      locale={locale}
+      view={view}
+      calm={calm}
+      seed={seed}
+      picked={picked}
+      angle={angle}
+    />
+  );
 }
 
 // useSearchParams reads something only the browser knows. Without this boundary

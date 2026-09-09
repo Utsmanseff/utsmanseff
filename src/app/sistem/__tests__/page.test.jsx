@@ -59,4 +59,37 @@ describe('/sistem', () => {
     render(<Sistem />, { wrapper: LocaleProvider });
     expect(document.querySelector('.paper-doc')).not.toBeNull();
   });
+
+  it('opens with the system the URL names already selected', () => {
+    params.value = new URLSearchParams('pilih=hris-nirwana');
+    render(<Sistem />, { wrapper: LocaleProvider });
+    expect(screen.getByText(/^(TERPILIH|SELECTED)$/)).toBeInTheDocument();
+  });
+
+  it('opens the camera on the angle the URL names', () => {
+    params.value = new URLSearchParams('sudut=-55');
+    const { container } = render(<Sistem />, { wrapper: LocaleProvider });
+    expect(container.querySelector('[data-testid="map-pane"] [role="group"]').getAttribute('style'))
+      .toContain('rotateZ(-55deg)');
+  });
+
+  it('ignores an angle that is not a number', () => {
+    params.value = new URLSearchParams('sudut=abc');
+    const { container } = render(<Sistem />, { wrapper: LocaleProvider });
+    expect(container.querySelector('[data-testid="map-pane"] [role="group"]').getAttribute('style'))
+      .toContain('rotateZ(-40deg)');
+  });
+
+  it('ignores an empty angle rather than reading it as zero', () => {
+    params.value = new URLSearchParams('sudut=');
+    const { container } = render(<Sistem />, { wrapper: LocaleProvider });
+    expect(container.querySelector('[data-testid="map-pane"] [role="group"]').getAttribute('style'))
+      .toContain('rotateZ(-40deg)');
+  });
+
+  it('ignores a slug that names no system, since a shared link can say anything', () => {
+    params.value = new URLSearchParams('pilih=tidak-ada');
+    render(<Sistem />, { wrapper: LocaleProvider });
+    expect(screen.queryByText(/^(TERPILIH|SELECTED)$/)).toBeNull();
+  });
 });

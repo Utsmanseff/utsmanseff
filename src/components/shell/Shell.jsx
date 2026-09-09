@@ -15,21 +15,25 @@ import LogRail from './LogRail';
 import MapScene from './MapScene';
 import Console from './Console';
 
-export default function Shell({ systems, locale, view: initialView, seed = '', calm = false }) {
+export default function Shell({ systems, locale, view: initialView, seed = '', calm = false, picked = null, angle = null }) {
   const { setLocale } = useLocale();
   const router = useRouter();
   // The URL decides which view opens; `calm` is only the fallback for a caller
   // that has no opinion. Reduced motion picks the still view as a starting
   // point, not as a verdict — the gate's other door is one back button away.
   const [view, setView] = useState(initialView ?? (calm ? 'list' : 'map'));
-  const [selected, setSelected] = useState(null);
+  // Slug dari URL hanya dipercaya kalau ia benar-benar menamai sebuah sistem;
+  // tautan yang dibagikan bisa membawa apa saja.
+  const [selected, setSelected] = useState(
+    () => (systems.some((s) => s.slug === picked) ? picked : null),
+  );
   const [filters, setFilters] = useState(EMPTY_FILTERS);
   const [log, setLog] = useState([{ text: '$ ls systems', kind: 'command' }]);
   const [cmd, setCmd] = useState(seed);
 
   // Dibaca pintu saat ditekan, tidak pernah saat render — jadi ia tidak perlu
   // memicu satu pun.
-  const angleRef = useRef(-40);
+  const angleRef = useRef(angle ?? -40);
 
   // The URL follows the view rather than leading it. replace(), so switching
   // back and forth does not fill the history; and local state, because a URL
@@ -155,6 +159,7 @@ export default function Shell({ systems, locale, view: initialView, seed = '', c
             dimmed={dimmed}
             onSelect={setSelected}
             angleRef={angleRef}
+            angle={angle}
           />
         )}
         <SelectedPanel system={current} locale={locale} span={span} onOpen={openSystem} />

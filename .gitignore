@@ -44,3 +44,9 @@ next-env.d.ts
 .claude/worktrees/
 .claude/settings.local.json
 .superpowers/
+
+# Catatan kerja internal: spec, rencana, PROGRESS, dan draf README repo klien.
+# Sengaja tidak ikut ke repo publik — isinya proses, penilaian internal, dan
+# catatan tentang sistem klien. Berkasnya tetap hidup di disk dan tetap dibaca
+# di awal tiap sesi; yang berubah cuma ia tidak lagi dipublikasikan.
+docs/

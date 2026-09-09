@@ -27,12 +27,12 @@ than for HR, about hospital and public-sector systems in South Kalimantan.
 
 **Next.js 16** (App Router, Turbopack, static prerender) · **React 19** ·
 **Tailwind CSS 4** (`@theme` tokens) · **Vitest + Testing Library + happy-dom**
-— **284 tests across 33 files**, written test-first.
+— **295 tests across 34 files**, written test-first.
 
 ```bash
 npm install
 npm run dev                       # http://localhost:3000
-npx vitest run                    # 284 tests
+npx vitest run                    # 295 tests
 npx eslint src --max-warnings=0   # lint (src only; .claude/** is excluded)
 npm run build
 ```
@@ -72,8 +72,6 @@ a reading page. That is what makes the browser back button work.
 | Map camera — drag, wheel | `src/lib/shell/useMapCamera.js` |
 | UI strings, both locales | `src/lib/i18n/{id,en}.js` |
 | Colour tokens | `src/app/globals.css` → `@theme` |
-| READMEs ready to paste into the client repos | `docs/readme-repo/` |
-| Specs, plans, and the running state | `docs/superpowers/`, `docs/PROGRESS.md` |
 
 `meta.siteUrl` is the single source of truth for the canonical URL —
 `metadataBase`, the JSON-LD and the OG card all read it. Do not hardcode a
@@ -121,8 +119,10 @@ of every screenshot file and refuses image dimensions that drift from the file
 on disk. Several tests exist only to keep decisions from being quietly undone —
 they are documented where they sit.
 
-## Resuming across machines
+## Decisions that outlived their reasons
 
-State lives in `docs/PROGRESS.md`, committed. A new session reads it to find
-what is finished, what is outstanding, and the decisions that are expensive to
-forget.
+Where a choice would look arbitrary later, the reason sits next to it in a
+comment — why the map camera never returns on its own, why the amber accent
+exists twice, why a screenshot's dimensions are read from the file rather than
+assumed. Several tests exist for the same purpose: to keep a decision from
+being quietly undone.

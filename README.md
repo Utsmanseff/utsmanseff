@@ -1,5 +1,5 @@
 # 💫 About Me:
-Fullstack Web Developer based in Banjarbaru, South Kalimantan. I work at RSU Nirwana Banjarbaru, where I build and maintain web-based systems that support daily hospital operations — from clinical workflows to government compliance integrations. I enjoy solving problems that actually matter to the people using the software, especially when the constraints are tight and the stakes are real. Currently expanding into TypeScript, Go, and Flutter. Open to collaborating on meaningful web projects.
+Fullstack Web Developer based in Banjarbaru, South Kalimantan. I mostly work at RSU Nirwana Banjarbaru, where I build and maintain web-based systems that support daily hospital operations — from clinical workflows to government compliance integrations. I enjoy solving problems that actually matter to the people using the software, especially when the constraints are tight and the stakes are real. Currently expanding into TypeScript, Go, and Flutter. Open to collaborating on meaningful web projects.
 
 
 ## 🌐 Socials:

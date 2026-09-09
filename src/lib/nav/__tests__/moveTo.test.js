@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { slideTo } from '@/lib/nav/slideTo';
+import { moveTo } from '@/lib/nav/moveTo';
 
 const push = vi.fn();
 const router = { push };
@@ -21,21 +21,21 @@ afterEach(() => {
   delete document.startViewTransition;
 });
 
-describe('slideTo', () => {
+describe('moveTo', () => {
   it('navigates plainly when the browser has no view transitions', () => {
-    slideTo(router, '/sistem', 'down');
+    moveTo(router, '/sistem', 'down');
     expect(push).toHaveBeenCalledWith('/sistem');
   });
 
   it('marks the direction on the root element, so the CSS can pick a keyframe', () => {
     canAnimate();
-    slideTo(router, '/', 'up');
+    moveTo(router, '/', 'up');
     expect(document.documentElement.dataset.nav).toBe('up');
   });
 
   it('marks the other direction too', () => {
     canAnimate();
-    slideTo(router, '/sistem', 'down');
+    moveTo(router, '/sistem', 'down');
     expect(document.documentElement.dataset.nav).toBe('down');
   });
 
@@ -45,7 +45,7 @@ describe('slideTo', () => {
     // layout is what drives the animation.
     const run = vi.fn();
     document.startViewTransition = run;
-    slideTo(router, '/', 'up');
+    moveTo(router, '/', 'up');
     expect(run).not.toHaveBeenCalled();
     expect(push).toHaveBeenCalledWith('/');
   });
@@ -56,21 +56,37 @@ describe('slideTo', () => {
     const seen = { nav: null };
     push.mockImplementation(() => { seen.nav = document.documentElement.dataset.nav; });
     canAnimate();
-    slideTo(router, '/', 'up');
+    moveTo(router, '/', 'up');
     push.mockReset();
     expect(seen.nav).toBe('up');
   });
 
   it('leaves no direction behind when it cannot animate anyway', () => {
-    slideTo(router, '/sistem', 'down');
+    moveTo(router, '/sistem', 'down');
     expect(push).toHaveBeenCalledWith('/sistem');
     expect(document.documentElement.dataset.nav).toBeUndefined();
   });
 
   it('refuses a direction it does not know, and still navigates', () => {
     canAnimate();
-    slideTo(router, '/sistem', 'sideways');
+    moveTo(router, '/sistem', 'sideways');
     expect(push).toHaveBeenCalledWith('/sistem');
     expect(document.documentElement.dataset.nav).toBeUndefined();
+  });
+
+  it('knows the way into a reading page', () => {
+    canAnimate();
+    moveTo(router, '/kerja/rme', 'zoom');
+    expect(document.documentElement.dataset.nav).toBe('zoom');
+    expect(push).toHaveBeenCalledWith('/kerja/rme');
+  });
+
+  it('uses one value for both ways of the zoom', () => {
+    // Arahnya sudah ditentukan oleh elemen mana yang membawa nama di tiap sisi,
+    // jadi keluar tidak butuh nilai sendiri. 'unzoom' bukan arah yang dikenal.
+    canAnimate();
+    moveTo(router, '/sistem', 'unzoom');
+    expect(document.documentElement.dataset.nav).toBeUndefined();
+    expect(push).toHaveBeenCalledWith('/sistem');
   });
 });

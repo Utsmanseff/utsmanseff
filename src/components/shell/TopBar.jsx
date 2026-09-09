@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { slideTo } from '@/lib/nav/slideTo';
+import { moveTo } from '@/lib/nav/moveTo';
 import LangSwitcher from '@/components/nav/LangSwitcher';
 
 const COPY = {
@@ -32,7 +32,7 @@ export default function TopBar({ locale, view, filtering, onView }) {
             // asked for; intercepting those breaks a plain link.
             if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
             e.preventDefault();
-            slideTo(router, '/', 'up');
+            moveTo(router, '/', 'up');
           }}
           className="flex items-center gap-1.5 text-muted hover:text-ink transition-colors duration-[180ms]"
         >

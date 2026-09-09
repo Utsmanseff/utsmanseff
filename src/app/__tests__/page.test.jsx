@@ -56,7 +56,7 @@ describe('/', () => {
   it('marks every way in as going down', () => {
     // All five ways into the shell — both buttons, Enter, Escape, any letter,
     // and the wheel — funnel through this one handler, so this covers them all.
-    // The API has to be stood up first: happy-dom has none, and slideTo leaves
+    // The API has to be stood up first: happy-dom has none, and moveTo leaves
     // the direction off when it cannot animate anyway.
     document.startViewTransition = (cb) => { cb(); return { finished: Promise.resolve() }; };
     eligible.value = true;

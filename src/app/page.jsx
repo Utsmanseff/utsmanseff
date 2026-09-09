@@ -5,7 +5,7 @@ import { projects } from '@/lib/data/projects';
 import { useLocale } from '@/lib/hooks/useLocale';
 import { useShellEligible } from '@/lib/hooks/useShellEligible';
 import { useMediaQuery } from '@/lib/hooks/useMediaQuery';
-import { slideTo } from '@/lib/nav/slideTo';
+import { moveTo } from '@/lib/nav/moveTo';
 import PaperFallback from '@/components/document/PaperFallback';
 import Gate from '@/components/shell/Gate';
 
@@ -31,7 +31,7 @@ export default function Home() {
         systems={projects}
         locale={locale}
         calm={calm}
-        onEnter={(href) => slideTo(router, href, 'down')}
+        onEnter={(href) => moveTo(router, href, 'down')}
       />
     </div>
   );

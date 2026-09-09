@@ -1,6 +1,6 @@
 # Sistem Kepegawaian Rumah Sakit
 
-RSU Nirwana · 2026 · Pengembang tunggal
+RSU Nirwana · 2026
 
 Sebelumnya absensi menggunakan mesin absen, pengajuan cuti dilakukan melalui surat, dan data pegawai disimpan di Excel. Aplikasi ini menyatukan ketiganya. Absensinya menggunakan lokasi dan deteksi wajah, serta terhubung dengan jadwal shift setiap pegawai.
 
@@ -26,7 +26,7 @@ Laravel, Livewire, Alpine.js, MySQL, TensorFlow.js
 
 # Hospital HR System
 
-RSU Nirwana · 2026 · Sole developer
+RSU Nirwana · 2026
 
 Attendance previously ran on a punch clock, leave was requested on paper, and staff data was kept in Excel. This application brings the three together. Its attendance uses location and face detection, and is tied to each employee's shift.
 

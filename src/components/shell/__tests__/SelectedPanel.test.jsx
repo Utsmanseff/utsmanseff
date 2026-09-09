@@ -61,4 +61,48 @@ describe('SelectedPanel', () => {
     expect(screen.getByRole('link', { name: /BUKA HALAMAN/ }))
       .toHaveAttribute('href', '/kerja/hris-nirwana');
   });
+  const brief = { ...system, slug: 'simbas', tier: 'brief', shortName: { id: 'SIMBAS', en: 'SIMBAS' } };
+  const REPO = 'https://github.com/Utsmanseff/Sistem-Informasi-Manajemen-BanSos';
+
+  it('keeps a full-tier system without a repo exactly as it was', () => {
+    renderPanel({ system: { ...system, repo: null } });
+    expect(screen.getByRole('link', { name: /BUKA HALAMAN/ })).toBeTruthy();
+    expect(screen.queryByRole('link', { name: /Lihat kode/ })).toBeNull();
+  });
+
+  it('gives a full-tier system with a repo a second, quieter row', () => {
+    renderPanel({ system: { ...system, repo: 'https://github.com/Utsmanseff/HRIS-Nirwana' } });
+    expect(screen.getByRole('link', { name: /BUKA HALAMAN/ })).toBeTruthy();
+    const code = screen.getByRole('link', { name: /Lihat kode/ });
+    expect(code).toHaveAttribute('href', 'https://github.com/Utsmanseff/HRIS-Nirwana');
+    // Dua kotak amber bertumpuk membuat keduanya berhenti berarti apa-apa.
+    expect(code.className).toContain('border-rule');
+    expect(code.className).not.toContain('border-amber');
+  });
+
+  it('lets the repo replace the dead label on a brief-tier system', () => {
+    renderPanel({ system: { ...brief, repo: REPO } });
+    const code = screen.getByRole('link', { name: /Lihat kode/ });
+    expect(code).toHaveAttribute('href', REPO);
+    // Label mati di atas tautan hidup itu janji palsu yang kedua.
+    expect(screen.queryByText(/RINGKASAN SAJA/)).toBeNull();
+    // Ia satu-satunya jalan keluar dari panel ini, jadi ia amber penuh.
+    expect(code.className).toContain('border-amber');
+  });
+
+  it('still says there is no page when a brief-tier system has no repo', () => {
+    renderPanel({ system: { ...brief, repo: null } });
+    expect(screen.getByText(/RINGKASAN SAJA/)).toBeTruthy();
+    expect(screen.queryByRole('link', { name: /Lihat kode/ })).toBeNull();
+  });
+
+  it('sends the code link straight out, never through the door', () => {
+    const onOpen = vi.fn();
+    renderPanel({ system: { ...brief, repo: REPO }, onOpen });
+    const code = screen.getByRole('link', { name: /Lihat kode/ });
+    fireEvent.click(code, { button: 0 });
+    expect(onOpen).not.toHaveBeenCalled();
+    expect(code).toHaveAttribute('target', '_blank');
+  });
+
 });

@@ -9,6 +9,7 @@ const COPY = {
   stack: { id: 'LAPISAN STACK', en: 'STACK LAYERS' },
   open: { id: 'ENTER → BUKA HALAMAN', en: 'ENTER → OPEN PAGE' },
   noPage: { id: 'RINGKASAN SAJA · TANPA HALAMAN', en: 'SUMMARY ONLY · NO PAGE' },
+  code: { id: 'Lihat kode ↗', en: 'View code ↗' },
   name: { id: 'NAMA', en: 'NAME' },
   role: { id: 'PERAN', en: 'ROLE' },
   place: { id: 'LOKASI', en: 'LOCATION' },
@@ -99,10 +100,32 @@ export default function SelectedPanel({ system, locale, span, onOpen }) {
           >
             {COPY.open[locale]}
           </Link>
-        ) : (
+        ) : null}
+
+        {/* Tier brief yang punya repo: tautan ini MENGGANTIKAN label mati.
+            Label yang bilang "tidak ada" sementara ada itu janji palsu,
+            sekerabat dengan pegangan tarik FilterSheet yang sudah dibuang. */}
+        {system.tier !== 'full' && !system.repo && (
           <span className="block text-center font-mono text-[11px] border border-rule text-muted-deep py-2 cursor-default">
             {COPY.noPage[locale]}
           </span>
+        )}
+
+        {/* <a> biasa, bukan Link dan bukan onOpen: ia keluar dari situs, jadi ia
+            tidak menyetel data-nav dan tidak ikut morf sistem-aktif. */}
+        {system.repo && (
+          <a
+            href={system.repo}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`block text-center font-mono text-[11px] py-2 ${
+              system.tier === 'full'
+                ? 'border border-rule text-muted mt-2'
+                : 'border border-amber text-amber'
+            }`}
+          >
+            {COPY.code[locale]}
+          </a>
         )}
       </div>
     </aside>

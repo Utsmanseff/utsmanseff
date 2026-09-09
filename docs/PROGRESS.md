@@ -93,7 +93,7 @@ kembali browser bekerja.
 | Spec tautan repo | `docs/superpowers/specs/2026-09-10-tautan-repo-design.md` |
 | Lima README siap tempel ke repo GitHub | `docs/readme-repo/` |
 
-Keadaan: **278 test hijau, 33 berkas**, `npx eslint src --max-warnings=0` bersih,
+Keadaan: **284 test hijau, 33 berkas**, `npx eslint src --max-warnings=0` bersih,
 `npm run build` sukses — dijalankan Utsman sendiri pada 2026-09-10.
 
 Jumlah test turun dari 165 ke 92 di Task 15 karena 73 test kanvas ikut dihapus
@@ -330,6 +330,25 @@ labelnya tetap dijaga `SelectedPanel.test.jsx`.
   diajukan ke Utsman pada 2026-09-09 dan tidak dipersoalkan; kalau nanti terasa
   janggal, jalan keluarnya membuat tautan itu memanggil `history.back()` waktu
   riwayatnya memang datang dari peta — bukan menaruh sudut di URL halaman baca.
+- **`ScreenshotBlock` tidak boleh mengunci rasio.** Dulu ia menulis
+  `width={1600} height={900}` untuk setiap gambar, dan **tidak satu pun** dari
+  delapan screenshot berasio itu: yang lanskap 2.10-2.43, HRIS potret 0.49.
+  Akibatnya kelima halaman baca yang punya gambar merentangnya diam-diam —
+  `object-fit` bawaan `fill`, jadi tidak ada error, tidak ada peringatan, cuma
+  gambar yang salah bentuk selama berbulan-bulan. Ukuran asli sekarang di
+  `projects.js` sebagai `imageSize: [w, h]`, dan satu test **membaca kepala
+  tiap berkas PNG/JPEG** untuk menolak angka yang melenceng dari berkasnya.
+  Jangan mengganti test itu dengan angka yang ditulis tangan.
+- **Screenshot tidak pernah dibesarkan melampaui pikselnya sendiri.**
+  `style={{ maxWidth: size[0] }}` plus `mx-auto`. Tidak mengikat untuk yang
+  lanskap (1652-1901px, jauh melebihi kolom 728px); yang dijaga `hris.png`
+  yang cuma 355px — tanpa batas itu ia direntang dua kali lipat setinggi
+  1489px, tidak gepeng tapi buram dan raksasa. Terukur di browser 2026-09-10.
+- **`psb-cbt.png` tidak dipakai, dan itu disengaja.** Kaki halamannya
+  bertuliskan `2026© Rahmad` — nama orang lain di screenshot yang akan berdiri
+  di halaman yang menyebut peran `Pengembang tunggal`. Yang dipakai
+  `psb-pendaftaran.png`; CBT tetap disebut di daftar `built`, hanya tidak
+  difoto. Diputuskan Utsman 2026-09-10.
 - **Tautan repo di `YearGroup` berdiri BERSAUDARA dengan tautan halaman baca,
   bukan di dalamnya.** Baris tier `full` dibungkus `<Link href="/kerja/...">`;
   menaruh `<a>` repo di dalam badan itu menghasilkan `<a>` bersarang — HTML
@@ -359,8 +378,8 @@ labelnya tetap dijaga `SelectedPanel.test.jsx`.
 
 ## Yang belum dikerjakan
 
-Sampai screenshot masuk, `image: null` dan halaman baca menampilkan keadaan
-kosong yang memang dirancang untuk itu.
+Ketujuh halaman baca sudah punya screenshot sejak 2026-09-10. `simbas` tetap
+`image: null`, dan itu benar: ia tier `brief` dan tidak punya halaman baca.
 
 ### Antrean berikutnya, urut
 
@@ -420,12 +439,12 @@ dump di dalam riwayatnya, kalau ada, belum pernah dicari. Repo-nya sudah
 publik apa adanya sebelum porto ini menautkannya, jadi tautan tidak menambah
 paparan — tetapi jangan pernah menulis di mana pun bahwa isinya sudah aman.
 
-**1. Screenshot** `hris.png` dan `psb.png` → `public/assets/img/`. Sensor dulu
-kalau memuat data pegawai atau pasien asli. Ini juga dua halaman yang masih
-memakai kalimat "Screenshot menyusul". Berkas gambarnya harus disiapkan
-Utsman; agen tidak bisa mengarangnya.
+**Screenshot sudah selesai 2026-09-10.** `hris.png` dan `psb-pendaftaran.png`
+tersambung; tidak ada lagi halaman baca yang memakai "Screenshot menyusul".
+Keadaan kosong di `ScreenshotBlock` tetap ada dan tetap benar — ada test yang
+menjaganya — hanya tidak ada lagi yang memakainya.
 
-**2. Merge ke `main` dan deploy.**
+**1. Merge ke `main` dan deploy.**
 
 ### Penilaian jujur, diminta Utsman 2026-09-10
 

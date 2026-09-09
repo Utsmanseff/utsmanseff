@@ -5,8 +5,8 @@ import { useEffect, useRef, useState } from 'react';
 const COPY = {
   label: { id: 'Konsol perintah', en: 'Command console' },
   placeholder: {
-    id: 'coba: filter client:rsu-nirwana · open hris · stack:soap · help',
-    en: 'try: filter client:rsu-nirwana · open hris · stack:soap · help',
+    id: 'coba: filter client:rsu-nirwana · open hris · stack:livewire · help',
+    en: 'try: filter client:rsu-nirwana · open hris · stack:livewire · help',
   },
   hint: {
     id: 'ENTER MENJALANKAN · ESC MENGOSONGKAN FILTER',

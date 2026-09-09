@@ -71,4 +71,55 @@ describe('projects dataset', () => {
     expect(new Set(nirwana.map((p) => p.clientKey)).size).toBe(1);
   });
 
+  it('places every system in the year it was actually built', () => {
+    const byYear = {};
+    for (const p of projects) (byYear[p.year] ??= []).push(p.slug);
+    expect(byYear['2024'].sort()).toEqual(['sibenih', 'sigap-bpn']);
+    expect(byYear['2025'].sort()).toEqual(['idrg-bridging', 'rme', 'simaset', 'simbas']);
+    expect(byYear['2026'].sort()).toEqual(['hris-nirwana', 'psb-walisongo', 'rsu-nirwana-web']);
+  });
+
+  it('carries the acronym slugs, not the old descriptive ones', () => {
+    const slugs = projects.map((p) => p.slug);
+    expect(slugs).toContain('simaset');
+    expect(slugs).toContain('sibenih');
+    expect(slugs).toContain('simbas');
+    expect(slugs).not.toContain('aset-kphl');
+    expect(slugs).not.toContain('sertifikasi-benih');
+  });
+
+  it('keeps the five reading-page slugs untouched', () => {
+    // Larangan yang tertulis di PROGRESS.md: URL ini sudah ada di luar sana.
+    const slugs = projects.map((p) => p.slug);
+    for (const s of ['rsu-nirwana-web', 'idrg-bridging', 'hris-nirwana', 'rme', 'psb-walisongo']) {
+      expect(slugs, s).toContain(s);
+    }
+  });
+
+  it('no longer claims SOAP anywhere in the stack', () => {
+    // Utsman memastikan IDRG tidak memakainya. "Pencatatan SOAP" di built RME
+    // adalah singkatan rekam medis dan tidak ada hubungannya — jangan ikut
+    // dibuang.
+    for (const p of projects) {
+      expect(p.tech, p.slug).not.toContain('SOAP');
+    }
+  });
+
+  it('gives the two agencies their own client keys', () => {
+    expect(bySlug('simaset').client).toBe('UPT-KPHL');
+    expect(bySlug('simaset').clientKey).toBe('upt-kphl');
+    expect(bySlug('sibenih').client).toBe('BPSBTPH');
+    expect(bySlug('sibenih').clientKey).toBe('bpsbtph');
+    expect(bySlug('simbas').client).toBe('Kecamatan Basarang');
+    expect(bySlug('simbas').clientKey).toBe('kecamatan-basarang');
+  });
+
+  it('names the systems the way Utsman names them', () => {
+    expect(bySlug('simaset').shortName.id).toBe('SIMASET');
+    expect(bySlug('sibenih').shortName.id).toBe('SIBENIH');
+    expect(bySlug('simbas').shortName.id).toBe('SIMBAS');
+    expect(bySlug('rsu-nirwana-web').shortName.id).toBe('Web & Pendaftaran');
+    expect(bySlug('psb-walisongo').shortName.id).toBe('PSB & CBT');
+  });
+
 });

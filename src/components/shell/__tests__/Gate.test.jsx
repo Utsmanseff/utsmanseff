@@ -29,7 +29,8 @@ describe('Gate', () => {
     const stack = screen.getByTestId('gate-stack').textContent;
     expect(stack).toContain('Laravel');
     expect(stack).toContain('TensorFlow.js');
-    expect(stack).toContain('SOAP');
+    expect(stack).toContain('Livewire');
+    expect(stack).toContain('Filament');
   });
 
   it('states no counts — every digit on the gate is a year', () => {

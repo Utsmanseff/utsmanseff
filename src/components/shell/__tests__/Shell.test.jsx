@@ -71,7 +71,7 @@ describe('Shell', () => {
   it('lists the systems in the rail and dims the ones a filter excludes', () => {
     renderShell();
     fireEvent.click(screen.getByRole('button', { name: 'client:bpn' }));
-    const row = railRow(/Pendaftaran OCR/);
+    const row = railRow(/Web & Pendaftaran/);
     expect(row.closest('li')).toHaveStyle({ opacity: '0.45' });
   });
 

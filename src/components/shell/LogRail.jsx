@@ -19,7 +19,10 @@ const CHIPS = [
   { key: 'client', value: 'bpn' },
   { key: 'year', value: '2026' },
   { key: 'access', value: 'public' },
-  { key: 'stack', value: 'soap' },
+  // Bukan `soap`: protokol itu sudah keluar dari IDRG, dan chip yang menyaring
+  // sampai kosong bukan chip. `laravel` dan `mysql` tidak bisa dipakai karena
+  // ada di kesembilan sistem.
+  { key: 'stack', value: 'livewire' },
 ];
 
 const LINE_COLOUR = {

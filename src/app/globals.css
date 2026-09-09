@@ -250,6 +250,10 @@ html[data-nav="down"]::view-transition-new(root) {
   *, *::before, *::after {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
+    /* Durasi saja tidak cukup. Lapis plate masuk dengan transition-delay
+       bertingkat, jadi tanpa baris ini lapis kelima tetap menunggu 160ms dan
+       gerak yang dikurangi berubah jadi kedipan bertahap. */
+    transition-delay: 0ms !important;
   }
 
   /* Wajib, bukan pelengkap. Aturan di atas tidak menjangkau pseudo-element

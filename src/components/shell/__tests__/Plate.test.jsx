@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Plate from '@/components/shell/Plate';
 
@@ -65,43 +65,52 @@ describe('Plate', () => {
     expect(container.firstChild).toHaveStyle({ opacity: '0.34' });
   });
 
-  // 4 x 7 rapat, 4 x 11 terbuka: lapis teratas dari lima lapis.
-  const topLayerZ = (container) => {
-    const layers = container.querySelectorAll('[data-layer]');
-    return layers[layers.length - 1].getAttribute('style');
+  // 4 x 7 rapat, 4 x 11 terbuka: lapis teratas dari lima lapis. Menunggu,
+  // karena lapis mulai rata di translateZ(0) sampai timer mount menyalakannya.
+  const settled = async (container) => {
+    await waitFor(() => {
+      const l = container.querySelectorAll('[data-layer]');
+      expect(l[l.length - 1].getAttribute('style')).not.toContain('translateZ(0px)');
+    });
+    const l = container.querySelectorAll('[data-layer]');
+    return l[l.length - 1].getAttribute('style');
   };
 
-  it('keeps the stack tight until something asks for it', () => {
+  it('keeps the stack tight until something asks for it', async () => {
     const { container } = renderPlate();
-    expect(topLayerZ(container)).toContain('translateZ(28px)');
+    expect(await settled(container)).toContain('translateZ(28px)');
   });
 
-  it('opens the stack under the pointer', () => {
+  it('opens the stack under the pointer', async () => {
     const { container } = renderPlate();
+    await settled(container);
     fireEvent.pointerEnter(container.firstChild);
-    expect(topLayerZ(container)).toContain('translateZ(44px)');
+    expect(await settled(container)).toContain('translateZ(44px)');
   });
 
-  it('closes it again when the pointer leaves', () => {
+  it('closes it again when the pointer leaves', async () => {
     const { container } = renderPlate();
+    await settled(container);
     fireEvent.pointerEnter(container.firstChild);
     fireEvent.pointerLeave(container.firstChild);
-    expect(topLayerZ(container)).toContain('translateZ(28px)');
+    expect(await settled(container)).toContain('translateZ(28px)');
   });
 
-  it('opens the stack for the keyboard too', () => {
+  it('opens the stack for the keyboard too', async () => {
     const { container } = renderPlate();
+    await settled(container);
     fireEvent.focus(container.firstChild);
-    expect(topLayerZ(container)).toContain('translateZ(44px)');
+    expect(await settled(container)).toContain('translateZ(44px)');
   });
 
-  it('keeps the selected plate open with no pointer on it', () => {
+  it('keeps the selected plate open with no pointer on it', async () => {
     const { container } = renderPlate({ selected: true });
-    expect(topLayerZ(container)).toContain('translateZ(44px)');
+    expect(await settled(container)).toContain('translateZ(44px)');
   });
 
-  it('carries its label up with the stack', () => {
+  it('carries its label up with the stack', async () => {
     const { container } = renderPlate();
+    await settled(container);
     const label = () => container.querySelector('[data-plate-label]').getAttribute('style');
     expect(label()).toContain('translateZ(32px)');
     fireEvent.pointerEnter(container.firstChild);
@@ -163,5 +172,29 @@ describe('Plate', () => {
     const layers = container.querySelectorAll('[data-layer]');
     const top = layers[layers.length - 1].getAttribute('style');
     expect(top.toLowerCase()).toContain('#e8e0d0');
+  });
+
+  it('starts every layer flat on the ground', () => {
+    const { container } = renderPlate();
+    const styles = [...container.querySelectorAll('[data-layer]')]
+      .map((l) => l.getAttribute('style'));
+    // Sebelum timer mount berjalan, semuanya bertumpuk rata.
+    expect(styles.every((s) => s.includes('translateZ(0px)'))).toBe(true);
+  });
+
+  it('raises them into place once mounted', async () => {
+    const { container } = renderPlate();
+    await waitFor(() => {
+      const layers = container.querySelectorAll('[data-layer]');
+      expect(layers[layers.length - 1].getAttribute('style')).toContain('translateZ(28px)');
+    });
+  });
+
+  it('lets each layer follow the one below it', async () => {
+    const { container } = renderPlate();
+    await settled(container);
+    const layers = container.querySelectorAll('[data-layer]');
+    expect(layers[0].style.transitionDelay).toBe('0ms');
+    expect(layers[4].style.transitionDelay).toBe('160ms');
   });
 });

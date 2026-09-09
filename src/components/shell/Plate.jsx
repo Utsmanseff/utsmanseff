@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { edgeTones } from '@/lib/shell/shading';
 
 const PLATE_BG = ['#1B2124', '#1D2428', '#20272B', '#252E33', '#2C3439'];
@@ -9,6 +9,7 @@ const STEP_TIGHT = 7;
 const STEP_OPEN = 11;
 const LIFT_HOVER = 6;
 const LIFT_SELECTED = 10;
+const STAGGER_MS = 40;
 
 // Colours are literal here rather than tokens: they are indexed by layer depth,
 // and a five-step ramp reads better as an array than as five class names.
@@ -19,6 +20,18 @@ export default function Plate({ system, position, locale, rotZ, selected, dimmed
   // Fokus keyboard dapat perlakuan yang sama dengan tetikus: kalau tumpukan
   // membuka untuk yang satu, ia membuka untuk yang lain.
   const [active, setActive] = useState(false);
+
+  // Lapis naik ke tempatnya berurutan waktu peta pertama muncul. setTimeout,
+  // bukan requestAnimationFrame: rAF menggantung waktu panel browser
+  // tersembunyi, dan satu rAF yang tergantung meracuni sisa sesi halaman itu.
+  //
+  // Mount saja. Delapan plate yang mengulang ini tiap chip filter ditekan itu
+  // kebisingan, dan peredupan filter sudah punya bahasanya sendiri.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(t);
+  }, []);
   const open = active || selected;
 
   const step = open ? STEP_OPEN : STEP_TIGHT;
@@ -68,8 +81,9 @@ export default function Plate({ system, position, locale, rotZ, selected, dimmed
               borderRightColor: flat ?? tones.right,
               borderBottomColor: flat ?? tones.bottom,
               borderLeftColor: flat ?? tones.left,
-              transform: `translateZ(${i * step}px)`,
+              transform: `translateZ(${mounted ? i * step : 0}px)`,
               transition: `transform 700ms ${EASE}, border-color 180ms linear`,
+              transitionDelay: `${i * STAGGER_MS}ms`,
             }}
           />
         );

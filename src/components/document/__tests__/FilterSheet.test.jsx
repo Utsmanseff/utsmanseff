@@ -20,6 +20,21 @@ const setup = (filters = EMPTY_FILTERS) => {
   return { onToggle, onReset, ...utils };
 };
 
+describe('FilterSheet · ruang untuk bar yang menimpanya', () => {
+  it('reserves the fixed bottom bar height, so its own controls stay tappable', () => {
+    // BottomBar `fixed bottom-0 h-14` menempati 56px terbawah viewport, dan
+    // sheet ini `sticky bottom-0`. Tanpa cadangan ini, baris TERAPKAN dan
+    // KETUK UNTUK MENUTUP berdiri persis di bawah bar itu: `elementFromPoint`
+    // di tengahnya mengembalikan BottomBar, dan sheet tidak pernah bisa
+    // ditutup. Terukur di browser pada 375x812, 2026-09-10.
+    //
+    // Tidak ada unit test yang bisa menangkap tumpang tindihnya sendiri —
+    // happy-dom tidak menata apa pun — jadi yang dijaga di sini angkanya.
+    const { container } = setup();
+    expect(container.firstChild.className).toContain('pb-[74px]');
+  });
+});
+
 describe('FilterSheet', () => {
   it('offers a chip per client, access state and technology', () => {
     setup();

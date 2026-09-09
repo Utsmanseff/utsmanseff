@@ -36,7 +36,12 @@ export default function FilterSheet({ systems, filters, locale, onToggle, onRese
   const clients = [...new Map(systems.map((s) => [s.clientKey, s.client])).entries()];
 
   return (
-    <div className="sticky bottom-0 bg-ground text-ink px-[18px] pt-3.5 pb-[18px] flex flex-col gap-3">
+    // pb-[74px] = 56px tinggi BottomBar + 18px nafas. BottomBar `fixed
+    // bottom-0 h-14` dan sheet ini `sticky bottom-0`, jadi tanpa cadangan itu
+    // baris TERAPKAN dan KETUK UNTUK MENUTUP berdiri persis di bawah bar dan
+    // tidak pernah tersentuh — `elementFromPoint` di tengahnya mengembalikan
+    // BottomBar. Sheet-nya bisa dibuka tapi tidak bisa ditutup sama sekali.
+    <div className="sticky bottom-0 bg-ground text-ink px-[18px] pt-3.5 pb-[74px] flex flex-col gap-3">
       <div className="w-10 h-[3px] bg-plate-edge-2 mx-auto" />
 
       <div className="flex items-center justify-between font-mono text-[11px] text-muted">

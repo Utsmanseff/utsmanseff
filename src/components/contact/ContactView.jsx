@@ -13,8 +13,8 @@ const COPY = {
   // Menggantikan "Terbuka untuk kerja sama", yang tidak menjawab satu pun
   // pertanyaan yang dibawa pembacanya: penuh waktu atau lepas, dan di mana.
   intro: {
-    id: 'Terbuka untuk kerja penuh waktu maupun project lepas, remote atau di lokasi mana pun.',
-    en: 'Open to full-time roles and freelance projects, remote or on site anywhere.',
+    id: 'Terbuka untuk kerja remote, on-site, full time atau freelance.',
+    en: 'Open to remote, on-site, full-time or freelance work.',
   },
   cv: { id: 'Unduh CV (PDF)', en: 'Download CV (PDF)' },
 };

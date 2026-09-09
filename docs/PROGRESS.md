@@ -89,7 +89,7 @@ kembali browser bekerja.
 | Rencana teks & data, 10 task (selesai) | `docs/superpowers/plans/2026-09-10-teks-dan-data-sistem.md` |
 | Spec teks & data | `docs/superpowers/specs/2026-09-09-teks-dan-data-sistem-design.md` |
 
-Keadaan: **260 test hijau, 32 berkas**, `npx eslint src --max-warnings=0` bersih,
+Keadaan: **261 test hijau, 32 berkas**, `npx eslint src --max-warnings=0` bersih,
 `npm run build` sukses — dijalankan Utsman sendiri pada 2026-09-10.
 
 Jumlah test turun dari 165 ke 92 di Task 15 karena 73 test kanvas ikut dihapus
@@ -99,9 +99,9 @@ ikut dibuang, lalu naik ke 145 lewat gaya scrollbar, ke 156 lewat perpindahan
 naik-turun, dan ke 201 lewat peta hidup (`shading` 7, `useMapCamera` 19,
 `MapScene` 3, sisanya `Plate`), lalu turun ke 197 waktu snap kamera dibuang —
 tiga test snap dan satu test `settling` hilang bersama fiturnya. Bukan regresi.
-Naik ke 223 lewat zoom halaman baca, lalu ke 260 lewat teks & data sistem
+Naik ke 223 lewat zoom halaman baca, lalu ke 261 lewat teks & data sistem
 (`projects` 14, `AxisLegend` 4, `LogRail` 5, `layout` 4, `MapScene` 4,
-`FlatTable` 1, `ProjectView` 2, kontras label tahun 1, ketersediaan kontak 2).
+`FlatTable` 1, `ProjectView` 2, kontras label tahun 1, ketersediaan kontak 2, sheet filter HP 1).
 
 ## Larangan yang tidak bisa ditawar
 
@@ -122,6 +122,15 @@ Naik ke 223 lewat zoom halaman baca, lalu ke 260 lewat teks & data sistem
   `#7A8580` memberi 4.58:1 tanpa menambah warna ke palet, dan amber tahun
   berjalan sudah 5.33:1. Ketiganya diukur di halaman hidup pada 2026-09-10.
   Ada test yang menjaganya.
+- **`FilterSheet` wajib menyisakan tinggi `BottomBar` di kakinya
+  (`pb-[74px]` = 56 + 18).** BottomBar `fixed bottom-0 h-14`; sheet-nya
+  `sticky bottom-0`. Tanpa cadangan itu baris `TERAPKAN` dan
+  `KETUK UNTUK MENUTUP` berdiri persis di bawah bar, dan
+  `elementFromPoint` di tengahnya mengembalikan BottomBar — sheet bisa dibuka
+  tapi **tidak bisa ditutup sama sekali**. Dilaporkan Utsman dan diukur di
+  browser pada 375x812, 2026-09-10. Tidak ada unit test yang bisa menangkap
+  tumpang tindihnya sendiri (happy-dom tidak menata apa pun), jadi yang dijaga
+  test angkanya.
 - **Amber ada dua.** `#C97B3F` hanya di atas gelap; di atas kertas wajib
   `#9C5A28`. Di lapis kertas, `#C97B3F` cuma 2.8:1 — itu sebabnya
   `document/AccessTick.jsx` ada dan terpisah dari `work/AccessBadge.jsx`.
@@ -329,9 +338,11 @@ melebar sampai ke data sembilan sistem dan seluruh prosa halaman baca.
 **Baris ketersediaan sudah selesai 2026-09-10**, di luar rencana, atas
 permintaan Utsman langsung. `/kontak` sekarang membuka dengan lencana mono
 `OPEN TO WORK` (tidak diterjemahkan, sama seperti `GITHUB` dan `CV.PDF` di
-StatusBar) lalu kalimatnya: "Terbuka untuk kerja penuh waktu maupun project
-lepas, remote atau di lokasi mana pun." Yang lama, "Terbuka untuk kerja
-sama", tidak menjawab satu pun pertanyaan yang dibawa pembacanya. Lencananya
+StatusBar) lalu kalimatnya: "Terbuka untuk kerja remote, on-site, full time
+atau freelance." Yang lama, "Terbuka untuk kerja sama", tidak menjawab satu
+pun pertanyaan yang dibawa pembacanya. Percobaan pertama menjawabnya tapi
+terlalu kaku ("kerja penuh waktu maupun project lepas"); kata-kata yang
+sekarang dari Utsman sendiri — istilah yang memang dipakai orang. Lencananya
 amber, 5.33:1 di atas ground, diukur di halaman hidup. Ada tiga test yang
 menjaganya.
 

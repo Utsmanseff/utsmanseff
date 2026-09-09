@@ -123,4 +123,25 @@ describe('ProjectView', () => {
     fireEvent.click(screen.getByRole('link', { name: /RME/ }));
     expect(document.documentElement.dataset.nav).toBeUndefined();
   });
+  it('shows the code button for a project with a repo', () => {
+    const withRepo = { ...project, repo: 'https://github.com/Utsmanseff/HRIS-Nirwana' };
+    render(<ProjectView project={withRepo} prev={null} next={null} />);
+    const link = screen.getByRole('link', { name: /Lihat kode/ });
+    expect(link).toHaveAttribute('href', 'https://github.com/Utsmanseff/HRIS-Nirwana');
+    expect(link).toHaveAttribute('target', '_blank');
+    expect(link.getAttribute('rel')).toContain('noopener');
+  });
+
+  it('shows no code button when there is no repo', () => {
+    render(<ProjectView project={{ ...project, repo: null }} prev={null} next={null} />);
+    expect(screen.queryByRole('link', { name: /Lihat kode/ })).toBeNull();
+  });
+
+  it('stands both outward links side by side when a project has each', () => {
+    const both = { ...project, repo: 'https://github.com/Utsmanseff/HRIS-Nirwana' };
+    render(<ProjectView project={both} prev={null} next={null} />);
+    expect(screen.getByRole('link', { name: /Coba langsung/ })).toBeTruthy();
+    expect(screen.getByRole('link', { name: /Lihat kode/ })).toBeTruthy();
+  });
+
 });

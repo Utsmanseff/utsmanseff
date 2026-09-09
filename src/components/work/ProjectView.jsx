@@ -15,6 +15,7 @@ const COPY = {
   built: { id: '02 YANG DIBANGUN', en: '02 BUILT' },
   stack: { id: '03 STACK', en: '03 STACK' },
   visit: { id: 'Coba langsung ↗', en: 'Try it live ↗' },
+  code: { id: 'Lihat kode ↗', en: 'View code ↗' },
 };
 
 // Sections are numbered because the page is read as a record, not as an essay.
@@ -79,17 +80,30 @@ export default function ProjectView({ project, prev, next }) {
           ))}
         </div>
 
-        {/* 6 — foot */}
-        {project.access === 'public' && project.site && (
-          <a
-            href={project.site}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block font-mono text-xs border border-amber text-amber px-4 py-2 mt-12 hover:bg-amber hover:text-ground transition-colors duration-500"
-          >
-            {COPY.visit[locale]}
-          </a>
-        )}
+        {/* 6 — foot. Dua tujuan keluar, satu bahasa. Tidak ada sistem yang
+            punya keduanya sekarang, tapi bentuknya tidak perlu tahu itu. */}
+        <div className="flex flex-wrap gap-3 mt-12">
+          {project.access === 'public' && project.site && (
+            <a
+              href={project.site}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block font-mono text-xs border border-amber text-amber px-4 py-2 hover:bg-amber hover:text-ground transition-colors duration-500"
+            >
+              {COPY.visit[locale]}
+            </a>
+          )}
+          {project.repo && (
+            <a
+              href={project.repo}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block font-mono text-xs border border-amber text-amber px-4 py-2 hover:bg-amber hover:text-ground transition-colors duration-500"
+            >
+              {COPY.code[locale]}
+            </a>
+          )}
+        </div>
 
         <WorkFooterNav prev={prev} next={next} locale={locale} />
       </FadeIn>

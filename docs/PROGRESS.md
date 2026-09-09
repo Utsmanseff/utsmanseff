@@ -89,7 +89,7 @@ kembali browser bekerja.
 | Rencana teks & data, 10 task (selesai) | `docs/superpowers/plans/2026-09-10-teks-dan-data-sistem.md` |
 | Spec teks & data | `docs/superpowers/specs/2026-09-09-teks-dan-data-sistem-design.md` |
 
-Keadaan: **261 test hijau, 32 berkas**, `npx eslint src --max-warnings=0` bersih,
+Keadaan: **262 test hijau, 32 berkas**, `npx eslint src --max-warnings=0` bersih,
 `npm run build` sukses — dijalankan Utsman sendiri pada 2026-09-10.
 
 Jumlah test turun dari 165 ke 92 di Task 15 karena 73 test kanvas ikut dihapus
@@ -99,9 +99,9 @@ ikut dibuang, lalu naik ke 145 lewat gaya scrollbar, ke 156 lewat perpindahan
 naik-turun, dan ke 201 lewat peta hidup (`shading` 7, `useMapCamera` 19,
 `MapScene` 3, sisanya `Plate`), lalu turun ke 197 waktu snap kamera dibuang —
 tiga test snap dan satu test `settling` hilang bersama fiturnya. Bukan regresi.
-Naik ke 223 lewat zoom halaman baca, lalu ke 261 lewat teks & data sistem
+Naik ke 223 lewat zoom halaman baca, lalu ke 262 lewat teks & data sistem
 (`projects` 14, `AxisLegend` 4, `LogRail` 5, `layout` 4, `MapScene` 4,
-`FlatTable` 1, `ProjectView` 2, kontras label tahun 1, ketersediaan kontak 2, sheet filter HP 1).
+`FlatTable` 1, `ProjectView` 2, kontras label tahun 1, ketersediaan kontak 2, sheet filter HP 2).
 
 ## Larangan yang tidak bisa ditawar
 
@@ -131,6 +131,12 @@ Naik ke 223 lewat zoom halaman baca, lalu ke 261 lewat teks & data sistem
   browser pada 375x812, 2026-09-10. Tidak ada unit test yang bisa menangkap
   tumpang tindihnya sendiri (happy-dom tidak menata apa pun), jadi yang dijaga
   test angkanya.
+- **`FilterSheet` tidak punya pegangan tarik, dan jangan dibuatkan lagi.**
+  Dulu ada garis `w-10 h-[3px]` di kepalanya yang berbentuk seperti pegangan,
+  padahal tidak ada kode seret di mana pun. Waktu sheet tidak bisa ditutup,
+  janji palsu itu ikut menyesatkan Utsman — ia mencoba menariknya. Yang
+  menutup sheet dua tombol di kakinya, dan keduanya bertuliskan apa yang
+  mereka lakukan. Ada test yang menjaga garis itu tetap tidak ada.
 - **Amber ada dua.** `#C97B3F` hanya di atas gelap; di atas kertas wajib
   `#9C5A28`. Di lapis kertas, `#C97B3F` cuma 2.8:1 — itu sebabnya
   `document/AccessTick.jsx` ada dan terpisah dari `work/AccessBadge.jsx`.

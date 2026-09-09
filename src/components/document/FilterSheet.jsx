@@ -42,8 +42,11 @@ export default function FilterSheet({ systems, filters, locale, onToggle, onRese
     // tidak pernah tersentuh — `elementFromPoint` di tengahnya mengembalikan
     // BottomBar. Sheet-nya bisa dibuka tapi tidak bisa ditutup sama sekali.
     <div className="sticky bottom-0 bg-ground text-ink px-[18px] pt-3.5 pb-[74px] flex flex-col gap-3">
-      <div className="w-10 h-[3px] bg-plate-edge-2 mx-auto" />
-
+      {/* Tanpa pegangan tarik. Garis kecil di sini dulu berbentuk seperti
+          pegangan, padahal tidak ada kode seret di mana pun — dan waktu sheet
+          ini tidak bisa ditutup, janji palsu itu ikut menyesatkan. Yang
+          menutup sheet adalah dua tombol di kakinya, dan keduanya bertuliskan
+          apa yang mereka lakukan. */}
       <div className="flex items-center justify-between font-mono text-[11px] text-muted">
         <span>{COPY.title[locale]}</span>
         <button type="button" onClick={onReset} className="text-amber">

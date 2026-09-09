@@ -33,6 +33,14 @@ describe('FilterSheet · ruang untuk bar yang menimpanya', () => {
     const { container } = setup();
     expect(container.firstChild.className).toContain('pb-[74px]');
   });
+
+  it('shows no drag handle, because nothing here can be dragged', () => {
+    // Garis kecil di kepala sheet berbentuk seperti pegangan tarik, padahal
+    // tidak ada kode seret di mana pun. Utsman mencoba menariknya waktu sheet
+    // tidak bisa ditutup, dan janji palsu itu ikut menyesatkannya.
+    const { container } = setup();
+    expect(container.querySelector('.h-\\[3px\\]')).toBeNull();
+  });
 });
 
 describe('FilterSheet', () => {

@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { describe, it, expect } from 'vitest';
 import { projects, fullProjects, bySlug, siblings } from '@/lib/data/projects';
 
@@ -198,6 +199,51 @@ describe('projects dataset', () => {
   it('points every repo URL at the owner account, so a typo cannot land elsewhere', () => {
     for (const p of projects) {
       if (p.repo) expect(p.repo).toMatch(/^https:\/\/github\.com\/Utsmanseff\/[\w.-]+$/);
+    }
+  });
+
+  it('gives every reading page a screenshot', () => {
+    // Keadaan kosong di ScreenshotBlock tetap ada dan tetap benar, tetapi
+    // sejak 2026-09-10 tidak ada lagi halaman baca yang memakainya.
+    for (const p of fullProjects) {
+      expect(p.image, p.slug).toBeTruthy();
+    }
+  });
+
+  // Ukuran gambar dibaca dari kepala berkasnya sendiri. Tanpa ini, angka di
+  // data bisa melenceng dari berkasnya tanpa satu pun test mengeluh — dan
+  // itulah bug yang membuat tujuh halaman baca gepeng sampai 2026-09-10.
+  const intrinsic = (publicPath) => {
+    const buf = readFileSync(`public${publicPath}`);
+    if (buf.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))) {
+      return [buf.readUInt32BE(16), buf.readUInt32BE(20)];
+    }
+    for (let i = 2; i < buf.length; ) {
+      if (buf[i] !== 0xff) { i += 1; continue; }
+      const m = buf[i + 1];
+      if (m >= 0xc0 && m <= 0xc3) return [buf.readUInt16BE(i + 7), buf.readUInt16BE(i + 5)];
+      if (m === 0xd8 || m === 0x01 || (m >= 0xd0 && m <= 0xd7)) { i += 2; continue; }
+      i += 2 + buf.readUInt16BE(i + 2);
+    }
+    throw new Error(`tidak bisa membaca ukuran ${publicPath}`);
+  };
+
+  it('carries the real pixel size of every image it points at', () => {
+    for (const p of projects) {
+      if (!p.image) { expect(p.imageSize, p.slug).toBeNull(); continue; }
+      expect(p.imageSize, p.slug).toHaveLength(2);
+      expect(p.imageSize, p.slug).toEqual(intrinsic(p.image));
+    }
+  });
+
+  it('never claims a 16:9 box for an image that is not 16:9', () => {
+    // ScreenshotBlock dulu mengunci 1600x900 untuk semuanya. Tidak satu pun
+    // gambar berasio itu: yang lanskap 2.10-2.43, dan HRIS potret 0.49.
+    for (const p of projects) {
+      if (!p.imageSize) continue;
+      const [w, h] = p.imageSize;
+      expect(w, p.slug).toBeGreaterThan(0);
+      expect(h, p.slug).toBeGreaterThan(0);
     }
   });
 

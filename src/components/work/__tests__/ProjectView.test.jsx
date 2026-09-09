@@ -20,6 +20,7 @@ const project = {
   title: { id: 'Pendaftaran Berbasis OCR', en: 'OCR Registration' },
   context: { id: 'Konteks singkat.', en: 'Short context.' },
   built: { id: ['Ekstraksi NIK dari foto KTP'], en: ['NIK extraction from a KTP photo'] },
+  imageSize: [1899, 866],
 };
 
 const noShot = { ...project, image: null, access: 'none', site: null };
@@ -142,6 +143,29 @@ describe('ProjectView', () => {
     render(<ProjectView project={both} prev={null} next={null} />);
     expect(screen.getByRole('link', { name: /Coba langsung/ })).toBeTruthy();
     expect(screen.getByRole('link', { name: /Lihat kode/ })).toBeTruthy();
+  });
+
+  it('sizes the screenshot from the file, not from a hardcoded 16:9 box', () => {
+    // Tujuh halaman baca gepeng sampai 2026-09-10 karena ScreenshotBlock
+    // mengunci 1600x900. Tidak satu pun gambar berasio itu.
+    const { container } = render(<ProjectView project={project} prev={null} next={null} />);
+    const img = container.querySelector('article img');
+    expect(img.getAttribute('width')).toBe('1899');
+    expect(img.getAttribute('height')).toBe('866');
+  });
+
+  it('falls back to the stated absence when there is no screenshot', () => {
+    render(<ProjectView project={noShot} prev={null} next={null} />);
+    expect(screen.getByText(/Screenshot menyusul/)).toBeTruthy();
+  });
+
+  it('never blows a screenshot up past its own pixels', () => {
+    // hris.png cuma 355px lebar. Tanpa batas ini kolom 728px merentangnya
+    // dua kali lipat: tidak gepeng, tapi buram dan setinggi 1489px.
+    const phone = { ...project, image: '/assets/img/hris.png', imageSize: [355, 727] };
+    const { container } = render(<ProjectView project={phone} prev={null} next={null} />);
+    const img = container.querySelector('article img');
+    expect(img.style.maxWidth).toBe('355px');
   });
 
 });

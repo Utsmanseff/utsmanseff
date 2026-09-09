@@ -25,6 +25,7 @@ export const projects = [
     site: 'https://rsunirwana.id',
     repo: null,
     image: '/assets/img/pendaftaran.png',
+    imageSize: [1899, 866],
     tech: ['Laravel', 'Next.js', 'MySQL', 'Google Vision', 'REST API'],
     shortName: { id: 'Web & Pendaftaran', en: 'Site & Registration' },
     // Halaman ini bercerita tentang situsnya, dengan pembacaan KTP sebagai
@@ -83,6 +84,7 @@ export const projects = [
     // No line to `rme`: RSU already links to both, and a straight IDRG-RME
     // line passes through the RSU node, reading as a relation that isn't there.
     image: '/assets/img/eklaim.png',
+    imageSize: [1652, 785],
     tech: ['Laravel', 'JavaScript', 'MySQL', 'REST API'],
     shortName: { id: 'IDRG Bridging', en: 'IDRG Bridging' },
     blurb: {
@@ -127,7 +129,8 @@ export const projects = [
     access: 'internal',
     site: null,
     repo: 'https://github.com/Utsmanseff/HRIS-Nirwana',
-    image: null,
+    image: '/assets/img/hris.png',
+    imageSize: [355, 727],
     tech: ['Laravel', 'Livewire', 'Alpine.js', 'MySQL', 'TensorFlow.js'],
     shortName: { id: 'HRIS', en: 'HRIS' },
     blurb: {
@@ -181,6 +184,7 @@ export const projects = [
     site: null,
     repo: null,
     image: '/assets/img/rme1.png',
+    imageSize: [1901, 860],
     tech: ['Laravel', 'JavaScript', 'MySQL', 'Livewire'],
     shortName: { id: 'RME', en: 'EMR' },
     blurb: {
@@ -231,6 +235,7 @@ export const projects = [
     site: null,
     repo: 'https://github.com/Utsmanseff/Sistem-Informasi-Kepegawaian',
     image: '/assets/img/sigap.jpg',
+    imageSize: [1280, 526],
     tech: ['Laravel', 'Filament', 'Livewire', 'MySQL', 'Tailwind CSS'],
     shortName: { id: 'SIGAP', en: 'SIGAP' },
     blurb: {
@@ -278,6 +283,7 @@ export const projects = [
     site: null,
     repo: 'https://github.com/Utsmanseff/Sistem-Informasi-Manajemen-Aset',
     image: '/assets/img/aset.jpg',
+    imageSize: [1280, 581],
     tech: ['Laravel', 'JavaScript', 'MySQL'],
     shortName: { id: 'SIMASET', en: 'SIMASET' },
     blurb: {
@@ -319,6 +325,7 @@ export const projects = [
     site: null,
     repo: 'https://github.com/Utsmanseff/Aplikasi-Monitoring-Sertifikasi-Benih',
     image: '/assets/img/sertifikasi.png',
+    imageSize: [1893, 845],
     tech: ['Laravel', 'Filament', 'Livewire', 'MySQL'],
     shortName: { id: 'SIBENIH', en: 'SIBENIH' },
     blurb: {
@@ -345,6 +352,7 @@ export const projects = [
     site: null,
     repo: 'https://github.com/Utsmanseff/Sistem-Informasi-Manajemen-BanSos',
     image: null,
+    imageSize: null,
     tech: ['Laravel', 'JavaScript', 'MySQL'],
     shortName: { id: 'SIMBAS', en: 'SIMBAS' },
     blurb: {
@@ -368,7 +376,8 @@ export const projects = [
     access: 'none',
     site: null,
     repo: null,
-    image: null,
+    image: '/assets/img/psb-pendaftaran.png',
+    imageSize: [1899, 868],
     tech: ['Laravel', 'JavaScript', 'MySQL', 'Fonnte'],
     shortName: { id: 'PSB & CBT', en: 'Admissions & CBT' },
     blurb: {

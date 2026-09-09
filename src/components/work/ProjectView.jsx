@@ -60,7 +60,7 @@ export default function ProjectView({ project, prev, next }) {
         </p>
 
         {/* 3 — screenshot */}
-        <ScreenshotBlock src={project.image} alt={project.title[locale]} locale={locale} />
+        <ScreenshotBlock src={project.image} size={project.imageSize} alt={project.title[locale]} locale={locale} />
 
         {/* 4 — what I built */}
         <h2 className={SECTION}>{COPY.built[locale]}</h2>

@@ -227,6 +227,14 @@ jalan mundurnya `<div role="button" tabIndex={0}>` dengan handler `Enter` /
 Ini **diverifikasi di browser sungguhan paling awal**, sebelum sisanya
 dikerjakan. Bukan diasumsikan.
 
+**Terukur 2026-09-09, Chrome di panel, viewport 1280×800, di `/sistem`.**
+`<button>` dengan `transform-style: preserve-3d` melaporkan
+`transformStyle: "preserve-3d"`, dan anak ber-`translateZ(60px)` di dalamnya
+terukur **110×53px** — sama persis dengan `<div>` pembanding, dan lebih lebar
+dari 100px aslinya, jadi proyeksi perspektifnya benar-benar berlaku dan bukan
+sekadar kotak yang diratakan. Konteks 3D bertahan; jalan mundur `role="button"`
+tidak dipakai.
+
 ## 9. Cara mengujinya
 
 TDD: test dulu, lihat gagal, baru implementasi. Commit tiap task.

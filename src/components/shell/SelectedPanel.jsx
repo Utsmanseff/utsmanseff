@@ -52,15 +52,25 @@ export default function SelectedPanel({ system, locale, span }) {
   return (
     <aside className="bg-surface border-l border-rule grid grid-rows-[1fr_auto] min-h-0">
       <div className="overflow-y-auto min-h-0 p-[18px] flex flex-col gap-3">
-        <span className="font-mono text-[10px] tracking-[.12em] text-amber">
-          {COPY.selected[locale]}
-        </span>
-        <h2 className="font-display text-[26px] font-extrabold tracking-[-.03em] text-ink-bright m-0">
-          {system.shortName[locale]}
-        </h2>
-        <span className="font-mono text-[10.5px] text-muted">
-          {system.client} · {system.year}
-        </span>
+        {/* Satu blok, satu nama. Ini yang tumbuh jadi kepala halaman baca, dan
+            yang menyusut balik waktu pengunjung kembali. Nama ini TIDAK boleh
+            pindah ke Plate: view-transition-name meratakan tumpukan 3D plate
+            seluruhnya, dan menulis ulang preserve-3d di atasnya tidak menolong.
+            Terukur di Chrome 148 — lihat spec zoom §5.
+
+            Jaraknya diatur di dalam blok ini, karena gap-3 induknya sekarang
+            melihat ketiganya sebagai satu anak. */}
+        <div className="flex flex-col gap-3" style={{ viewTransitionName: 'sistem-aktif' }}>
+          <span className="font-mono text-[10px] tracking-[.12em] text-amber">
+            {COPY.selected[locale]}
+          </span>
+          <h2 className="font-display text-[26px] font-extrabold tracking-[-.03em] text-ink-bright m-0">
+            {system.shortName[locale]}
+          </h2>
+          <span className="font-mono text-[10.5px] text-muted">
+            {system.client} · {system.year}
+          </span>
+        </div>
         <AccessBadge access={system.access} locale={locale} />
         <div className="border-t border-rule" />
         <p className="text-[13.5px] text-body-soft m-0">{system.blurb[locale]}</p>

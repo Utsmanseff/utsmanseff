@@ -122,4 +122,26 @@ describe('projects dataset', () => {
     expect(bySlug('psb-walisongo').shortName.id).toBe('PSB & CBT');
   });
 
+  it('gives SIGAP and SIMASET the reading pages their content earns', () => {
+    expect(bySlug('sigap-bpn').tier).toBe('full');
+    expect(bySlug('simaset').tier).toBe('full');
+    expect(fullProjects).toHaveLength(7);
+  });
+
+  it('keeps the summary-only pair summary-only', () => {
+    expect(bySlug('sibenih').tier).toBe('brief');
+    expect(bySlug('simbas').tier).toBe('brief');
+    expect(bySlug('sibenih').built.id).toHaveLength(0);
+    expect(bySlug('simbas').built.id).toHaveLength(0);
+  });
+
+  it('says plainly that SIGAP does not pay anyone', () => {
+    // SIGAP mencatat dan menghitung penggajian bulanan, tetapi tidak
+    // menjalankan pembayaran. Batas itu harus ada di kalimatnya sendiri,
+    // bukan cuma di kepala penulisnya. Larangan payroll di PROGRESS.md
+    // berlaku untuk HRIS RSU Nirwana, bukan untuk sistem ini.
+    expect(bySlug('sigap-bpn').context.id).toMatch(/tidak menjalankan pembayaran/);
+    expect(bySlug('sigap-bpn').context.en).toMatch(/does not carry out payment/);
+  });
+
 });

@@ -194,25 +194,46 @@ export const projects = [
     clientKey: 'bpn',
     year: '2024',
     role: { id: 'Pengembang tunggal', en: 'Sole developer' },
-    tier: 'brief',
+    // Naik dari 'brief' pada 2026-09-10. Absensi terikat lokasi, data SDM,
+    // pengajuan lembur dan cuti, serta hitungan penggajian bulanan — isi
+    // setingkat IDRG dan RME, dan satu baris blurb tidak cukup menampungnya.
+    tier: 'full',
     access: 'none',
     site: null,
     image: '/assets/img/sigap.jpg',
     tech: ['Laravel', 'Filament', 'Livewire', 'MySQL', 'Tailwind CSS'],
     shortName: { id: 'SIGAP', en: 'SIGAP' },
     blurb: {
-      id: 'Kepegawaian dengan absensi yang terikat pada lokasi kerja.',
-      en: 'Staff management with attendance tied to the actual work site.',
+      id: 'Kepegawaian dengan absensi berbasis lokasi dan perhitungan gaji bulanan yang bersumber dari absensi, lembur, dan cuti.',
+      en: 'Staff management with location-based attendance and a monthly pay calculation drawn from attendance, overtime, and leave.',
     },
     title: {
-      id: 'Kepegawaian & Absensi Geolocation',
-      en: 'Staffing & Geolocation Attendance',
+      id: 'Kepegawaian dan Absensi Berbasis Lokasi',
+      en: 'Staffing and Location-Based Attendance',
     },
+    // Kalimat terakhir menyebut batasnya sendiri. Larangan payroll yang
+    // tertulis berlaku untuk HRIS RSU Nirwana; SIGAP sistem lain milik klien
+    // lain, dan ia memang menghitung — tetapi tidak membayarkan.
     context: {
-      id: 'Manajemen kepegawaian dengan absensi berbasis lokasi, supaya kehadiran tercatat sesuai lokasi kerja.',
-      en: 'Staff management with location-based attendance, so presence is recorded against the actual work site.',
+      id: 'Pengelolaan kepegawaian dengan absensi yang terikat pada lokasi kerja, sehingga kehadiran tercatat sesuai tempat pegawai bertugas. Data absensi, lembur, dan cuti digunakan sebagai dasar perhitungan gaji bulanan. Aplikasi ini mencatat dan menghitung komponennya, tetapi tidak menjalankan pembayaran.',
+      en: 'Staff management with attendance tied to the work site, so presence is recorded against where the employee actually works. Attendance, overtime, and leave data are the basis for the monthly pay calculation. The application records and calculates the components, but does not carry out payment.',
     },
-    built: { id: [], en: [] },
+    built: {
+      id: [
+        'Absensi yang terikat pada titik lokasi kerja',
+        'Pengelolaan data sumber daya manusia',
+        'Pengajuan lembur',
+        'Pengajuan cuti',
+        'Pencatatan penggajian bulanan yang dihitung dari absensi, lembur, dan cuti',
+      ],
+      en: [
+        'Attendance tied to the work site location',
+        'Human resource records',
+        'Overtime requests',
+        'Leave requests',
+        'Monthly pay records calculated from attendance, overtime, and leave',
+      ],
+    },
   },
   {
     slug: 'simaset',
@@ -220,22 +241,41 @@ export const projects = [
     clientKey: 'upt-kphl',
     year: '2025',
     role: { id: 'Pengembang tunggal', en: 'Sole developer' },
-    tier: 'brief',
+    // Naik dari 'brief' pada 2026-09-10, bersama SIGAP. Kode QR per unit dan
+    // depresiasi yang terhitung sendiri tidak muat di satu baris blurb.
+    tier: 'full',
     access: 'none',
     site: null,
     image: '/assets/img/aset.jpg',
     tech: ['Laravel', 'JavaScript', 'MySQL'],
     shortName: { id: 'SIMASET', en: 'SIMASET' },
     blurb: {
-      id: 'Aset organisasi dengan pelacakan lokasi, kondisi, jadwal perawatan, dan pelaporan.',
-      en: 'Organisational assets with location and condition tracking, maintenance scheduling and reporting.',
+      id: 'Pengelolaan aset dengan kode QR per unit, pelacakan lokasi dan kondisi, jadwal perawatan, serta perhitungan depresiasi.',
+      en: 'Asset management with a QR code per unit, location and condition tracking, maintenance scheduling, and depreciation calculation.',
     },
-    title: { id: 'Manajemen Aset & Inventaris', en: 'Asset & Inventory Management' },
+    title: { id: 'Manajemen Aset dan Inventaris', en: 'Asset and Inventory Management' },
     context: {
-      id: 'Pengelolaan aset organisasi dengan pelacakan lokasi dan kondisi, jadwal perawatan, dan pelaporan.',
-      en: 'Organisational asset management with location and condition tracking, maintenance scheduling and reporting.',
+      id: 'Pengelolaan aset milik UPT-KPHL Kapuas Kahayan, mencakup pencatatan lokasi dan kondisi setiap aset, penjadwalan perawatan, serta pelaporan. Setiap aset memiliki kode QR yang dapat dicetak dan ditempel pada unitnya, dan pemindaian kode tersebut membuka rincian aset yang bersangkutan.',
+      en: 'Asset management for UPT-KPHL Kapuas Kahayan, covering location and condition records for each asset, maintenance scheduling, and reporting. Every asset has a QR code that can be printed and attached to the unit, and scanning that code opens the details of the asset concerned.',
     },
-    built: { id: [], en: [] },
+    built: {
+      id: [
+        'Pencatatan aset beserta lokasi dan kondisinya',
+        'Kode QR per unit aset, dapat dicetak dan ditempel',
+        'Pemindaian kode QR yang langsung membuka rincian aset',
+        'Penjadwalan perawatan aset',
+        'Perhitungan nilai depresiasi secara otomatis',
+        'Pelaporan aset',
+      ],
+      en: [
+        'Asset records with location and condition',
+        'A QR code per asset unit, ready to print and attach',
+        "QR scanning that opens the asset's details directly",
+        'Maintenance scheduling',
+        'Automatic depreciation calculation',
+        'Asset reporting',
+      ],
+    },
   },
   {
     slug: 'sibenih',

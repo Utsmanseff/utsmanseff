@@ -52,7 +52,8 @@ describe('Shell', () => {
 
   it('refuses to offer a page for a summary-only system', () => {
     renderShell();
-    fireEvent.click(railRow(/SIGAP/));
+    // SIBENIH, bukan SIGAP: SIGAP punya halaman baca sejak 2026-09-10.
+    fireEvent.click(railRow(/SIBENIH/));
     expect(screen.getByText(/RINGKASAN SAJA/)).toBeInTheDocument();
     expect(screen.queryByRole('link', { name: /BUKA HALAMAN/ })).toBeNull();
   });
@@ -92,7 +93,7 @@ describe('Shell', () => {
   it('says why a summary-only system will not open', () => {
     renderShell();
     const input = screen.getByLabelText(/konsol/i);
-    fireEvent.change(input, { target: { value: 'open sigap' } });
+    fireEvent.change(input, { target: { value: 'open sibenih' } });
     fireEvent.keyDown(input, { key: 'Enter' });
     expect(screen.getByText(/ringkasan saja · tidak ada halaman/i)).toBeInTheDocument();
   });

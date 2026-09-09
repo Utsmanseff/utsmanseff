@@ -26,8 +26,10 @@ describe('SystemsDocument', () => {
   it('links only the systems that have a reading page', () => {
     renderDoc();
     expect(screen.getByRole('link', { name: /HRIS/ })).toHaveAttribute('href', '/kerja/hris-nirwana');
-    expect(screen.queryByRole('link', { name: /SIGAP/ })).toBeNull();
-    expect(screen.getByText('SIGAP')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /SIGAP/ })).toHaveAttribute('href', '/kerja/sigap-bpn');
+    // SIBENIH tetap ringkasan: namanya ada, tautannya tidak.
+    expect(screen.queryByRole('link', { name: /SIBENIH/ })).toBeNull();
+    expect(screen.getByText('SIBENIH')).toBeInTheDocument();
   });
 
   it('opens with the identity band, not the old one-line head', () => {

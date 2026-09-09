@@ -51,7 +51,7 @@ export default function YearGroup({ year, systems, locale, dimmed }) {
                   href={s.repo}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="shrink-0 font-mono text-[9px] uppercase tracking-wide text-amber-ink px-2 py-3 -my-1"
+                  className="shrink-0 font-mono text-[9px] uppercase tracking-wide text-amber-ink px-2 py-[15px] -my-2"
                 >
                   KODE ↗
                 </a>

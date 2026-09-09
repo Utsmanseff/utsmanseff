@@ -62,8 +62,14 @@ describe('ProjectView', () => {
     // /sistem, not /. Since the gate moved onto `/`, a link labelled "all
     // systems" that landed there showed a name and two buttons instead of the
     // systems it promised.
+    //
+    // It now carries the system it came from, so the map can select that plate
+    // again and have something to morph back into. The path is what this test
+    // guards; PaperHeader.test.jsx guards the query.
     render(<ProjectView project={project} prev={null} next={null} />);
-    expect(screen.getByRole('link', { name: /SEMUA SISTEM/ })).toHaveAttribute('href', '/sistem');
+    const back = screen.getByRole('link', { name: /SEMUA SISTEM/ });
+    expect(back.getAttribute('href')).toMatch(/^\/sistem(\?|$)/);
+    expect(back.getAttribute('href')).toContain('pilih=rsu-nirwana-web');
   });
 
   it('numbers its three sections and links back to all systems', () => {

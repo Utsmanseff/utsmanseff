@@ -34,7 +34,7 @@ export default function ProjectView({ project, prev, next }) {
 
   return (
     <div className="max-w-3xl mx-auto px-5 pb-20">
-      <PaperHeader locale={locale} />
+      <PaperHeader locale={locale} slug={project.slug} />
 
       <FadeIn as="article">
         {/* 1 — head. Satu blok, satu nama: ini yang ditumbuhi panel sistem

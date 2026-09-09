@@ -14,11 +14,23 @@ import LangSwitcher from '@/components/nav/LangSwitcher';
 // stays true at every width.
 const BACK = { id: '← SEMUA SISTEM', en: '← ALL SYSTEMS' };
 
-export default function PaperHeader({ locale }) {
+export default function PaperHeader({ locale, slug }) {
+  // Halaman baca tahu slug-nya sendiri, jadi tautan ini bisa mengembalikan
+  // pengunjung ke peta dengan sistem itu terpilih — dan panel terpilih itulah
+  // yang membawa nama transisinya, jadi ada yang dimorf balik.
+  //
+  // Sudut kamera TIDAK ikut: halaman baca tidak tahu sudut yang ditinggalkan,
+  // dan menaruhnya di URL /kerja/* akan mengotori halaman yang punya canonical
+  // dan metadata sendiri. Tombol kembali browser yang memulihkan keduanya.
+  //
+  // URLSearchParams, bukan disambung sendiri: slug beraksara `&` akan memotong
+  // query jadi dua.
+  const href = slug ? `/sistem?${new URLSearchParams({ pilih: slug })}` : '/sistem';
+
   return (
     <header className="flex items-center justify-between py-6">
       <Link
-        href="/sistem"
+        href={href}
         className="font-mono text-[11px] text-muted hover:text-amber transition-colors duration-500"
       >
         {BACK[locale]}

@@ -14,6 +14,8 @@
 
 **Dev server:** sudah jalan milik Utsman di port 3000. Jangan menjalankan server sendiri. Kalau `globals.css` berubah dan token terlihat basi, minta Utsman `Ctrl+C` lalu `Remove-Item -Recurse -Force .next` di PowerShell.
 
+Server perlu berhenti **satu kali saja**, di Task 11 Step 4, untuk `npm run build` — build menulis ke `.next` yang dipegang dev server, dan Windows mengunci berkas di dalamnya selama ia hidup. Task 1–10 seluruhnya lewat HMR. Task 10 menyentuh `globals.css` tapi cuma menambah satu aturan ke blok `@media` yang sudah ada, bukan token `@theme` baru, jadi biasanya tidak perlu membuang cache.
+
 **Titik awal:** 156 test hijau, 24 berkas. `npx eslint src --max-warnings=0` bersih.
 
 ---
@@ -1685,7 +1687,12 @@ git commit -m "feat(map): raise the stack layer by layer on arrival"
 **Files:**
 - Modify: `docs/PROGRESS.md`
 
-- [ ] **Step 1: Suite penuh, lint, build**
+Urutannya penting. `npm run build` menulis ke `.next` yang sedang dipegang dev
+server Utsman, dan di Windows berkas di dalamnya terkunci selama server hidup.
+Jadi semua yang butuh server hidup — `curl` dan browser — dikerjakan **lebih
+dulu**, dan build paling belakang, sesudah server dihentikan.
+
+- [ ] **Step 1: Suite penuh dan lint (server tidak perlu disentuh)**
 
 ```bash
 npx vitest run
@@ -1695,11 +1702,7 @@ npx vitest run
 npx eslint src --max-warnings=0
 ```
 
-```bash
-npm run build
-```
-
-Diharapkan: semua hijau, dan `/` serta `/sistem` tetap terdaftar `○ (Static)`.
+Diharapkan: semua hijau, keluaran lint kosong.
 
 - [ ] **Step 2: Peta masih utuh tanpa JavaScript**
 
@@ -1744,7 +1747,32 @@ const afterTap = document.querySelector('aside h2')?.textContent ?? null;
 
 Diharapkan: `stackRose` positif, `edgeAfter` berbeda dari `edgeBefore`, `angle` mendarat di salah satu dari `-55/-40/-25`, `afterDrag` `null`, `afterTap` berisi nama sistem.
 
-- [ ] **Step 4: Serahkan rasanya ke Utsman**
+- [ ] **Step 4: Hentikan server, build, jalankan lagi**
+
+Baru di sini server perlu berhenti. Minta Utsman:
+
+> Semua yang butuh server hidup sudah selesai. `Ctrl+C` di terminal dev server,
+> lalu:
+> ```powershell
+> npm run build
+> ```
+> lalu `npm run dev` lagi.
+
+Kalau build gagal dengan `EPERM` atau `EBUSY` di sekitar `.next`, servernya belum
+benar-benar mati — Windows mengunci berkas di dalam `.next` selama ia hidup.
+Minta Utsman memastikan prosesnya berhenti, lalu:
+
+```powershell
+Remove-Item -Recurse -Force .next
+```
+
+dan build lagi.
+
+Diharapkan: build sukses, `/` dan `/sistem` tetap terdaftar `○ (Static)`. Kalau
+salah satunya berubah jadi `ƒ (Dynamic)`, ada yang membaca sesuatu waktu render
+yang tidak boleh dibaca — berhenti dan lapor sebelum menulis PROGRESS.
+
+- [ ] **Step 5: Serahkan rasanya ke Utsman**
 
 Tiga angka tidak bisa diputuskan dari panel dan harus dilihat di browsernya sendiri:
 
@@ -1754,7 +1782,7 @@ Tiga angka tidak bisa diputuskan dari panel dan harus dilihat di browsernya send
 
 Sebutkan ketiganya beserta nama berkasnya, dan tunggu jawabannya sebelum menulis PROGRESS.
 
-- [ ] **Step 5: Perbarui `docs/PROGRESS.md`**
+- [ ] **Step 6: Perbarui `docs/PROGRESS.md`**
 
 Yang harus berubah:
 
@@ -1766,7 +1794,7 @@ Yang harus berubah:
 - **Pelajaran** — tambahkan apa pun yang ternyata mahal selama Task 1–10, terutama hasil pengukuran `preserve-3d` di Task 1.
 - **Jumlah test** — angka sungguhan dari Step 1, bukan perkiraan 180 di rencana ini.
 
-- [ ] **Step 6: Commit**
+- [ ] **Step 7: Commit**
 
 ```bash
 git add docs/PROGRESS.md

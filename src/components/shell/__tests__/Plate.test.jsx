@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Plate from '@/components/shell/Plate';
 
@@ -63,5 +63,53 @@ describe('Plate', () => {
   it('dims without disappearing', () => {
     const { container } = renderPlate({ dimmed: true });
     expect(container.firstChild).toHaveStyle({ opacity: '0.34' });
+  });
+
+  // 4 x 7 rapat, 4 x 11 terbuka: lapis teratas dari lima lapis.
+  const topLayerZ = (container) => {
+    const layers = container.querySelectorAll('[data-layer]');
+    return layers[layers.length - 1].getAttribute('style');
+  };
+
+  it('keeps the stack tight until something asks for it', () => {
+    const { container } = renderPlate();
+    expect(topLayerZ(container)).toContain('translateZ(28px)');
+  });
+
+  it('opens the stack under the pointer', () => {
+    const { container } = renderPlate();
+    fireEvent.pointerEnter(container.firstChild);
+    expect(topLayerZ(container)).toContain('translateZ(44px)');
+  });
+
+  it('closes it again when the pointer leaves', () => {
+    const { container } = renderPlate();
+    fireEvent.pointerEnter(container.firstChild);
+    fireEvent.pointerLeave(container.firstChild);
+    expect(topLayerZ(container)).toContain('translateZ(28px)');
+  });
+
+  it('opens the stack for the keyboard too', () => {
+    const { container } = renderPlate();
+    fireEvent.focus(container.firstChild);
+    expect(topLayerZ(container)).toContain('translateZ(44px)');
+  });
+
+  it('keeps the selected plate open with no pointer on it', () => {
+    const { container } = renderPlate({ selected: true });
+    expect(topLayerZ(container)).toContain('translateZ(44px)');
+  });
+
+  it('carries its label up with the stack', () => {
+    const { container } = renderPlate();
+    const label = () => container.querySelector('[data-plate-label]').getAttribute('style');
+    expect(label()).toContain('translateZ(32px)');
+    fireEvent.pointerEnter(container.firstChild);
+    expect(label()).toContain('translateZ(54px)');
+  });
+
+  it('lifts a selected plate further than a hovered one', () => {
+    const { container } = renderPlate({ selected: true });
+    expect(container.firstChild.getAttribute('style')).toContain('translateZ(10px)');
   });
 });

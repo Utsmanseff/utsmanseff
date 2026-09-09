@@ -93,7 +93,7 @@ kembali browser bekerja.
 | Spec tautan repo | `docs/superpowers/specs/2026-09-10-tautan-repo-design.md` |
 | Lima README siap tempel ke repo GitHub | `docs/readme-repo/` |
 
-Keadaan: **284 test hijau, 33 berkas**, `npx eslint src --max-warnings=0` bersih,
+Keadaan: **295 test hijau, 34 berkas**, `npx eslint src --max-warnings=0` bersih,
 `npm run build` sukses — dijalankan Utsman sendiri pada 2026-09-10.
 
 Jumlah test turun dari 165 ke 92 di Task 15 karena 73 test kanvas ikut dihapus
@@ -330,6 +330,31 @@ labelnya tetap dijaga `SelectedPanel.test.jsx`.
   diajukan ke Utsman pada 2026-09-09 dan tidak dipersoalkan; kalau nanti terasa
   janggal, jalan keluarnya membuat tautan itu memanggil `history.back()` waktu
   riwayatnya memang datang dari peta — bukan menaruh sudut di URL halaman baca.
+- **Diagram IDRG: batas layanan itu inti gambarnya, bukan hiasan.**
+  `src/components/work/IdrgFlow.jsx`. Datanya menyebut hasil coding diagnosa
+  dikirim ke SatuSehat "melalui service tersendiri" — service itu **bukan**
+  layanan ini. Karena itu SIMRS, BPJS, SatuSehat **dan service pengirimnya**
+  berdiri di luar kotak amber, dan tidak boleh ada satu pun panah dari dalam
+  batas langsung ke SatuSehat. Dua test menjaganya, satu per tata letak, dengan
+  membaca koordinat `d` tiap `path` — bukan dengan mempercayai daftar `edges`.
+- **`viewBox` mendatar 728 sama dengan lebar kolom halaman baca, dan itu
+  disengaja.** Skalanya jadi 1:1, sehingga teks 11px benar-benar terbaca 11px.
+  Melebarkan `viewBox` akan mengecilkan hurufnya tanpa satu pun test melihatnya.
+  Kotak `relay` sendirian lebih lebar (160) karena "Service tersendiri" label
+  terpanjang, dan memendekkannya akan membuang justru bagian yang paling
+  penting.
+- **Nomor bagian halaman baca dihitung, bukan ditulis.** IDRG menyisipkan
+  `02 ALUR`, jadi `YANG DIBANGUN` dan `STACK` bergeser jadi 03 dan 04 di
+  halaman itu saja. Nomor yang ditulis tangan akan mengulang 02.
+- **Diagram IDRG belum pernah dilihat mata siapa pun.** Panel browser di sesi
+  2026-09-10 berhenti menghasilkan frame baru: screenshot kembali identik walau
+  `scrollY` sudah 873, dan itu **bukan** kasus `document.hidden` yang biasa —
+  pengukuran DOM tetap benar sementara gambarnya basi. Yang sudah terbukti
+  lewat angka: skala 1:1, tidak ada label meluber dari kotaknya, tidak ada
+  simpul bertindihan, batas memuat tepat tiga simpul dalam dan mengecualikan
+  empat simpul luar, satu-satunya panah ke SatuSehat berasal dari service
+  tersendiri, dan halaman tidak menggulir ke samping. Yang **belum** terbukti:
+  apakah gambarnya enak dilihat. Menunggu mata Utsman.
 - **`README.md` memikul dua tugas, dan urutannya penting.** Repo ini
   `Utsmanseff/utsmanseff` — repo profil GitHub **dan** sumber porto. Berkas
   `README.md`-nya yang tayang di halaman profil. Kartu profil (About Me,

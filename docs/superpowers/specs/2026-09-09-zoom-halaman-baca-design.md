@@ -15,8 +15,6 @@ Yang **tidak** termasuk:
 
 - Filter dan rail log yang pulih waktu kembali. Kembali memberi peta yang bersih
   kecuali plate terpilih dan sudut kameranya.
-- Zoom dari tabel datar. Tidak ada plate di sana untuk dimorf; transisinya turun
-  jadi lintas-pudar biasa, dan itu benar.
 - Morf antar halaman baca (`WorkFooterNav` prev/next). Dua sistem berbeda yang
   saling memorf menyiratkan hubungan yang tidak ada.
 - Teks legenda dan catatan rail (antrean nomor 2), kontras label tahun (nomor 3).
@@ -46,8 +44,7 @@ benar-benar memanggil API-nya.
 | `src/app/sistem/page.jsx` | diubah | membaca `?pilih=` dan `?sudut=` |
 | `src/components/shell/Shell.jsx` | diubah | `openSystem`, satu pintu dua pemanggil; `angleRef` |
 | `src/components/shell/MapScene.jsx` | diubah | menulis `camera.rotZ` ke ref titipan |
-| `src/components/shell/Plate.jsx` | diubah | `viewTransitionName` waktu terpilih |
-| `src/components/shell/SelectedPanel.jsx` | diubah | prop `onOpen`, klik kiri dicegat |
+| `src/components/shell/SelectedPanel.jsx` | diubah | membawa `sistem-aktif`; prop `onOpen`, klik kiri dicegat |
 | `src/components/work/ProjectView.jsx` | diubah | blok kepala bernama; `data-nav` saat mount |
 | `src/components/work/PaperHeader.jsx` | diubah | `← SEMUA SISTEM` membawa `?pilih=` |
 | `src/components/work/WorkFooterNav.jsx` | diubah | membersihkan `data-nav` |
@@ -94,21 +91,28 @@ Satu nama, `sistem-aktif`. **Tepat satu elemen boleh membawanya pada satu
 waktu** — kalau dua, browser membatalkan transisinya diam-diam, tanpa error.
 Keunikannya dijamin lewat bentuk kode, bukan kehati-hatian.
 
-**Di peta.** `Plate` menulisnya inline, dan hanya kalau terpilih:
+**Di cangkang.** Blok judul `SelectedPanel` yang membawanya — bukan plate.
+Plate sudah dicoba dan meratakan tumpukannya; lihat §5.
 
 ```js
-viewTransitionName: selected ? 'sistem-aktif' : undefined
+<div style={{ viewTransitionName: 'sistem-aktif' }}>
 ```
 
-`selected` datang dari satu `useState` di `Shell` yang menyimpan satu slug, jadi
-dua plate tidak bisa terpilih bersamaan.
+Panel hanya merender blok itu kalau ada sistem terpilih, dan `selected` adalah
+satu `useState` di `Shell` yang menyimpan satu slug. Jadi elemen itu ada nol atau
+satu kali, tidak pernah dua.
+
+Konsekuensi yang menguntungkan: `SelectedPanel` berdiri di **kedua** view, jadi
+morfnya juga bekerja dari tabel datar — bukan cuma dari peta.
 
 **Di halaman baca.** Blok kepala `ProjectView` — baris `klien · tahun · peran`,
 `<h1>`, dan `AccessBadge` — dibungkus satu `<div>` bernama sama. Blok itu dipilih
 karena isinya sepadan dengan isi plate: nama sistem, klien, aksesnya.
 
-**Dari tabel datar** tidak ada plate di pohon, jadi tidak ada yang membawa nama
-di sisi lama dan transisinya turun jadi lintas-pudar. Benar, bukan bug.
+**Kalau belum ada yang terpilih**, tidak ada yang membawa nama di sisi lama dan
+transisinya turun jadi lintas-pudar biasa. Itu cuma bisa terjadi lewat konsol
+(`open <nama>` pada peta yang bersih), karena tautan `BUKA HALAMAN` sendiri hanya
+ada di dalam panel yang terpilih. Benar, bukan bug.
 
 ## 3. Arah dan CSS
 
@@ -248,7 +252,9 @@ TDD: test dulu, lihat gagal, baru implementasi. Commit tiap task.
   kalau sedang di tabel datar; `open <nama>` lewat pintu yang sama.
 - `SelectedPanel.test.jsx` — klik kiri polos memanggil `onOpen` dan mencegah
   bawaan; ctrl-klik tidak memanggilnya dan membiarkan tautan bekerja.
-- `Plate.test.jsx` — `viewTransitionName` ada hanya waktu `selected`.
+- `SelectedPanel.test.jsx` — blok judul membawa `sistem-aktif` waktu ada sistem
+  terpilih, dan tidak ada elemen bernama sama sekali waktu panel menampilkan blok
+  catatan.
 - `MapScene.test.jsx` — sudut kamera terkini tertulis ke ref titipan.
 - `ProjectView.test.jsx` — blok kepala membawa `sistem-aktif`; `data-nav` jadi
   `zoom` sesudah mount; `← SEMUA SISTEM` menunjuk `/sistem?pilih=<slug>`;
@@ -258,8 +264,8 @@ Perkiraan 197 → sekitar 215.
 
 ## 7. Yang bisa dibuktikan dari panel browser
 
-1. Spike: plate dengan `view-transition-name` tetap punya tumpukan 3D — lapisnya
-   masih terpisah di layar.
+1. Spike: sudah dijalankan dan **gagal** — plate tidak bisa membawa nama itu.
+   Nama pindah ke `SelectedPanel`, yang datar dan tidak berisiko.
 2. Tepat satu elemen membawa `sistem-aktif` pada satu waktu — sapu DOM dengan
    `getComputedStyle(el).viewTransitionName`, di peta dan di halaman baca.
 3. Klik pintu → URL jadi `/kerja/<slug>`; `history.back()` → `/sistem?pilih=…&sudut=…`,

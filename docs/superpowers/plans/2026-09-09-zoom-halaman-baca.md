@@ -25,13 +25,12 @@
 | `src/lib/nav/moveTo.js` | pindah nama dari `slideTo.js` | Satu-satunya tempat yang tahu tentang View Transitions API |
 | `src/lib/nav/__tests__/moveTo.test.js` | pindah nama | |
 | `src/app/globals.css` | diubah | Dua keyframes pudar, aturan pasangan bernama, tambalan reduced-motion |
-| `src/components/shell/Plate.jsx` | diubah | Membawa `sistem-aktif` waktu terpilih |
 | `src/components/work/ProjectView.jsx` | diubah | Blok kepala bernama, `data-nav` saat mount, `slug` ke `PaperHeader` |
 | `src/components/work/WorkFooterNav.jsx` | diubah | Membersihkan `data-nav` |
 | `src/components/work/PaperHeader.jsx` | diubah | Prop `slug` opsional, tautan membawa `?pilih=` |
 | `src/components/shell/MapScene.jsx` | diubah | Menulis `camera.rotZ` ke ref titipan; sudut awal dari prop |
 | `src/components/shell/Shell.jsx` | diubah | `angleRef`, `openSystem`, prop `picked` dan `angle` |
-| `src/components/shell/SelectedPanel.jsx` | diubah | Prop `onOpen`, klik kiri dicegat |
+| `src/components/shell/SelectedPanel.jsx` | diubah | Membawa `sistem-aktif`; prop `onOpen`, klik kiri dicegat |
 | `src/app/sistem/page.jsx` | diubah | Membaca `?pilih=` dan `?sudut=` |
 | `src/app/page.jsx`, `src/components/shell/TopBar.jsx` | diubah | Ikut nama baru `moveTo` |
 
@@ -326,48 +325,88 @@ git commit -m "feat(nav): give the morph its timing, and its reduced-motion esca
 
 ---
 
-## Task 4: Plate terpilih membawa nama transisi
+## Task 4: Panel kanan membawa nama transisi
+
+**Task 1 gagal**, jadi sasarannya berpindah: bukan `Plate`, melainkan blok judul
+`SelectedPanel`. Plate meratakan tumpukan 3D-nya begitu diberi nama, dan itu
+tidak bisa ditimpa. `SelectedPanel` datar, di aliran normal, dan di situ pula
+tombol `BUKA HALAMAN` berdiri.
 
 **Files:**
-- Modify: `src/components/shell/Plate.jsx`
-- Test: `src/components/shell/__tests__/Plate.test.jsx`
+- Modify: `src/components/shell/SelectedPanel.jsx`
+- Test: `src/components/shell/__tests__/SelectedPanel.test.jsx` (baru)
 
 - [ ] **Step 1: Tulis test yang gagal**
 
-Tambahkan ke `describe('Plate', …)` di `src/components/shell/__tests__/Plate.test.jsx`:
+Buat `src/components/shell/__tests__/SelectedPanel.test.jsx`:
 
 ```jsx
-  it('carries the transition name when it is the selected system', () => {
-    const { container } = renderPlate({ selected: true });
-    expect(container.firstChild.style.viewTransitionName).toBe('sistem-aktif');
+import { describe, it, expect } from 'vitest';
+import { render } from '@testing-library/react';
+import SelectedPanel from '@/components/shell/SelectedPanel';
+
+const system = {
+  slug: 'hris-nirwana', client: 'RSU Nirwana', year: '2026', access: 'internal',
+  tier: 'full', tech: ['Laravel'],
+  shortName: { id: 'HRIS', en: 'HRIS' },
+  blurb: { id: 'Ringkas.', en: 'Short.' },
+};
+
+const named = (container) => [...container.querySelectorAll('*')]
+  .filter((el) => el.style.viewTransitionName === 'sistem-aktif');
+
+describe('SelectedPanel', () => {
+  it('names its title block, so the reading page has something to grow from', () => {
+    const { container } = render(
+      <SelectedPanel system={system} locale="id" span="2024-2026" />,
+    );
+    expect(named(container)).toHaveLength(1);
+    expect(named(container)[0].textContent).toContain('HRIS');
   });
 
-  it('carries no name at all when it is not selected', () => {
-    const { container } = renderPlate();
-    expect(container.firstChild.style.viewTransitionName).toBe('');
+  it('names nothing while it is still the record block', () => {
+    // Two elements carrying one name make the browser cancel the transition
+    // without an error, so the empty case is a guard, not a formality.
+    const { container } = render(
+      <SelectedPanel system={null} locale="id" span="2024-2026" />,
+    );
+    expect(named(container)).toHaveLength(0);
   });
+});
 ```
-
-Dua plate yang membawa nama sama membuat browser membatalkan transisinya diam-diam, jadi test kedua bukan pelengkap — ia yang menjaga keunikan itu.
 
 - [ ] **Step 2: Jalankan, pastikan gagal**
 
 ```bash
-npx vitest run src/components/shell/__tests__/Plate.test.jsx
+npx vitest run src/components/shell/__tests__/SelectedPanel.test.jsx
 ```
 
-Diharapkan: FAIL — `expected '' to be 'sistem-aktif'`.
+Diharapkan: FAIL — `expected [] to have a length of 1`.
 
 - [ ] **Step 3: Implementasi**
 
-Di `src/components/shell/Plate.jsx`, pada `style` `<button>` pembungkus, tambahkan satu baris setelah `transform`:
+Di `src/components/shell/SelectedPanel.jsx`, bungkus tiga elemen judul yang sudah
+ada — `TERPILIH`, `<h2>`, dan baris `klien · tahun` — dengan satu `<div>`
+bernama. `AccessBadge` dan seterusnya tetap di luarnya. Karena ketiganya kini di
+dalam satu `<div>`, jarak antar-barisnya tidak lagi diatur `gap-3` induknya, jadi
+blok itu membawa `flex flex-col gap-3` sendiri:
 
 ```jsx
-        transform: `translateZ(${lift}px)`,
-        // Hanya plate terpilih yang membawanya, dan hanya satu plate bisa
-        // terpilih. Dua elemen dengan nama yang sama membuat browser
-        // membatalkan transisinya tanpa error.
-        viewTransitionName: selected ? 'sistem-aktif' : undefined,
+        {/* Satu blok, satu nama. Ini yang ditumbuhi jadi kepala halaman baca,
+            dan yang menyusut balik waktu pengunjung kembali. Nama ini TIDAK
+            boleh pindah ke Plate: view-transition-name meratakan tumpukan 3D
+            plate dan itu tidak bisa ditimpa — terukur, lihat spec §5. */}
+        <div className="flex flex-col gap-3" style={{ viewTransitionName: 'sistem-aktif' }}>
+          <span className="font-mono text-[10px] tracking-[.12em] text-amber">
+            {COPY.selected[locale]}
+          </span>
+          <h2 className="font-display text-[26px] font-extrabold tracking-[-.03em] text-ink-bright m-0">
+            {system.shortName[locale]}
+          </h2>
+          <span className="font-mono text-[10.5px] text-muted">
+            {system.client} · {system.year}
+          </span>
+        </div>
 ```
 
 - [ ] **Step 4: Jalankan seluruh suite**
@@ -386,26 +425,33 @@ npx eslint src --max-warnings=0
 
 - [ ] **Step 6: Verifikasi di browser**
 
-Muat ulang `/sistem`, lalu buktikan tepat satu elemen membawanya:
+Muat ulang `/sistem`, lalu buktikan tepat satu elemen membawanya — dan bahwa
+tumpukan plate **tidak** ikut rata:
 
 ```js
 const carriers = () => [...document.querySelectorAll('*')]
   .filter((el) => getComputedStyle(el).viewTransitionName === 'sistem-aktif');
-const before = carriers().length;
 const plate = document.querySelector('[data-plate-label]').closest('button');
+const layers = [...plate.querySelectorAll('[data-layer]')];
+const spread = () => +(layers[0].getBoundingClientRect().top
+  - layers[layers.length - 1].getBoundingClientRect().top).toFixed(2);
+
+const before = { named: carriers().length, spread: spread() };
 plate.click();
-await new Promise((r) => setTimeout(r, 400));
+await new Promise((r) => setTimeout(r, 600));
 const after = carriers();
-({ before, after: after.length, tag: after[0]?.tagName ?? null, isPlate: after[0] === plate });
+({ before, namedAfter: after.length, tag: after[0]?.tagName ?? null,
+   text: after[0]?.textContent.slice(0, 30) ?? null, spreadAfter: spread() });
 ```
 
-Diharapkan: `before: 0`, `after: 1`, `isPlate: true`.
+Diharapkan: `before.named: 0`, `namedAfter: 1`, teksnya memuat nama sistem, dan
+`spreadAfter` tetap positif — plate masih bertumpuk.
 
 - [ ] **Step 7: Commit**
 
 ```bash
-git add src/components/shell/Plate.jsx src/components/shell/__tests__/Plate.test.jsx
-git commit -m "feat(map): name the selected plate, so it has something to become"
+git add src/components/shell/SelectedPanel.jsx src/components/shell/__tests__/SelectedPanel.test.jsx
+git commit -m "feat(shell): name the panel that stands for the open system"
 ```
 
 ---
@@ -914,26 +960,21 @@ bawaan.
 
 - [ ] **Step 2: Tulis test `SelectedPanel` yang gagal**
 
-Buat `src/components/shell/__tests__/SelectedPanel.test.jsx`:
+Berkas `src/components/shell/__tests__/SelectedPanel.test.jsx` sudah dibuat Task 4.
+Tambahkan `vi`, `screen` dan `fireEvent` ke importnya, satu pembantu render, lalu
+tiga test baru ke dalam `describe` yang sudah ada:
 
 ```jsx
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import SelectedPanel from '@/components/shell/SelectedPanel';
-
-const system = {
-  slug: 'hris-nirwana', client: 'RSU Nirwana', year: '2026', access: 'internal',
-  tier: 'full', tech: ['Laravel'],
-  shortName: { id: 'HRIS', en: 'HRIS' },
-  blurb: { id: 'Ringkas.', en: 'Short.' },
-};
 
 const renderPanel = (props = {}) =>
   render(
-    <SelectedPanel system={system} locale="id" span="2024–2026" onOpen={vi.fn()} {...props} />,
+    <SelectedPanel system={system} locale="id" span="2024-2026" onOpen={vi.fn()} {...props} />,
   );
+```
 
-describe('SelectedPanel', () => {
+```jsx
   it('takes a plain click through the door instead of the link', () => {
     const onOpen = vi.fn();
     renderPanel({ onOpen });
@@ -960,7 +1001,6 @@ describe('SelectedPanel', () => {
     expect(screen.getByRole('link', { name: /BUKA HALAMAN/ }))
       .toHaveAttribute('href', '/kerja/hris-nirwana');
   });
-});
 ```
 
 - [ ] **Step 3: Jalankan keduanya, pastikan gagal**
@@ -1351,7 +1391,7 @@ git commit -m "docs: record the plate that becomes its page"
 
 ## Catatan urutan
 
-- **Task 1 mendahului semuanya.** Hasilnya bisa memindahkan nama dari `Plate` ke `SelectedPanel`, yang mengubah Task 4 dan sebagian Task 10.
+- **Task 1 sudah dijalankan dan gagal.** Nama pindah dari `Plate` ke `SelectedPanel`; Task 4 ditulis ulang dengan sasaran itu, dan `Plate.jsx` tidak disentuh sama sekali oleh rencana ini.
 - **Task 2 sebelum Task 8**, karena pintu memanggil `moveTo` dengan arah `zoom`.
 - **Task 3 sebelum apa pun yang diverifikasi di browser**, supaya aturan CSS-nya sudah ada waktu morf pertama dicoba. Ia tidak menambah test — CSS tidak diuji lewat happy-dom.
 - **Task 4 dan 5 boleh ditukar.** Keduanya memasang nama di sisi yang berbeda dan masing-masing hijau sendiri; transisinya baru bermakna setelah keduanya ada.

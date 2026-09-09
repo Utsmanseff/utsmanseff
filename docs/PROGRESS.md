@@ -7,7 +7,7 @@
 lalu `2026-09-08-gerbang-hero.md` **selesai, Task 1–8**, plus penyetelan gerbang
 setelah Utsman melihatnya, lalu `2026-09-08-gerbang-punya-url.md`
 **selesai, Task 1–6** (dikerjakan dengan Task 2 lebih dulu — lihat catatan di
-bawah).
+bawah), lalu `2026-09-09-peta-hidup.md` **selesai, Task 1–11**.
 Belum di-merge ke `main`, dan belum di-deploy.
 
 ## Bentuk sekarang
@@ -31,8 +31,12 @@ salah satunya.
 
 Perpindahan `/` ⇄ `/sistem` membawa arah: naik untuk mundur, turun untuk masuk,
 700ms, jarak `--nav-slide` `22vh`. Pintu lain — halaman baca, kontak — memotong
-seperti biasa, menunggu kerja zoom peta. **Geraknya belum pernah dilihat berjalan
-dari sesi ini**; lihat catatan di bawah.
+seperti biasa, menunggu kerja zoom peta. **Utsman sudah melihatnya berjalan di
+browsernya sendiri pada 2026-09-09: gesernya jalan dan `22vh` terasa pas.**
+
+Peta sekarang menjawab penunjuk. Badan plate adalah tombolnya, roda memutar
+kamera, tumpukan lapis membuka waktu hover dan fokus, tepinya berubah menurut
+sudut kamera, dan lapis naik berurutan waktu peta muncul.
 
 Gerbang berdiri di `/` sebagai halaman penuh, bukan lapisan: nama, peran, lokasi,
 rentang tahun, daftar stack, dan dua tombol yang menyebut tujuannya
@@ -52,6 +56,8 @@ kembali browser bekerja.
 | Filter murni (DOM-free) | `src/lib/shell/filters.js` |
 | Tabel perintah konsol | `src/lib/shell/commands.js` |
 | Geometri plate & skala | `src/lib/shell/layout.js` |
+| Kamera peta: seret, roda, snap | `src/lib/shell/useMapCamera.js` |
+| Warna tepi lapis dari sudut | `src/lib/shell/shading.js` |
 | Kosakata stack | `src/lib/data/tech.js` |
 | Gerbang, halaman `/` | `src/app/page.jsx` + `src/components/shell/Gate.jsx` |
 | Cangkang, halaman `/sistem` | `src/app/sistem/page.jsx` (+ `layout.js` untuk canonical) |
@@ -66,18 +72,21 @@ kembali browser bekerja.
 | Rencana gerbang, 8 task (selesai) | `docs/superpowers/plans/2026-09-08-gerbang-hero.md` |
 | Rencana URL gerbang, 6 task (selesai) | `docs/superpowers/plans/2026-09-08-gerbang-punya-url.md` |
 | Spec gerbang | `docs/superpowers/specs/2026-09-08-gerbang-hero-design.md` |
+| Rencana peta hidup, 11 task (selesai) | `docs/superpowers/plans/2026-09-09-peta-hidup.md` |
+| Spec peta hidup | `docs/superpowers/specs/2026-09-09-peta-hidup-design.md` |
 | Seluruh teks tampil, dua bahasa | `docs/superpowers/notes/2026-09-03-seluruh-isi-tulisan.md` |
 | Teks yang dibuang, diarsipkan | `docs/superpowers/notes/2026-09-03-arsip-bagian-sulit.md` |
 
-Keadaan: **156 test hijau, 24 berkas**, `npx eslint src --max-warnings=0` bersih,
+Keadaan: **201 test hijau, 27 berkas**, `npx eslint src --max-warnings=0` bersih,
 `npm run build` sukses: `/sistem` terdaftar **statis** (`○`), bersama `/`,
 `/kontak` dan lima halaman `/kerja/*`.
 
 Jumlah test turun dari 165 ke 92 di Task 15 karena 73 test kanvas ikut dihapus
 bersama kodenya. Itu bukan regresi. Naik ke 142 lewat rencana gerbang, lalu
 sempat turun ke 130 waktu 10 test lapisan gerbang dan 6 test `useGatePassed`
-ikut dibuang, lalu naik ke 145 lewat gaya scrollbar dan ke 156 lewat perpindahan
-naik-turun.
+ikut dibuang, lalu naik ke 145 lewat gaya scrollbar, ke 156 lewat perpindahan
+naik-turun, dan ke 201 lewat peta hidup (`shading` 7, `useMapCamera` 19,
+`MapScene` 3, sisanya `Plate`).
 
 ## Larangan yang tidak bisa ditawar
 
@@ -106,10 +115,16 @@ naik-turun.
 - **HRIS memakai TensorFlow.js**, bukan MediaPipe. Arsip teks lama masih
   menyebut MediaPipe dan tidak boleh dipakai apa adanya.
 - **Tiga tahun, bukan empat.** Freelance sejak akhir 2023.
-- **Kontrak gerak terbelah.** Yang digerakkan jari 1:1 tanpa easing (grup peta
-  sengaja tidak punya `transition`); yang bergerak sendiri memudar 700ms
-  `cubic-bezier(.22, 1, .36, 1)`; warna 180ms; `prefers-reduced-motion`
-  memangkas ke 1ms. Sejak 2026-09-08 ia **tidak lagi** menahan cangkang.
+- **Kontrak gerak terbelah.** Yang digerakkan jari 1:1 tanpa easing; yang
+  bergerak sendiri memudar 700ms `cubic-bezier(.22, 1, .36, 1)`; warna 180ms;
+  `prefers-reduced-motion` memangkas ke 1ms. Sejak 2026-09-08 ia **tidak lagi**
+  menahan cangkang.
+- **Grup peta punya `transition` hanya selama `camera.settling`.** Dulu ia
+  sengaja tidak punya sama sekali, dan itu benar selama jari menempel. Tapi snap
+  bukan jari — itu mesin yang bergerak sendiri, jadi ia dapat 700ms seperti gerak
+  mandiri lainnya. `useMapCamera` menyalakan `settling` selama snap saja dan
+  mematikannya lagi, supaya seretan berikutnya tetap nol easing. Jangan
+  memasangnya permanen.
 - **Tanpa JavaScript `/` **dan** `/sistem` harus tetap utuh.** Sudah diverifikasi
   lewat `curl`: HTML server keduanya memuat delapan sistem dan lima tautan
   `/kerja/*`. Server merender `PaperFallback`, bukan gerbang.
@@ -166,6 +181,32 @@ naik-turun.
   atau memberi track warna.
 - **Panah di tombol gerbang `aria-hidden`.** Nama aksesibelnya
   `LIHAT SISTEM · PETA`, tanpa "panah ke kanan" di belakang tiap label.
+- **Plate adalah satu `<button>`, dan lapisannya cuma hiasan.** Dulu hanya
+  `<button data-plate-label>` yang klikable. Sekarang pembungkusnya tombolnya dan
+  labelnya `<span>` — satu sistem, satu kontrol, sama seperti `UTSMAN` berhenti
+  jadi tautan. `<button>` **memelihara** `transform-style: preserve-3d`; sudah
+  diukur di Chrome 148, anak ber-`translateZ(60px)` di dalamnya terukur sama
+  persis dengan di dalam `<div>`. Jalan mundur `role="button"` tidak dipakai.
+- **`Plate` menghitung `topZ`-nya sendiri, bukan memakai `position.topZ`.**
+  `layout.js` menghitung `topZ` dari `LAYER_STEP` rapat (7px), padahal tumpukan
+  membuka ke 11px waktu hover, fokus, atau terpilih. Label harus naik bersama
+  tumpukannya, jadi `Plate` memakai `(layers - 1) * step` dari langkah yang
+  sedang berlaku. `layout.js` tetap mengekspor `topZ` dan `layerStep`, dan
+  keduanya tetap benar sebagai tinggi rapat — jangan dihapus.
+- **Makna menang atas shading di tepi lapis atas.** `shading.js` mewarnai empat
+  sisi tiap lapis dari `rotZ`, tapi lapis teratas plate publik tetap `#C97B3F`
+  dan yang terpilih tetap `#E8E0D0`, menutupi keempat sisinya. Amber dan krem itu
+  informasi, bukan kedalaman.
+- **Stagger masuk cuma waktu mount, bukan tiap filter berubah.** Delapan plate
+  yang mengulang animasi tiap chip ditekan itu kebisingan; peredupan filter sudah
+  punya bahasanya sendiri (opacity 700ms).
+- **Blok `prefers-reduced-motion` menolkan `transition-delay`, bukan cuma
+  durasi.** Lapis plate masuk dengan delay bertingkat `40ms × index`. Tanpa baris
+  itu, durasi jadi 0.01ms sementara lapis kelima tetap menunggu 160ms — gerak
+  yang dikurangi berubah jadi kedipan bertahap.
+- **`dragged()` menghitung jarak yang ditempuh, bukan jarak dari titik awal.**
+  Seret bolak-balik yang berakhir di tempat semula tetap seret, dan kliknya tetap
+  harus ditelan. Ambangnya 4px, dan `MapScene` yang memakainya — bukan `Plate`.
 
 ## Yang belum dikerjakan
 
@@ -174,20 +215,17 @@ kosong yang memang dirancang untuk itu.
 
 ### Antrean berikutnya, urut
 
-**1. Peta lebih interaktif.** Belum dispec, dan ini yang paling besar. Empat hal
-yang diminta Utsman:
+**1. Zoom masuk ke halaman baca, zoom keluar waktu kembali.** Sisa terakhir dari
+"peta lebih interaktif"; tiga butir lainnya — klik badan plate, roda memutar
+kamera, lapisan lebih bernyawa — sudah selesai lewat `2026-09-09-peta-hidup.md`.
+Belum dispec.
 
-  - **Klik badan plate, bukan cuma labelnya.** Sekarang cuma
-    `<button data-plate-label>` yang klikable; lapisannya mati. Tombol harus
-    tetap ada untuk keyboard.
-  - **Roda memutar kamera.** `onWheel` → `setRotZ`. Keputusan URL sudah jatuh dan
-    `/sistem` tidak pernah menggulir, jadi roda bebas dipakai. Catatan: di
-    gerbang roda sudah punya arti sendiri — gulir ke bawah membuka `/sistem`.
-  - **Lapisan lebih bernyawa.** `Plate.jsx` sekarang ramp lima warna datar.
-    Ingat: desain ini **tanpa bayangan** — kedalaman dari lapisan dan warna tepi.
-  - **Zoom masuk ke halaman baca, zoom keluar waktu kembali.** View Transitions
-    API. Chrome/Edge/Safari 18 dapat animasinya, Firefox navigasi biasa. Zoom
-    keluar butuh `rotZ`/`scale`/`selected` peta bertahan waktu kembali.
+View Transitions API. Chrome/Edge/Safari 18 dapat animasinya, Firefox navigasi
+biasa. Zoom keluar butuh `rotZ`/`scale`/`selected` peta bertahan waktu kembali,
+dan itu yang membuatnya menyeberang route — beda dari pekerjaan peta hidup yang
+seluruhnya di dalam `MapScene`/`Plate`. Kabel arahnya sudah ada di
+`src/lib/nav/slideTo.js` dan boundary `<ViewTransition>` di layout; yang belum
+ada adalah nama transisi per plate dan cara peta mengingat dirinya.
 
 **2. Teks legenda dan catatan rail.** Utsman menyebut keduanya kurang
 informatif: `AxisLegend` (`KEDALAMAN tahun · TINGGI stack` dst) dan catatan di
@@ -202,7 +240,37 @@ kalau memuat data pegawai atau pasien asli.
 
 **5. Merge ke `main` dan deploy.**
 
-### Perpindahan naik-turun — **selesai 2026-09-09, satu bagian belum dilihat**
+### Peta hidup — **selesai 2026-09-09**
+
+Sebelas task. Task 1 sengaja bukan fitur melainkan pengukuran: `<button>` yang
+meratakan konteks 3D akan membatalkan bentuk sembilan task sesudahnya, jadi itu
+diukur di browser sungguhan lebih dulu. Ternyata bertahan.
+
+Yang berubah: `Plate` jadi satu `<button>`; `useMapCamera` memegang seret, roda,
+debounce diam dan snap; `shading` mewarnai empat sisi tiap lapis dari `rotZ`;
+tumpukan membuka waktu hover, fokus dan terpilih; lapis naik berurutan waktu
+mount. `layout.js` tidak disentuh sama sekali.
+
+**Terukur di browser sungguhan pada 1280×800, lewat `javascript_tool`:** plate
+adalah `BUTTON` tanpa tombol bersarang dan kliknya mengisi panel; seret 100px
+memberi `rotZ -18` (`-40 + 100 × 0.22`) lalu snap `-25`; roda `deltaY 100`
+memberi `+12°` dan `deltaX 100` dengan `deltaY 8` memberi hal yang sama — sumbu
+dominan menang; dua elemen bergulir di cangkang tidak ikut bergerak waktu roda
+dipakai di peta; grup peta `transition: none` selama roda dan
+`transform 700ms var(--nav-ease)` selama snap, lalu `none` lagi; tumpukan naik
+**5,49px** di layar waktu membuka; sisi terang tepi berpindah kiri → bawah waktu
+kamera memutar 84°; seret lalu klik meninggalkan panel kosong sementara tekan
+tanpa geser memilih sistem; `transition-delay` lapis terbaca
+`0 / 0.04 / 0.08 / 0.12 / 0.16s`.
+
+**Belum terukur, dan jangan diklaim sudah:** rasa geraknya. Panel browser
+`document.hidden`, jadi easing 700ms tidak pernah berjalan di sana. Tiga angka
+menunggu mata Utsman: `WHEEL_PER_UNIT = 0.12`, `STAGGER_MS = 40`,
+`STEP_OPEN = 11`. Sisi `prefers-reduced-motion` untuk `transition-delay` juga
+belum diuji — aturannya terbukti ada di stylesheet, tapi jalurnya tidak aktif
+waktu diperiksa.
+
+### Perpindahan naik-turun — **selesai 2026-09-09, dan sudah dilihat berjalan**
 
 `↑ KEMBALI` di TopBar (dan `UTSMAN` berhenti jadi tautan), `slideTo` di
 `src/lib/nav/`, boundary `<ViewTransition>` di layout, empat `@keyframes` di
@@ -217,12 +285,11 @@ enam aturan `::view-transition-*` ada di stylesheet dengan durasi `0.7s`;
 `--nav-slide` sampai bernilai `22vh`; `npm run build` sukses dengan `/` dan
 `/sistem` tetap `○ Static`.
 
-**Belum terukur, dan jangan diklaim sudah:** bahwa gesernya terlihat. Panel
-browser melaporkan `document.hidden === true` dan Chrome membatalkan tiap
-transisi (`InvalidStateError`). Begitu juga `prefers-reduced-motion` untuk
-pseudo-element itu — `UserPreferencesMask` byte 0 terbaca `9E`, animasi Windows
-sedang menyala, jadi jalurnya tidak aktif waktu diperiksa. Keduanya perlu mata
-Utsman di browsernya sendiri, dan `22vh` mungkin perlu disetel setelah dilihat.
+**Dilihat Utsman di browsernya sendiri, 2026-09-09: gesernya jalan dan `22vh`
+terasa pas.** Tidak perlu disetel. Yang **masih** belum terukur cuma sisi
+`prefers-reduced-motion` untuk pseudo-element view-transition — animasi Windows
+sedang menyala (`UserPreferencesMask` byte 0 = `9E`) waktu diperiksa, jadi
+jalurnya tidak aktif. Jangan diklaim sudah.
 
 ### Gerbang punya URL — **selesai 2026-09-09**
 
@@ -331,6 +398,15 @@ dulu `/` selalu mendarat di dokumen kertas — plate tidak bergeser sama sekali,
   menangkap juga tautan GitHub `Utsmanseff` di `StatusBar`. Cocokkan persis.
 - **Chip filter yang aktif membawa `×` di labelnya.** `{ name: 'client:bpn' }`
   gagal setelah chip menyala; pakai `/^client:bpn/`.
+- **happy-dom menggabungkan longhand `border-*-color` jadi shorthand.** Mencari
+  `'border-top-color'` di dalam atribut `style` gagal walau kodenya benar —
+  yang tersimpan `border-color: #30383c #30383c #313a3e #3e474c`. Baca lewat
+  CSSOM (`el.style.borderLeftColor`), jangan mencari substring. Kerabat pelajaran
+  "assertion substring bisa lolos palsu", cuma arahnya terbalik: di sini ia
+  **gagal palsu**.
+- **Test yang membaca posisi lapis plate harus menunggu mount.** Lapis mulai rata
+  di `translateZ(0)` sampai `setTimeout(…, 0)` menyalakannya. Pembacaan langsung
+  sesudah `render` melaporkan keadaan sebelum masuk, bukan keadaan akhir.
 
 ### Tentang alat browser (mahal, berulang)
 
@@ -411,13 +487,28 @@ dulu `/` selalu mendarat di dokumen kertas — plate tidak bergeser sama sekali,
   melaporkan **1**, itu `border-l`-nya, bukan scrollbar.
 - **Satu rAF yang tergantung meracuni sisa sesi halaman itu.** Setelah skrip
   ber-rAF timeout, muat ulang halaman sebelum mengukur lagi.
+- **Transisi CSS biasa juga tidak beranjak di panel tersembunyi.** Bukan cuma
+  View Transitions dan rAF. Gejalanya menipu: atribut `style` sudah berisi nilai
+  baru sementara `getComputedStyle` tetap melaporkan nilai lama selamanya, jadi
+  perubahan yang benar terbaca seperti kode yang tidak jalan. Untuk mengukur
+  posisi akhir, matikan dulu transisinya (`el.style.transition = 'none'`,
+  paksa reflow dengan `void el.offsetWidth`), ukur, lalu kembalikan.
+- **`setTimeout` di-throttle di panel tersembunyi.** Terukur: tidur yang diminta
+  520ms memakan 1206ms. Jeda tunggu dalam skrip pengukuran harus dilebihkan dua
+  sampai tiga kali, dan pembacaan yang "gagal" sekali sering cuma mendahului
+  timernya — baca ulang sebelum menyimpulkan ada yang rusak.
+- **`pointerenter` mentah tidak sampai ke React.** React menurunkan
+  `onPointerEnter`/`onPointerLeave` dari `pointerover`/`pointerout` yang
+  menggelembung. `dispatchEvent(new PointerEvent('pointerenter'))` tidak
+  melakukan apa-apa, tanpa error. Pakai `pointerover` dan `pointerout`.
 
 ## Cara lanjut
 
 1. `git checkout portfolio-canvas-redesign`
-2. `npx vitest run` — harus 156 hijau, `npx eslint src --max-warnings=0` bersih
+2. `npx vitest run` — harus 201 hijau, `npx eslint src --max-warnings=0` bersih
 3. Antrean ada di bagian **"Antrean berikutnya, urut"** di atas. Nomor 1 sekarang
-   gaya scrollbar — pekerjaan kecil yang berdiri sendiri dan belum dispec.
+   zoom masuk/keluar halaman baca lewat View Transitions — belum dispec, dan
+   satu-satunya sisa dari "peta lebih interaktif".
 
 Aturan kerja yang berlaku di sesi ini dan sebaiknya diteruskan: TDD (test dulu,
 lihat gagal, baru implementasi), commit tiap task, verifikasi di browser

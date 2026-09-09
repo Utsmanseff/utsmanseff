@@ -63,6 +63,20 @@ describe('MapScene', () => {
     await waitFor(() => expect(angleRef.current).toBeCloseTo(-28, 5));
   });
 
+  it('says everything the map answers to, not only the drag', () => {
+    // Roda memutar (useMapCamera) dan badan plate adalah tombolnya (Plate),
+    // tetapi pojoknya selama ini hanya menyebut seret.
+    const { container } = renderScene();
+    const text = container.textContent;
+    expect(text).toContain('SERET ATAU GULIR');
+    expect(text).toContain('KLIK PLATE');
+  });
+
+  it('drops the motion-contract jargon a visitor cannot use', () => {
+    const { container } = renderScene();
+    expect(container.textContent).not.toContain('1:1');
+  });
+
   it('opens on the angle it is given, not always on the default', () => {
     const angleRef = { current: null };
     renderScene({ angleRef, angle: -55 });

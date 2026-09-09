@@ -6,7 +6,15 @@ import { useMapCamera } from '@/lib/shell/useMapCamera';
 import Plate from './Plate';
 import AxisLegend from './AxisLegend';
 
-const COPY = { drag: { id: 'SERET UNTUK MEMUTAR · 1:1', en: 'DRAG TO ORBIT · 1:1' } };
+// `1:1` dibuang: itu istilah kontrak gerak internal, dan tidak berarti apa-apa
+// bagi pengunjung. Yang berarti adalah bahwa roda juga memutar dan badan plate
+// bisa ditekan — dua hal yang selama ini benar tetapi tidak pernah dikatakan.
+const COPY = {
+  hints: {
+    id: ['SERET ATAU GULIR · MEMUTAR', 'KLIK PLATE · MEMILIH'],
+    en: ['DRAG OR SCROLL · ORBIT', 'CLICK A PLATE · SELECT'],
+  },
+};
 
 export default function MapScene({ systems, locale, selected, dimmed, onSelect, angleRef, angle }) {
   const paneRef = useRef(null);
@@ -53,9 +61,9 @@ export default function MapScene({ systems, locale, selected, dimmed, onSelect, 
         className="relative overflow-hidden cursor-grab active:cursor-grabbing touch-none"
         {...camera.handlers}
       >
-        <span className="absolute right-4 top-3 font-mono text-[10px] text-muted-deep pointer-events-none">
-          {COPY.drag[locale]}
-        </span>
+        <div className="absolute right-4 top-3 font-mono text-[10px] leading-[1.7] text-right text-muted-deep pointer-events-none">
+          {COPY.hints[locale].map((line) => <div key={line}>{line}</div>)}
+        </div>
 
         <div
           className="absolute left-1/2 top-1/2"

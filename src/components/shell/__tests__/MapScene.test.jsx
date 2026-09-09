@@ -80,6 +80,19 @@ describe('MapScene', () => {
     expect(rule.style.width).toBe('195px');
   });
 
+  it('keeps the year labels readable, not merely present', () => {
+    // #4C555A di atas ground #161A1D cuma 2.30:1 — di bawah AA untuk teks
+    // 11px. --color-muted (#7A8580) memberi 4.58:1 tanpa menambah warna baru
+    // ke palet, dan tanpa membuat label tahun seramai label plate.
+    const older = {
+      ...systems[0], slug: 'rme', year: '2025', shortName: { id: 'RME', en: 'EMR' },
+    };
+    const { container } = renderScene({ systems: [...systems, older] });
+    const label = container.querySelector('[data-year-rule="2025"] span');
+    expect(label.className).toContain('text-muted');
+    expect(label.className).not.toContain('text-muted-deep');
+  });
+
   it('draws no rule for a year with no systems', () => {
     const { container } = renderScene();
     expect(container.querySelector('[data-year-rule="2024"]')).toBeNull();

@@ -89,7 +89,7 @@ kembali browser bekerja.
 | Rencana teks & data, 10 task (selesai) | `docs/superpowers/plans/2026-09-10-teks-dan-data-sistem.md` |
 | Spec teks & data | `docs/superpowers/specs/2026-09-09-teks-dan-data-sistem-design.md` |
 
-Keadaan: **257 test hijau, 32 berkas**, `npx eslint src --max-warnings=0` bersih,
+Keadaan: **258 test hijau, 32 berkas**, `npx eslint src --max-warnings=0` bersih,
 `npm run build` sukses — dijalankan Utsman sendiri pada 2026-09-10.
 
 Jumlah test turun dari 165 ke 92 di Task 15 karena 73 test kanvas ikut dihapus
@@ -99,9 +99,9 @@ ikut dibuang, lalu naik ke 145 lewat gaya scrollbar, ke 156 lewat perpindahan
 naik-turun, dan ke 201 lewat peta hidup (`shading` 7, `useMapCamera` 19,
 `MapScene` 3, sisanya `Plate`), lalu turun ke 197 waktu snap kamera dibuang —
 tiga test snap dan satu test `settling` hilang bersama fiturnya. Bukan regresi.
-Naik ke 223 lewat zoom halaman baca, lalu ke 257 lewat teks & data sistem
+Naik ke 223 lewat zoom halaman baca, lalu ke 258 lewat teks & data sistem
 (`projects` 14, `AxisLegend` 4, `LogRail` 5, `layout` 4, `MapScene` 4,
-`FlatTable` 1, `ProjectView` 2).
+`FlatTable` 1, `ProjectView` 2, kontras label tahun 1).
 
 ## Larangan yang tidak bisa ditawar
 
@@ -117,6 +117,11 @@ Naik ke 223 lewat zoom halaman baca, lalu ke 257 lewat teks & data sistem
   absensi, lembur dan cuti, tetapi tidak menjalankan pembayaran — dan kalimat
   konteksnya menyebut batas itu sendiri. Ada test yang menjaganya. Jangan
   menghapus kata "penggajian" dari SIGAP karena membaca larangan ini sekilas.
+- **Label tahun di peta memakai `--color-muted`, bukan `--color-muted-deep`.**
+  `#4C555A` di atas ground `#161A1D` cuma 2.30:1, di bawah AA untuk teks 11px.
+  `#7A8580` memberi 4.58:1 tanpa menambah warna ke palet, dan amber tahun
+  berjalan sudah 5.33:1. Ketiganya diukur di halaman hidup pada 2026-09-10.
+  Ada test yang menjaganya.
 - **Amber ada dua.** `#C97B3F` hanya di atas gelap; di atas kertas wajib
   `#9C5A28`. Di lapis kertas, `#C97B3F` cuma 2.8:1 — itu sebabnya
   `document/AccessTick.jsx` ada dan terpisah dari `work/AccessBadge.jsx`.
@@ -321,15 +326,11 @@ seluruhnya**, lewat `2026-09-09-peta-hidup.md` dan
 selesai**, lewat `2026-09-10-teks-dan-data-sistem.md`, dan di jalan itu ia
 melebar sampai ke data sembilan sistem dan seluruh prosa halaman baca.
 
-**1. Kontras label tahun di peta.** `#4C555A` di atas ground ±2.3:1. Palet
-handoff, informasinya juga ada di legenda dan rail, jadi dibiarkan — tapi belum
-pernah ditawarkan ke Utsman untuk dinaikkan.
-
-**2. Screenshot** `hris.png` dan `psb.png` → `public/assets/img/`. Sensor dulu
+**1. Screenshot** `hris.png` dan `psb.png` → `public/assets/img/`. Sensor dulu
 kalau memuat data pegawai atau pasien asli. Ini juga dua halaman yang masih
 memakai kalimat "Screenshot menyusul".
 
-**3. Merge ke `main` dan deploy.**
+**2. Merge ke `main` dan deploy.**
 
 **Kalau nanti terasa perlu, bukan sekarang:**
 
@@ -386,9 +387,9 @@ dua hal yang tidak bisa dibuka dari ponsel membuat halaman itu terbaca seperti
 versi yang kurang, padahal isinya memang lengkap. Sekarang: "Semua isinya
 dapat dibaca di sini. Buka di desktop untuk tampilan yang lebih utuh."
 
-**Belum dilihat Utsman, dan itu yang tersisa:** apakah `GULIR` terasa wajar
-atau lebih baik `SCROLL`; apakah `Web & Pendaftaran` dan `PSB & CBT` enak
-dilihat di plate; dan apakah peta yang menyusut ±4% masih terbaca nyaman.
+**Sudah dilihat Utsman di browsernya sendiri pada 2026-09-10, dan semuanya
+aman:** `GULIR` di pojok peta, panjang `Web & Pendaftaran` dan `PSB & CBT` di
+plate, dan peta yang menyusut ±4%. Tidak ada yang perlu disetel.
 
 ### Zoom halaman baca — **selesai 2026-09-09**
 

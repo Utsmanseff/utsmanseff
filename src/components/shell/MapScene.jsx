@@ -103,7 +103,11 @@ export default function MapScene({ systems, locale, selected, dimmed, onSelect, 
                   style={{ left: 20, top: y + 40, width: end - 10, background: year === '2026' ? '#2E3539' : '#232B30' }}
                 >
                   <span
-                    className={`absolute font-mono text-[11px] ${year === '2026' ? 'text-amber' : 'text-muted-deep'}`}
+                    // `muted`, bukan `muted-deep`: #4C555A di atas ground
+                    // #161A1D cuma 2.30:1, di bawah AA untuk teks 11px.
+                    // #7A8580 memberi 4.58:1 tanpa menambah warna ke palet.
+                    // Amber tahun berjalan sudah 5.33:1.
+                    className={`absolute font-mono text-[11px] ${year === '2026' ? 'text-amber' : 'text-muted'}`}
                     style={{ left: end + 15, transform: `rotateZ(${-camera.rotZ}deg) rotateX(-56deg) translate(0,-7px)` }}
                   >
                     {year}

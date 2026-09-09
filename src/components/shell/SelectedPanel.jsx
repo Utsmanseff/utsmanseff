@@ -40,7 +40,7 @@ function Record({ locale, span }) {
   );
 }
 
-export default function SelectedPanel({ system, locale, span }) {
+export default function SelectedPanel({ system, locale, span, onOpen }) {
   if (!system) {
     return (
       <aside className="bg-surface border-l border-rule p-[18px] overflow-y-auto">
@@ -87,6 +87,14 @@ export default function SelectedPanel({ system, locale, span }) {
         {system.tier === 'full' ? (
           <Link
             href={`/kerja/${system.slug}`}
+            onClick={(e) => {
+              // Klik tengah, ctrl-klik dan "buka di tab baru" harus tetap
+              // bekerja, jadi yang dicegat hanya klik kiri polos. href-nya
+              // sengaja tetap asli supaya tautannya bisa disalin.
+              if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+              e.preventDefault();
+              onOpen(system.slug);
+            }}
             className="block text-center font-mono text-[11px] border border-amber text-amber py-2"
           >
             {COPY.open[locale]}

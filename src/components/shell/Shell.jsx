@@ -6,6 +6,7 @@ import { meta } from '@/lib/data/meta';
 import { useLocale } from '@/lib/hooks/useLocale';
 import { EMPTY_FILTERS, isShown, toggleFilter, isFiltering } from '@/lib/shell/filters';
 import { parseCommand, findSystem } from '@/lib/shell/commands';
+import { moveTo } from '@/lib/nav/moveTo';
 import TopBar from './TopBar';
 import StatusBar from './StatusBar';
 import FlatTable from './FlatTable';
@@ -36,6 +37,28 @@ export default function Shell({ systems, locale, view: initialView, seed = '', c
   const changeView = (next) => {
     setView(next);
     router.replace(next === 'list' ? '/sistem?tampilan=datar' : '/sistem', { scroll: false });
+  };
+
+  // Satu pintu, dua pemanggil: tautan di panel kanan dan `open` di konsol.
+  // Entri riwayat yang sedang berdiri ditimpa dengan titik pulang, lalu halaman
+  // baca didorong di atasnya — jadi tombol kembali browser mendarat tepat di URL
+  // berparameter ini dan peta pulih dengan sistem serta sudut yang ditinggalkan.
+  // Tidak ada penyimpanan; URL yang mengingat.
+  //
+  // history.replaceState, BUKAN router.replace. Terukur di Chrome 148:
+  // router.replace menjadwalkan transisi yang belum sempat commit sebelum push
+  // berikutnya jalan, jadi entri lama tidak pernah tertimpa dan tombol kembali
+  // mendarat di `/sistem` polos. replaceState menimpanya saat itu juga — dan ia
+  // tidak memicu render, yang memang tidak diinginkan di sini karena kita sedang
+  // meninggalkan halaman ini.
+  const openSystem = (slug) => {
+    const params = new URLSearchParams({
+      pilih: slug,
+      sudut: String(Math.round(angleRef.current)),
+    });
+    if (view === 'list') params.set('tampilan', 'datar');
+    window.history.replaceState(null, '', `/sistem?${params}`);
+    moveTo(router, `/kerja/${slug}`, 'zoom');
   };
 
   // Ten lines, oldest dropped. The log is a record of intent, not a report:
@@ -82,7 +105,7 @@ export default function Shell({ systems, locale, view: initialView, seed = '', c
       if (!found) { say(RESULT.noMatch[locale], 'result'); return; }
       setSelected(found.slug);
       if (found.tier !== 'full') { say(RESULT.noPage[locale], 'result'); return; }
-      router.push(`/kerja/${found.slug}`);
+      openSystem(found.slug);
       return;
     }
 
@@ -134,7 +157,7 @@ export default function Shell({ systems, locale, view: initialView, seed = '', c
             angleRef={angleRef}
           />
         )}
-        <SelectedPanel system={current} locale={locale} span={span} />
+        <SelectedPanel system={current} locale={locale} span={span} onOpen={openSystem} />
       </div>
 
       <Console

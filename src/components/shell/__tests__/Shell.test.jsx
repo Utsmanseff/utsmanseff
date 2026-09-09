@@ -6,9 +6,22 @@ import { projects } from '@/lib/data/projects';
 
 
 const replace = vi.hoisted(() => vi.fn());
-vi.mock('next/navigation', () => ({ useRouter: () => ({ push: vi.fn(), replace }) }));
+const push = vi.hoisted(() => vi.fn());
+vi.mock('next/navigation', () => ({ useRouter: () => ({ push, replace }) }));
 
-beforeEach(() => replace.mockClear());
+// Titik pulang ditulis lewat history.replaceState, bukan router.replace: yang
+// kedua menjadwalkan transisi yang belum commit sebelum push berikutnya jalan,
+// jadi entri lamanya tidak pernah tertimpa. Terukur di browser sungguhan.
+const stamp = vi.fn();
+
+beforeEach(() => {
+  replace.mockClear();
+  push.mockClear();
+  stamp.mockClear();
+  window.history.replaceState = stamp;
+  document.startViewTransition = (cb) => { cb(); return { finished: Promise.resolve() }; };
+  delete document.documentElement.dataset.nav;
+});
 
 // The gate is a page of its own now, so nothing here has to get past it. The
 // view and the seeded letter arrive as props, the way `/sistem` hands them over.
@@ -170,5 +183,48 @@ describe('Shell · what the URL decides', () => {
   it('has no gate to render any more', () => {
     renderShell();
     expect(screen.queryByTestId('gate')).toBeNull();
+  });
+
+  it('leaves a way home in the URL before it opens a reading page', () => {
+    renderShell();
+    fireEvent.click(railRow(/HRIS/));
+    fireEvent.click(screen.getByRole('link', { name: /BUKA HALAMAN/ }));
+
+    expect(stamp).toHaveBeenCalledWith(null, '', '/sistem?pilih=hris-nirwana&sudut=-40');
+    expect(push).toHaveBeenCalledWith('/kerja/hris-nirwana');
+  });
+
+  it('writes that way home before it navigates, not after', () => {
+    const order = [];
+    stamp.mockImplementation(() => order.push('stamp'));
+    push.mockImplementation(() => order.push('push'));
+    renderShell();
+    fireEvent.click(railRow(/HRIS/));
+    fireEvent.click(screen.getByRole('link', { name: /BUKA HALAMAN/ }));
+    push.mockReset();
+    expect(order).toEqual(['stamp', 'push']);
+  });
+
+  it('remembers the flat table in that way home', () => {
+    renderShell({ view: 'list' });
+    fireEvent.click(railRow(/HRIS/));
+    fireEvent.click(screen.getByRole('link', { name: /BUKA HALAMAN/ }));
+    expect(stamp).toHaveBeenCalledWith(null, '', expect.stringContaining('tampilan=datar'));
+  });
+
+  it('marks that navigation as a zoom', () => {
+    renderShell();
+    fireEvent.click(railRow(/HRIS/));
+    fireEvent.click(screen.getByRole('link', { name: /BUKA HALAMAN/ }));
+    expect(document.documentElement.dataset.nav).toBe('zoom');
+  });
+
+  it('takes the console through the same door', () => {
+    renderShell();
+    const input = screen.getByLabelText(/konsol/i);
+    fireEvent.change(input, { target: { value: 'open hris' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    expect(stamp).toHaveBeenCalledWith(null, '', expect.stringContaining('pilih=hris-nirwana'));
+    expect(push).toHaveBeenCalledWith('/kerja/hris-nirwana');
   });
 });

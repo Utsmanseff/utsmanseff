@@ -8,10 +8,19 @@ import AxisLegend from './AxisLegend';
 
 const COPY = { drag: { id: 'SERET UNTUK MEMUTAR · 1:1', en: 'DRAG TO ORBIT · 1:1' } };
 
-export default function MapScene({ systems, locale, selected, dimmed, onSelect }) {
+export default function MapScene({ systems, locale, selected, dimmed, onSelect, angleRef, angle }) {
   const paneRef = useRef(null);
   const [scale, setScale] = useState(0.4);
-  const camera = useMapCamera();
+  // `angle ?? undefined`, bukan `angle`: parameter bawaan -40 hanya berlaku
+  // untuk undefined, sementara null akan diteruskan apa adanya.
+  const camera = useMapCamera(angle ?? undefined);
+
+  // Sudut dititipkan lewat ref, bukan dinaikkan jadi state Shell: pintu cuma
+  // membacanya sekali saat ditekan, sementara state akan merender ulang rail,
+  // panel dan konsol tiap klik roda.
+  useEffect(() => {
+    if (angleRef) angleRef.current = camera.rotZ;
+  });
 
   // Measured by observing the pane, not the window: the pane is what the scene
   // has to fit, and it changes size on its own when the chrome around it does.

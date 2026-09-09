@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { meta } from '@/lib/data/meta';
 import { useLocale } from '@/lib/hooks/useLocale';
@@ -25,6 +25,10 @@ export default function Shell({ systems, locale, view: initialView, seed = '', c
   const [filters, setFilters] = useState(EMPTY_FILTERS);
   const [log, setLog] = useState([{ text: '$ ls systems', kind: 'command' }]);
   const [cmd, setCmd] = useState(seed);
+
+  // Dibaca pintu saat ditekan, tidak pernah saat render — jadi ia tidak perlu
+  // memicu satu pun.
+  const angleRef = useRef(-40);
 
   // The URL follows the view rather than leading it. replace(), so switching
   // back and forth does not fill the history; and local state, because a URL
@@ -127,6 +131,7 @@ export default function Shell({ systems, locale, view: initialView, seed = '', c
             selected={selected}
             dimmed={dimmed}
             onSelect={setSelected}
+            angleRef={angleRef}
           />
         )}
         <SelectedPanel system={current} locale={locale} span={span} />

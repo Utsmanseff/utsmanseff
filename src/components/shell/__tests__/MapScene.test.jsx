@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import MapScene from '@/components/shell/MapScene';
 
 const systems = [
@@ -48,5 +48,24 @@ describe('MapScene', () => {
     fireEvent.pointerUp(pane);
     fireEvent.click(screen.getByRole('button', { name: /HRIS/ }));
     expect(onSelect).toHaveBeenCalledWith('hris-nirwana');
+  });
+
+  it('writes the angle it is holding into the ref it was handed', async () => {
+    const angleRef = { current: null };
+    renderScene({ angleRef });
+    await waitFor(() => expect(angleRef.current).toBe(-40));
+  });
+
+  it('keeps that ref current as the camera turns', async () => {
+    const angleRef = { current: null };
+    renderScene({ angleRef });
+    fireEvent.wheel(screen.getByTestId('map-pane'), { deltaY: 100, deltaX: 0 });
+    await waitFor(() => expect(angleRef.current).toBeCloseTo(-28, 5));
+  });
+
+  it('opens on the angle it is given, not always on the default', () => {
+    const angleRef = { current: null };
+    renderScene({ angleRef, angle: -55 });
+    expect(angleRef.current).toBe(-55);
   });
 });

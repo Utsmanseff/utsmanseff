@@ -12,8 +12,11 @@ export default function Plate({ system, position, locale, rotZ, selected, dimmed
   const lift = selected ? 10 : 0;
 
   return (
-    <div
-      className="absolute"
+    <button
+      type="button"
+      aria-pressed={selected}
+      onClick={() => onSelect(system.slug)}
+      className="absolute appearance-none bg-transparent border-0 p-0 text-left"
       style={{
         left: position.x,
         top: position.y,
@@ -44,10 +47,7 @@ export default function Plate({ system, position, locale, rotZ, selected, dimmed
         );
       })}
 
-      <button
-        type="button"
-        aria-pressed={selected}
-        onClick={() => onSelect(system.slug)}
+      <span
         data-plate-label
         className="absolute left-1/2 top-1/2 text-center whitespace-nowrap"
         style={{
@@ -67,7 +67,7 @@ export default function Plate({ system, position, locale, rotZ, selected, dimmed
         }`}>
           {system.client.toUpperCase()} · {system.access.toUpperCase()}
         </span>
-      </button>
-    </div>
+      </span>
+    </button>
   );
 }

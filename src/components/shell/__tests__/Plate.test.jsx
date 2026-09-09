@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Plate from '@/components/shell/Plate';
 
 const system = {
@@ -21,9 +22,25 @@ const renderPlate = (props = {}) =>
   );
 
 describe('Plate', () => {
-  it('is a button, so it can be reached by keyboard', () => {
-    renderPlate();
-    expect(screen.getByRole('button', { name: /HRIS/ })).toBeInTheDocument();
+  it('is one button covering the whole plate, not just its label', () => {
+    const { container } = renderPlate();
+    const button = screen.getByRole('button', { name: 'HRIS RSU NIRWANA · INTERNAL' });
+    expect(button).toBe(container.firstChild);
+    expect(container.querySelectorAll('button')).toHaveLength(1);
+    expect(container.querySelectorAll('[data-layer]')[0].closest('button')).toBe(button);
+  });
+
+  it('says whether it is the selected system', () => {
+    renderPlate({ selected: true });
+    expect(screen.getByRole('button', { name: /HRIS/ })).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('reports the slug it stands for when pressed', async () => {
+    const onSelect = vi.fn();
+    const user = userEvent.setup();
+    renderPlate({ onSelect });
+    await user.click(screen.getByRole('button', { name: /HRIS/ }));
+    expect(onSelect).toHaveBeenCalledWith('hris-nirwana');
   });
 
   it('draws one layer per technology', () => {

@@ -5,10 +5,18 @@ import AccessBadge from '@/components/work/AccessBadge';
 const COPY = {
   log: { id: 'LOG', en: 'LOG' },
   filters: { id: 'FILTER · KLIK ATAU KETIK', en: 'FILTERS · CLICK OR TYPE' },
-  inView: { id: 'SISTEM YANG TAMPIL', en: 'SYSTEMS IN VIEW' },
+  // Bukan "SISTEM YANG TAMPIL": Shell mengoper systems utuh, jadi daftar ini
+  // selalu berisi semuanya dan tidak pernah menyaring apa pun. Nama ini juga
+  // menepati janji tombol lewati di TopBar ("LEWATI PETA → DAFTAR SISTEM").
+  list: { id: 'DAFTAR SISTEM', en: 'SYSTEM LIST' },
+  // Catatan ini berdiri di kedua view, jadi ia tidak boleh menyebut peta
+  // sebagai tempat tinggalnya, dan tidak ada yang "didorong ke belakang" —
+  // plate redup cuma turun ke opacity .34 tanpa berpindah. Peredupan sudah
+  // punya barisnya sendiri di legenda; yang belum pernah dikatakan adalah
+  // bahwa daftar ini bisa dipakai memilih, dan bisa dicapai tanpa tetikus.
   note: {
-    id: 'Sistem yang diredupkan tetap di peta. Tidak ada yang disembunyikan, hanya didorong ke belakang.',
-    en: 'Dimmed systems stay on the map. Nothing is ever hidden, only pushed back.',
+    id: 'Cermin peta, dan bisa dicapai dengan Tab. Memilih di sini sama dengan menekan plate-nya.',
+    en: 'A mirror of the map, reachable by Tab. Selecting here is the same as pressing the plate.',
   },
 };
 
@@ -71,7 +79,7 @@ export default function LogRail({
         </button>
       </div>
 
-      <div className="font-mono text-[10px] tracking-[.12em] text-muted">{COPY.inView[locale]}</div>
+      <div className="font-mono text-[10px] tracking-[.12em] text-muted">{COPY.list[locale]}</div>
       <ul className="overflow-y-auto min-h-0 flex-1 m-0 p-0 list-none">
         {systems.map((s) => (
           <li

@@ -54,8 +54,12 @@ describe('Shell', () => {
     renderShell();
     // SIBENIH, bukan SIGAP: SIGAP punya halaman baca sejak 2026-09-10.
     fireEvent.click(railRow(/SIBENIH/));
-    expect(screen.getByText(/RINGKASAN SAJA/)).toBeInTheDocument();
     expect(screen.queryByRole('link', { name: /BUKA HALAMAN/ })).toBeNull();
+    // RINGKASAN SAJA tidak diperiksa di sini: sejak 2026-09-10 SIBENIH punya
+    // repo, dan tautan kode menggantikan label itu. Sisi labelnya dijaga
+    // SelectedPanel.test.jsx, yang bisa memberi sistem tanpa repo.
+    expect(screen.getByRole('link', { name: /Lihat kode/ }))
+      .toHaveAttribute('href', 'https://github.com/Utsmanseff/Aplikasi-Monitoring-Sertifikasi-Benih');
   });
 
   it('switches to the flat table and back', () => {

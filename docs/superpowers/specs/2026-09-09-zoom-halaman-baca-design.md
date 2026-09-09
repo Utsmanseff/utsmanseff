@@ -219,6 +219,20 @@ Kalau itu terjadi, dua jalan mundur, urut:
 
 Spike ini **task pertama** di rencana, dan hasilnya boleh membatalkan §2 dan §4.
 
+**Terukur 2026-09-09, Chrome di panel, 1280×800, di `/sistem`. GAGAL.**
+Dengan `view-transition-name: sistem-aktif` dipasang pada plate, jarak layar
+antara lapis terbawah dan teratas jatuh dari **9,51px ke 0** — tumpukan 3D rata
+seluruhnya. Melepas nama itu mengembalikannya ke 9,51px, jadi namanya yang
+menyebabkannya, bukan hal lain.
+
+Dan **tidak bisa dilawan**: dengan nama terpasang, `getComputedStyle` tetap
+melaporkan `transform-style: preserve-3d` dan `contain: none` — tapi anak-anaknya
+tetap rata. Menulis ulang `transform-style: preserve-3d` di atasnya tidak
+mengubah apa pun; jaraknya tetap 0. Perataan itu dipaksa mesin penangkap
+view-transition, di luar jangkauan properti yang bisa ditimpa.
+
+Jalan mundur pertama dipakai: **nama pindah ke blok judul `SelectedPanel`.**
+
 ## 6. Cara mengujinya
 
 TDD: test dulu, lihat gagal, baru implementasi. Commit tiap task.

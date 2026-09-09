@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from 'react';
-import { SCENE, ROW_Y, platePositions, fitScale } from '@/lib/shell/layout';
+import { SCENE, ROW_Y, platePositions, fitScale, rowExtents } from '@/lib/shell/layout';
 import { useMapCamera } from '@/lib/shell/useMapCamera';
 import Plate from './Plate';
 import AxisLegend from './AxisLegend';
@@ -46,6 +46,7 @@ export default function MapScene({ systems, locale, selected, dimmed, onSelect, 
   }, []);
 
   const positions = platePositions(systems);
+  const extents = rowExtents(systems);
 
   // Seret yang kebetulan berakhir di atas plate tidak memilih sistem.
   const select = (slug) => {
@@ -87,20 +88,29 @@ export default function MapScene({ systems, locale, selected, dimmed, onSelect, 
               ? 'Peta sistem: kedalaman menandai tahun, tinggi menandai jumlah teknologi'
               : 'System map: depth is the year, height is the number of technologies'}
           >
-            {Object.entries(ROW_Y).map(([year, y]) => (
-              <div
-                key={year}
-                className="absolute h-px"
-                style={{ left: 20, top: y + 40, width: 700, background: year === '2026' ? '#2E3539' : '#232B30' }}
-              >
-                <span
-                  className={`absolute font-mono text-[11px] ${year === '2026' ? 'text-amber' : 'text-muted-deep'}`}
-                  style={{ left: 710, transform: `rotateZ(${-camera.rotZ}deg) rotateX(-56deg) translate(0,-7px)` }}
+            {/* Garis berhenti di ujung barisnya sendiri, dan labelnya berdiri
+                sesudah garis itu. Lebar mati 700 dengan label di 710 sudah
+                patah begitu 2025 berisi empat sistem: plate terakhirnya
+                menabrak label tahunnya sendiri. */}
+            {Object.entries(ROW_Y).map(([year, y]) => {
+              const end = extents[year];
+              if (!end) return null;
+              return (
+                <div
+                  key={year}
+                  data-year-rule={year}
+                  className="absolute h-px"
+                  style={{ left: 20, top: y + 40, width: end - 10, background: year === '2026' ? '#2E3539' : '#232B30' }}
                 >
-                  {year}
-                </span>
-              </div>
-            ))}
+                  <span
+                    className={`absolute font-mono text-[11px] ${year === '2026' ? 'text-amber' : 'text-muted-deep'}`}
+                    style={{ left: end + 15, transform: `rotateZ(${-camera.rotZ}deg) rotateX(-56deg) translate(0,-7px)` }}
+                  >
+                    {year}
+                  </span>
+                </div>
+              );
+            })}
 
             {systems.map((s, i) => (
               <Plate

@@ -1,6 +1,9 @@
 // The authoring box. Everything below is expressed inside it; the single
 // scale factor from fitScale() is applied once, by MapScene.
-export const SCENE = { width: 900, height: 620 };
+// 940, bukan 900: baris terpanjang (2025, empat sistem) berujung di 875, dan
+// label tahunnya berdiri sesudah itu. Ini satu-satunya angka yang perlu naik
+// kalau nanti ada baris yang lebih panjang lagi.
+export const SCENE = { width: 940, height: 620 };
 
 export const ROW_Y = { 2024: 10, 2025: 225, 2026: 440 };
 export const PLATE = {
@@ -33,6 +36,21 @@ export function platePositions(systems) {
       layerStep: LAYER_STEP,
     };
   });
+}
+
+// Ujung tiap baris, dihitung dari posisi yang sama dengan platePositions.
+// Garis tahun dan labelnya berdiri di atas nilai ini, jadi keduanya berhenti
+// bergantung pada lebar mati yang kebetulan cukup — dan berhenti patah tiap
+// kali ada sistem yang bertambah.
+//
+// Tahun tanpa sistem tidak muncul di hasilnya sama sekali: tidak ada garis
+// yang perlu digambar untuk baris kosong.
+export function rowExtents(systems) {
+  const ends = {};
+  for (const p of platePositions(systems)) {
+    ends[p.year] = Math.max(ends[p.year] ?? 0, p.x + p.width);
+  }
+  return ends;
 }
 
 // The 170px horizontal reserve is for labels that project outside the plate

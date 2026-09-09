@@ -72,6 +72,19 @@ describe('MapScene', () => {
     expect(text).toContain('KLIK PLATE');
   });
 
+  it('draws each year rule as long as its own row, not a fixed width', () => {
+    const { container } = renderScene();
+    const rule = container.querySelector('[data-year-rule="2026"]');
+    // Fixture berisi satu plate full: 40 + 165 = 205, dan garisnya mulai di
+    // 20, jadi lebarnya 205 - 10.
+    expect(rule.style.width).toBe('195px');
+  });
+
+  it('draws no rule for a year with no systems', () => {
+    const { container } = renderScene();
+    expect(container.querySelector('[data-year-rule="2024"]')).toBeNull();
+  });
+
   it('drops the motion-contract jargon a visitor cannot use', () => {
     const { container } = renderScene();
     expect(container.textContent).not.toContain('1:1');

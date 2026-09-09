@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { SCENE, platePositions, fitScale } from '@/lib/shell/layout';
+import { SCENE, platePositions, fitScale, rowExtents } from '@/lib/shell/layout';
 
 const systems = [
   { slug: 'a', year: '2025', tier: 'full', tech: ['x', 'y', 'z'] },
@@ -42,7 +42,9 @@ describe('platePositions', () => {
 
 describe('fitScale', () => {
   it('fits the scene inside the pane, reserving room for labels', () => {
-    expect(fitScale({ width: 1070, height: 650 })).toBeCloseTo(1, 5);
+    // Diturunkan dari SCENE.width, bukan ditulis sebagai angka: adegannya
+    // melebar waktu barisnya bertambah panjang, dan lebar pas ikut bergeser.
+    expect(fitScale({ width: SCENE.width + 170, height: 650 })).toBeCloseTo(1, 5);
     expect(fitScale({ width: 800, height: 650 })).toBeCloseTo((800 - 170) / SCENE.width, 5);
   });
 
@@ -53,5 +55,40 @@ describe('fitScale', () => {
 
   it('survives a pane that has not been measured yet', () => {
     expect(fitScale({ width: 0, height: 0 })).toBe(0.4);
+  });
+});
+
+// Baris tahun tidak lagi punya lebar tetap: garis dan labelnya berdiri di atas
+// ujung baris yang sebenarnya, supaya data yang bertambah tidak menabrak
+// apa pun.
+const row2025 = [
+  { slug: 'a', year: '2025', tier: 'full', tech: ['x'] },
+  { slug: 'b', year: '2025', tier: 'brief', tech: ['x'] },
+  { slug: 'c', year: '2025', tier: 'full', tech: ['x'] },
+  { slug: 'd', year: '2025', tier: 'full', tech: ['x'] },
+  { slug: 'e', year: '2024', tier: 'brief', tech: ['x'] },
+];
+
+describe('rowExtents', () => {
+  it('ends each row where its last plate ends', () => {
+    const ends = rowExtents(row2025);
+    // 40 + 165 + 80 + 100 + 80 + 165 + 80 + 165
+    expect(ends['2025']).toBe(875);
+    // 40 + 100
+    expect(ends['2024']).toBe(140);
+  });
+
+  it('agrees with the positions the same data produces', () => {
+    const pos = platePositions(row2025);
+    const last = pos.filter((p) => p.year === '2025').at(-1);
+    expect(rowExtents(row2025)['2025']).toBe(last.x + last.width);
+  });
+
+  it('leaves a year with no systems out entirely', () => {
+    expect(rowExtents(row2025)['2026']).toBeUndefined();
+  });
+
+  it('gives the scene room for the widest row and its label', () => {
+    expect(SCENE.width).toBeGreaterThanOrEqual(940);
   });
 });

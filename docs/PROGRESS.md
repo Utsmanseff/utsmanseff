@@ -330,6 +330,18 @@ labelnya tetap dijaga `SelectedPanel.test.jsx`.
   diajukan ke Utsman pada 2026-09-09 dan tidak dipersoalkan; kalau nanti terasa
   janggal, jalan keluarnya membuat tautan itu memanggil `history.back()` waktu
   riwayatnya memang datang dari peta — bukan menaruh sudut di URL halaman baca.
+- **`README.md` memikul dua tugas, dan urutannya penting.** Repo ini
+  `Utsmanseff/utsmanseff` — repo profil GitHub **dan** sumber porto. Berkas
+  `README.md`-nya yang tayang di halaman profil. Kartu profil (About Me,
+  Socials, Tech Stack, GitHub Stats) **wajib tetap di atas**; bagian porto
+  berdiri di bawah `---`. Sebelum 2026-09-10, branch ini membawa README porto
+  saja: merge ke `main` akan menghapus kartu profil Utsman dari GitHub tanpa
+  ada yang menyadarinya. Jangan pernah menaruh dokumentasi porto di puncak
+  berkas itu.
+- **Demo satu sistem dengan data karangan ditolak, dan alasannya biaya.**
+  Diusulkan 2026-09-10 sebagai cara menutup keluhan "delapan dari sembilan
+  sistem tidak bisa dicoba". Utsman menolak: perlu hosting database berbayar.
+  Jangan diusulkan lagi tanpa jalan yang tidak berbiaya.
 - **`ScreenshotBlock` tidak boleh mengunci rasio.** Dulu ia menulis
   `width={1600} height={900}` untuk setiap gambar, dan **tidak satu pun** dari
   delapan screenshot berasio itu: yang lanskap 2.10-2.43, HRIS potret 0.49.

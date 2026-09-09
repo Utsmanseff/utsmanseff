@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from 'react';
-import { SCENE, ROW_Y, platePositions, fitScale, snapRotation } from '@/lib/shell/layout';
+import { SCENE, ROW_Y, platePositions, fitScale } from '@/lib/shell/layout';
+import { useMapCamera } from '@/lib/shell/useMapCamera';
 import Plate from './Plate';
 import AxisLegend from './AxisLegend';
 
@@ -10,9 +11,7 @@ const COPY = { drag: { id: 'SERET UNTUK MEMUTAR · 1:1', en: 'DRAG TO ORBIT · 1
 export default function MapScene({ systems, locale, selected, dimmed, onSelect }) {
   const paneRef = useRef(null);
   const [scale, setScale] = useState(0.4);
-  const [rotZ, setRotZ] = useState(-40);
-  // Dragging follows the pointer exactly; only the release is eased.
-  const drag = useRef(null);
+  const camera = useMapCamera();
 
   // Measured by observing the pane, not the window: the pane is what the scene
   // has to fit, and it changes size on its own when the chrome around it does.
@@ -31,29 +30,13 @@ export default function MapScene({ systems, locale, selected, dimmed, onSelect }
 
   const positions = platePositions(systems);
 
-  const onPointerDown = (e) => {
-    drag.current = { x: e.clientX, rot: rotZ };
-  };
-  const onPointerMove = (e) => {
-    if (!drag.current) return;
-    setRotZ(drag.current.rot + (e.clientX - drag.current.x) * 0.22);
-  };
-  const endDrag = () => {
-    if (!drag.current) return;
-    drag.current = null;
-    setRotZ((r) => snapRotation(r));
-  };
-
   return (
     <div className="grid grid-rows-[1fr_auto] min-h-0">
       <div
         ref={paneRef}
         data-testid="map-pane"
         className="relative overflow-hidden cursor-grab active:cursor-grabbing touch-none"
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={endDrag}
-        onPointerCancel={endDrag}
+        {...camera.handlers}
       >
         <span className="absolute right-4 top-3 font-mono text-[10px] text-muted-deep pointer-events-none">
           {COPY.drag[locale]}
@@ -72,7 +55,7 @@ export default function MapScene({ systems, locale, selected, dimmed, onSelect }
             className="absolute inset-0"
             style={{
               transformStyle: 'preserve-3d',
-              transform: `rotateX(56deg) rotateZ(${rotZ}deg)`,
+              transform: `rotateX(56deg) rotateZ(${camera.rotZ}deg)`,
             }}
             role="group"
             aria-label={locale === 'id'
@@ -87,7 +70,7 @@ export default function MapScene({ systems, locale, selected, dimmed, onSelect }
               >
                 <span
                   className={`absolute font-mono text-[11px] ${year === '2026' ? 'text-amber' : 'text-muted-deep'}`}
-                  style={{ left: 710, transform: `rotateZ(${-rotZ}deg) rotateX(-56deg) translate(0,-7px)` }}
+                  style={{ left: 710, transform: `rotateZ(${-camera.rotZ}deg) rotateX(-56deg) translate(0,-7px)` }}
                 >
                   {year}
                 </span>
@@ -100,7 +83,7 @@ export default function MapScene({ systems, locale, selected, dimmed, onSelect }
                 system={s}
                 position={positions[i]}
                 locale={locale}
-                rotZ={rotZ}
+                rotZ={camera.rotZ}
                 selected={selected === s.slug}
                 dimmed={dimmed.has(s.slug)}
                 onSelect={onSelect}

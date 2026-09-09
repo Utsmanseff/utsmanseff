@@ -9,7 +9,8 @@ setelah Utsman melihatnya, lalu `2026-09-08-gerbang-punya-url.md`
 **selesai, Task 1–6** (dikerjakan dengan Task 2 lebih dulu — lihat catatan di
 bawah), lalu `2026-09-09-peta-hidup.md` **selesai, Task 1–11**, lalu
 `2026-09-09-zoom-halaman-baca.md` **selesai, Task 1–10**, lalu
-`2026-09-10-teks-dan-data-sistem.md` **selesai, Task 1–10**.
+`2026-09-10-teks-dan-data-sistem.md` **selesai, Task 1–10**, lalu
+`2026-09-10-tautan-repo.md` **selesai, Task 1–10**.
 Belum di-merge ke `main`, dan belum di-deploy.
 
 ## Bentuk sekarang
@@ -88,8 +89,11 @@ kembali browser bekerja.
 | Teks yang dibuang, diarsipkan | `docs/superpowers/notes/2026-09-03-arsip-bagian-sulit.md` |
 | Rencana teks & data, 10 task (selesai) | `docs/superpowers/plans/2026-09-10-teks-dan-data-sistem.md` |
 | Spec teks & data | `docs/superpowers/specs/2026-09-09-teks-dan-data-sistem-design.md` |
+| Rencana tautan repo, 10 task (selesai) | `docs/superpowers/plans/2026-09-10-tautan-repo.md` |
+| Spec tautan repo | `docs/superpowers/specs/2026-09-10-tautan-repo-design.md` |
+| Lima README siap tempel ke repo GitHub | `docs/readme-repo/` |
 
-Keadaan: **262 test hijau, 32 berkas**, `npx eslint src --max-warnings=0` bersih,
+Keadaan: **278 test hijau, 33 berkas**, `npx eslint src --max-warnings=0` bersih,
 `npm run build` sukses — dijalankan Utsman sendiri pada 2026-09-10.
 
 Jumlah test turun dari 165 ke 92 di Task 15 karena 73 test kanvas ikut dihapus
@@ -102,6 +106,11 @@ tiga test snap dan satu test `settling` hilang bersama fiturnya. Bukan regresi.
 Naik ke 223 lewat zoom halaman baca, lalu ke 262 lewat teks & data sistem
 (`projects` 14, `AxisLegend` 4, `LogRail` 5, `layout` 4, `MapScene` 4,
 `FlatTable` 1, `ProjectView` 2, kontras label tahun 1, ketersediaan kontak 2, sheet filter HP 2).
+Naik ke 278 lewat tautan repo (`projects` 3, `ProjectView` 3, `SelectedPanel` 5,
+`YearGroup` 5 — berkas test baru). Satu test `Shell` yang lama disetel, bukan
+dihapus: ia mengunci `RINGKASAN SAJA` untuk SIBENIH, padahal SIBENIH tepat
+kasus tier `brief` yang punya repo dan labelnya memang digantikan. Sisi
+labelnya tetap dijaga `SelectedPanel.test.jsx`.
 
 ## Larangan yang tidak bisa ditawar
 
@@ -321,6 +330,28 @@ Naik ke 223 lewat zoom halaman baca, lalu ke 262 lewat teks & data sistem
   diajukan ke Utsman pada 2026-09-09 dan tidak dipersoalkan; kalau nanti terasa
   janggal, jalan keluarnya membuat tautan itu memanggil `history.back()` waktu
   riwayatnya memang datang dari peta — bukan menaruh sudut di URL halaman baca.
+- **Tautan repo di `YearGroup` berdiri BERSAUDARA dengan tautan halaman baca,
+  bukan di dalamnya.** Baris tier `full` dibungkus `<Link href="/kerja/...">`;
+  menaruh `<a>` repo di dalam badan itu menghasilkan `<a>` bersarang — HTML
+  tidak sah, dan hidrasi Next menatanya ulang diam-diam tanpa error. Susunannya
+  karena itu `flex items-center gap-3` dengan `<Link>` di dalam pembungkus
+  `flex-1 min-w-0`, dan tautan repo `shrink-0` di sebelahnya. `min-w-0` karena
+  `1fr` punya `min-width: auto`. Ada test yang menelusuri DOM (`a.parentElement
+  .closest('a')`), bukan className.
+- **Tautan repo di baris HP `py-[15px] -my-2`, dan angkanya terukur.** `py-3`
+  memberi 38px — di bawah 44, ambang yang sama yang dulu meloloskan chip filter
+  38px lewat seluruh test lalu menggagalkannya di tangan. `py-[15px]` memberi
+  44px, dan `-my-2` menahannya supaya tinggi baris tidak ikut tumbuh. Diukur di
+  375×812 pada 2026-09-10. happy-dom tidak menata letak, jadi angka ini tidak
+  bisa dijaga unit test.
+- **Kaki `SelectedPanel` punya empat keadaan, dan tier `brief` ber-repo
+  MENGGANTIKAN `noPage`, bukan menumpuk di atasnya.** SIBENIH dan SIMBAS tepat
+  dua sistem tier `brief`, dan keduanya punya repo — label yang bilang "tidak
+  ada halaman" sementara ada tujuan hidup di bawahnya itu janji palsu,
+  sekerabat dengan pegangan tarik `FilterSheet`. Waktu tautan kode berdiri
+  sendiri ia amber penuh; waktu ia baris kedua di bawah `ENTER → BUKA HALAMAN`
+  ia turun ke `border-rule text-muted`, karena dua kotak amber bertumpuk
+  membuat keduanya berhenti berarti apa-apa. Keempat keadaan punya testnya.
 - **`SelectedPanel` tidak lagi memegang `router`.** Pintunya satu fungsi di
   `Shell` (`openSystem`), dipanggil tautan panel dan `open` di konsol. Tautannya
   tetap `<Link href>` asli dan hanya klik kiri polos yang dicegat, supaya klik
@@ -352,23 +383,33 @@ sekarang dari Utsman sendiri — istilah yang memang dipakai orang. Lencananya
 amber, 5.33:1 di atas ground, diukur di halaman hidup. Ada tiga test yang
 menjaganya.
 
-**1. Tautan repo per project.** Lahir dari penilaian yang diminta Utsman pada
-2026-09-10 (lihat "Penilaian jujur" di bawah). Belum dispec — brainstorm
-dulu, keluar spec, baru rencana.
+**Tautan repo sudah selesai 2026-09-10**, lewat `2026-09-10-tautan-repo.md`.
+Lima repo tertaut: HRIS, SIGAP, SIMASET, SIBENIH dan SIMBAS. Empat sistem
+sisanya `repo: null`.
 
-Tiga syarat, tiga syarat yang harus diperiksa sebelum satu pun tautan
-masuk, karena masing-masing justru menurunkan nilai kalau lolos:
-- **Repo privat.** Tautan yang mendarat di 404 GitHub lebih buruk daripada
-  tidak ada tautan sama sekali.
-- **Kode klien.** RME, IDRG, HRIS dan web RSU milik rumah sakit; SIMASET,
-  SIGAP, SIBENIH dan SIMBAS milik instansi. Perlu izin, dan riwayat commit
-  harus bersih dari kredensial, endpoint internal, dump database, dan data
-  pasien atau pegawai — bukan cuma commit terakhirnya.
-- **Repo tanpa README.** Recruiter membuka, melihat folder Laravel standar,
-  lalu menutupnya.
+Dari tiga syarat yang dulu ditulis di sini, dua lolos dan satu **gagal di
+kelima repo**: semuanya membawa README bawaan Laravel ("About Laravel ·
+Laravel Sponsors · Premium Partners"), yang persis kegagalan yang syarat itu
+jaga. Karena itu lima README ditulis lebih dulu di `docs/readme-repo/`.
 
-Medan `repo` di `projects.js` dan tautannya di halaman baca adalah perubahan
-data **dan** tampilan, jadi ia spec sendiri, bukan tempelan.
+**1. Tempelkan lima README ke repo tujuannya.** Ini pekerjaan Utsman, bukan
+agen: repo-nya di luar porto ini dan tidak bisa didorong dari sesi kerja.
+Sampai itu terjadi, tiap tautan mendarat di teks Laravel. **Penghalang
+deploy, bukan penghalang merge.**
+
+| Berkas di `docs/readme-repo/` | Repo tujuan |
+|---|---|
+| `HRIS-Nirwana.md` | `Utsmanseff/HRIS-Nirwana` |
+| `Sistem-Informasi-Kepegawaian.md` | `Utsmanseff/Sistem-Informasi-Kepegawaian` |
+| `Sistem-Informasi-Manajemen-Aset.md` | `Utsmanseff/Sistem-Informasi-Manajemen-Aset` |
+| `Aplikasi-Monitoring-Sertifikasi-Benih.md` | `Utsmanseff/Aplikasi-Monitoring-Sertifikasi-Benih` |
+| `Sistem-Informasi-Manajemen-BanSos.md` | `Utsmanseff/Sistem-Informasi-Manajemen-BanSos` |
+
+**Isi kode kelima repo tidak pernah diperiksa dari sesi mana pun** — hanya
+halaman depan GitHub-nya yang dibaca. Kredensial, endpoint internal atau
+dump di dalam riwayatnya, kalau ada, belum pernah dicari. Repo-nya sudah
+publik apa adanya sebelum porto ini menautkannya, jadi tautan tidak menambah
+paparan — tetapi jangan pernah menulis di mana pun bahwa isinya sudah aman.
 
 **2. Screenshot** `hris.png` dan `psb.png` → `public/assets/img/`. Sensor dulu
 kalau memuat data pegawai atau pasien asli. Ini juga dua halaman yang masih
@@ -416,6 +457,48 @@ satu cicipan cangkang untuk pengunjung ponsel.
   halaman itu bercerita tentang situsnya. Kalau nanti terasa hilang, jalan
   keluarnya menambah medan pencarian di `findSystem` — bukan menyelipkan "OCR"
   kembali ke judul yang sudah disetujui.
+
+### Tautan repo — **selesai 2026-09-10**
+
+Sepuluh task, lima di antaranya menulis README. Berangkat dari alasan nomor satu
+di "Penilaian jujur": hampir tidak ada yang bisa diperiksa orang lain. Yang
+ditemukan di jalan: kelima repo yang diizinkan **sudah publik**, tetapi
+kelima-limanya membawa README bawaan Laravel — bukan "repo tanpa README", tapi
+kegagalan yang sama persis, dan sedikit lebih buruk karena halamannya terisi
+tulisan orang lain.
+
+Yang berubah: medan `repo` di kesembilan entri `projects.js` (lima terisi);
+kaki halaman baca jadi `flex` yang memuat dua tujuan keluar; kaki
+`SelectedPanel` jadi empat keadaan; baris dokumen HP dapat `KODE ↗`.
+`filters.js`, `commands.js`, `LogRail`, `FilterSheet`, `AccessBadge` dan
+`AccessTick` tidak disentuh sama sekali — repo medan tampilan, bukan sumbu
+penyaringan.
+
+**Terukur di browser sungguhan lewat `javascript_tool`, 2026-09-10:** di 1280×800,
+`/kerja/hris-nirwana` memberi satu tautan `Lihat kode ↗` ke `HRIS-Nirwana` dengan
+`target="_blank"` dan `rel="noopener noreferrer"`, sementara `/kerja/rme` memberi
+nol; klik plate SIMBAS memberi kaki panel berisi tautan GitHub amber penuh
+(`rgb(201,123,63)`) **tanpa** teks `RINGKASAN SAJA`; klik plate SIGAP memberi
+`BUKA HALAMAN` amber **dan** baris kode di bawahnya dengan tepi `rgb(46,53,57)`
+serta teks `rgb(122,133,128)`. Di 375×812, lima tautan `KODE ↗`, tidak satu pun
+bersarang (`parentElement.closest('a')` null di kelimanya), warna terhitung
+`rgb(156,90,40)` — amber kertas, bukan amber gelap — dan kotak sentuh 51×44
+dengan kelegaan 12px dari lencana akses. `curl` memberi kelima URL repo di HTML
+server `/` dan `/sistem`, dan satu di `/kerja/hris-nirwana`: pengunjung tanpa
+JavaScript ikut mendapatkannya.
+
+**Satu hal ditemukan lewat mata, bukan lewat test, lagi:** baris SIMBAS tumbuh
+dari 62px ke 77px karena `Kecamatan Basarang · 2025` — nama klien terpanjang
+dari sembilan — jatuh ke dua baris begitu tautan memakan ~50px di kanannya.
+Baseline diukur dengan mengembalikan `YearGroup` ke versi sebelum fitur:
+kesembilan baris 62px, kolom klien SIMBAS 192px. Merampingkan tautan sampai
+`px-1.5 gap-1` cuma mengembalikannya ke 141px, masih kurang dari ~150px yang
+dibutuhkan, jadi jarak yang lega dikembalikan dan wrap-nya diterima. Kalau
+nanti terasa, jalan keluarnya memendekkan label klien SIMBAS di data — bukan
+menyempitkan tautan lebih jauh, yang sudah terbukti tidak cukup.
+
+**Belum dilihat Utsman waktu catatan ini ditulis:** rasa baris HP yang wrap itu,
+dan `· 2025` yang jatuh sendirian ke baris kedua di SIMBAS.
 
 ### Teks dan data sembilan sistem — **selesai 2026-09-10**
 

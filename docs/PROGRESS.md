@@ -89,7 +89,7 @@ kembali browser bekerja.
 | Rencana teks & data, 10 task (selesai) | `docs/superpowers/plans/2026-09-10-teks-dan-data-sistem.md` |
 | Spec teks & data | `docs/superpowers/specs/2026-09-09-teks-dan-data-sistem-design.md` |
 
-Keadaan: **258 test hijau, 32 berkas**, `npx eslint src --max-warnings=0` bersih,
+Keadaan: **260 test hijau, 32 berkas**, `npx eslint src --max-warnings=0` bersih,
 `npm run build` sukses — dijalankan Utsman sendiri pada 2026-09-10.
 
 Jumlah test turun dari 165 ke 92 di Task 15 karena 73 test kanvas ikut dihapus
@@ -99,9 +99,9 @@ ikut dibuang, lalu naik ke 145 lewat gaya scrollbar, ke 156 lewat perpindahan
 naik-turun, dan ke 201 lewat peta hidup (`shading` 7, `useMapCamera` 19,
 `MapScene` 3, sisanya `Plate`), lalu turun ke 197 waktu snap kamera dibuang —
 tiga test snap dan satu test `settling` hilang bersama fiturnya. Bukan regresi.
-Naik ke 223 lewat zoom halaman baca, lalu ke 258 lewat teks & data sistem
+Naik ke 223 lewat zoom halaman baca, lalu ke 260 lewat teks & data sistem
 (`projects` 14, `AxisLegend` 4, `LogRail` 5, `layout` 4, `MapScene` 4,
-`FlatTable` 1, `ProjectView` 2, kontras label tahun 1).
+`FlatTable` 1, `ProjectView` 2, kontras label tahun 1, ketersediaan kontak 2).
 
 ## Larangan yang tidak bisa ditawar
 
@@ -326,16 +326,20 @@ seluruhnya**, lewat `2026-09-09-peta-hidup.md` dan
 selesai**, lewat `2026-09-10-teks-dan-data-sistem.md`, dan di jalan itu ia
 melebar sampai ke data sembilan sistem dan seluruh prosa halaman baca.
 
-**1. Tautan repo per project, dan baris ketersediaan di `/kontak`.** Keduanya
-lahir dari penilaian yang diminta Utsman pada 2026-09-10 (lihat "Penilaian
-jujur" di bawah). Belum dispec — brainstorm dulu, keluar spec, baru rencana.
+**Baris ketersediaan sudah selesai 2026-09-10**, di luar rencana, atas
+permintaan Utsman langsung. `/kontak` sekarang membuka dengan lencana mono
+`OPEN TO WORK` (tidak diterjemahkan, sama seperti `GITHUB` dan `CV.PDF` di
+StatusBar) lalu kalimatnya: "Terbuka untuk kerja penuh waktu maupun project
+lepas, remote atau di lokasi mana pun." Yang lama, "Terbuka untuk kerja
+sama", tidak menjawab satu pun pertanyaan yang dibawa pembacanya. Lencananya
+amber, 5.33:1 di atas ground, diukur di halaman hidup. Ada tiga test yang
+menjaganya.
 
-Yang sudah diputuskan Utsman soal baris ketersediaan, jadi jangan ditanya lagi:
-terbuka untuk kerja penuh waktu **dan** freelance sekaligus; bebas lokasi —
-remote, Banjarbaru, Kalsel, atau di mana pun; nadanya "open to work" atau
-"open for collaboration", bukan kalimat panjang.
+**1. Tautan repo per project.** Lahir dari penilaian yang diminta Utsman pada
+2026-09-10 (lihat "Penilaian jujur" di bawah). Belum dispec — brainstorm
+dulu, keluar spec, baru rencana.
 
-Untuk tautan repo, tiga syarat yang harus diperiksa sebelum satu pun tautan
+Tiga syarat, tiga syarat yang harus diperiksa sebelum satu pun tautan
 masuk, karena masing-masing justru menurunkan nilai kalau lolos:
 - **Repo privat.** Tautan yang mendarat di 404 GitHub lebih buruk daripada
   tidak ada tautan sama sekali.

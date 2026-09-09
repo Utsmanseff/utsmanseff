@@ -8,7 +8,8 @@ lalu `2026-09-08-gerbang-hero.md` **selesai, Task 1–8**, plus penyetelan gerba
 setelah Utsman melihatnya, lalu `2026-09-08-gerbang-punya-url.md`
 **selesai, Task 1–6** (dikerjakan dengan Task 2 lebih dulu — lihat catatan di
 bawah), lalu `2026-09-09-peta-hidup.md` **selesai, Task 1–11**, lalu
-`2026-09-09-zoom-halaman-baca.md` **selesai, Task 1–10**.
+`2026-09-09-zoom-halaman-baca.md` **selesai, Task 1–10**, lalu
+`2026-09-10-teks-dan-data-sistem.md` **selesai, Task 1–10**.
 Belum di-merge ke `main`, dan belum di-deploy.
 
 ## Bentuk sekarang
@@ -59,7 +60,7 @@ kembali browser bekerja.
 
 | Apa | Di mana |
 |-----|---------|
-| Data tunggal, 8 project | `src/lib/data/projects.js` |
+| Data tunggal, 9 project | `src/lib/data/projects.js` |
 | Filter murni (DOM-free) | `src/lib/shell/filters.js` |
 | Tabel perintah konsol | `src/lib/shell/commands.js` |
 | Geometri plate & skala | `src/lib/shell/layout.js` |
@@ -85,10 +86,12 @@ kembali browser bekerja.
 | Spec zoom halaman baca | `docs/superpowers/specs/2026-09-09-zoom-halaman-baca-design.md` |
 | Seluruh teks tampil, dua bahasa | `docs/superpowers/notes/2026-09-03-seluruh-isi-tulisan.md` |
 | Teks yang dibuang, diarsipkan | `docs/superpowers/notes/2026-09-03-arsip-bagian-sulit.md` |
+| Rencana teks & data, 10 task (selesai) | `docs/superpowers/plans/2026-09-10-teks-dan-data-sistem.md` |
+| Spec teks & data | `docs/superpowers/specs/2026-09-09-teks-dan-data-sistem-design.md` |
 
-Keadaan: **223 test hijau, 29 berkas**, `npx eslint src --max-warnings=0` bersih,
-`npm run build` sukses: `/sistem` terdaftar **statis** (`○`), bersama `/`,
-`/kontak` dan lima halaman `/kerja/*`.
+Keadaan: **256 test hijau, 32 berkas**, `npx eslint src --max-warnings=0` bersih.
+Build terakhir yang benar-benar dijalankan masih yang sebelum rencana teks &
+data; lihat catatan di bagian rencana itu.
 
 Jumlah test turun dari 165 ke 92 di Task 15 karena 73 test kanvas ikut dihapus
 bersama kodenya. Itu bukan regresi. Naik ke 142 lewat rencana gerbang, lalu
@@ -97,7 +100,9 @@ ikut dibuang, lalu naik ke 145 lewat gaya scrollbar, ke 156 lewat perpindahan
 naik-turun, dan ke 201 lewat peta hidup (`shading` 7, `useMapCamera` 19,
 `MapScene` 3, sisanya `Plate`), lalu turun ke 197 waktu snap kamera dibuang —
 tiga test snap dan satu test `settling` hilang bersama fiturnya. Bukan regresi.
-Naik ke 223 lewat zoom halaman baca.
+Naik ke 223 lewat zoom halaman baca, lalu ke 256 lewat teks & data sistem
+(`projects` 14, `AxisLegend` 4, `LogRail` 5, `layout` 4, `MapScene` 4,
+`FlatTable` 1, `ProjectView` 1).
 
 ## Larangan yang tidak bisa ditawar
 
@@ -107,11 +112,26 @@ Naik ke 223 lewat zoom halaman baca.
   `parseCommand('--rare')` sengaja dijawab `unknown`, dan ada test yang menjaga itu.
 - **Tidak ada bagian "yang sulit" dan "di luar lingkup"** di halaman baca.
 - **Tidak ada angka dampak.** Tidak ada persen, tidak ada jumlah pengguna.
-- **HRIS tidak punya payroll atau modul keuangan.** Jangan pernah disebut.
+- **HRIS RSU Nirwana tidak punya payroll atau modul keuangan.** Jangan pernah
+  disebut. **SIGAP (BPN) berbeda, dan itu bukan pengecualian yang lupa
+  dihapus:** ia memang mencatat serta menghitung penggajian bulanan dari
+  absensi, lembur dan cuti, tetapi tidak menjalankan pembayaran — dan kalimat
+  konteksnya menyebut batas itu sendiri. Ada test yang menjaganya. Jangan
+  menghapus kata "penggajian" dari SIGAP karena membaca larangan ini sekilas.
 - **Amber ada dua.** `#C97B3F` hanya di atas gelap; di atas kertas wajib
   `#9C5A28`. Di lapis kertas, `#C97B3F` cuma 2.8:1 — itu sebabnya
   `document/AccessTick.jsx` ada dan terpisah dari `work/AccessBadge.jsx`.
-- **SIMRS Khanza bukan vendor.** Open source, dipakai apa adanya.
+- **Nama SIMRS rumah sakit tidak ditulis di layar.** Yang tampil "SIMRS open
+  source". Ia memang open source dan dipakai apa adanya, bukan produk vendor —
+  tapi namanya tetap tidak disebut. Ada test yang menjaganya.
+- **Prosa halaman baca berbahasa baku, dan tanpa kata "saya".** Kalimat lurus,
+  tanpa tanda pisah yang mendramatisir dan tanpa personifikasi. Alasannya
+  disebut Utsman sendiri pada 2026-09-09: prosa bergaya membuat halaman
+  terbaca seperti tulisan mesin. Ada test yang menjaga keduanya.
+- **Ada dua SOAP.** Protokol `SOAP` sudah keluar dari stack IDRG karena
+  memang tidak dipakai. "Pencatatan SOAP" di butir RME adalah singkatan rekam
+  medis — subjektif, objektif, asesmen, plan — dan tetap tinggal. Jangan
+  disapu bersama.
 - **Tidak ada kalimat headline.** Panel kanan desktop berisi blok catatan.
 - **Vitest & ESLint mengecualikan `.claude/**`.** Jangan "diperbaiki".
 - **`meta.siteUrl` satu-satunya sumber URL kanonik.** Sudah diperiksa: tidak ada
@@ -126,7 +146,23 @@ Naik ke 223 lewat zoom halaman baca.
 ## Keputusan yang mahal kalau dilupakan
 
 - **Slug tidak berubah.** `rsu-nirwana-web`, `idrg-bridging`, `hris-nirwana`,
-  `rme`, `psb-walisongo`. Lima halaman baca.
+  `rme`, `psb-walisongo`, dan sejak 2026-09-10 juga `sigap-bpn` dan `simaset`.
+  **Tujuh** halaman baca. `aset-kphl` dan `sertifikasi-benih` sempat diganti
+  jadi `simaset` dan `sibenih` — itu aman justru karena dikerjakan waktu
+  keduanya masih tier ringkasan dan belum punya URL. Sesudah punya halaman,
+  tidak boleh lagi.
+- **`AxisLegend` tidak ikut ke view `DATAR`.** Ia hidup di dalam `MapScene`,
+  jadi peredupan di tabel datar memang tanpa keterangan. Itu pilihan sadar:
+  catatan kaki rail dulu memikulnya, dan sejak 2026-09-10 ia pindah tugas
+  menerangkan daftarnya sendiri. Harganya disebutkan ke Utsman dan diterima.
+  Kalau nanti terasa, jalan keluarnya menaruh satu kata di dekat chip filter,
+  bukan mengembalikan catatan kaki lama.
+- **Garis tahun di peta tidak punya lebar tetap.** `rowExtents()` di
+  `layout.js` yang menentukannya, dari kursor yang sama dengan
+  `platePositions`, dan label berdiri 35px sesudah ujung baris. Angka mati
+  `700` dan `710` sudah dibuang. Kelegaan 35px itu terukur, bukan selera: 20px
+  membuat label 2026 tertimpa label plate, dan itu terlihat di browser
+  sungguhan pada 2026-09-10.
 - **Prosa berasal dari repo**, bukan dari prototipe.
 - **Stack PSB:** `Laravel, JavaScript, MySQL, Fonnte`. Bukan Livewire.
 - **HRIS memakai TensorFlow.js**, bukan MediaPipe. Arsip teks lama masih
@@ -148,7 +184,7 @@ Naik ke 223 lewat zoom halaman baca.
   kecil sesudah menggulir jauh menarik kamera balik dengan lompatan besar.
   Jangan dikembalikan tanpa alasan baru.
 - **Tanpa JavaScript `/` **dan** `/sistem` harus tetap utuh.** Sudah diverifikasi
-  lewat `curl`: HTML server keduanya memuat delapan sistem dan lima tautan
+  lewat `curl`: HTML server keduanya memuat sembilan sistem dan tujuh tautan
   `/kerja/*`. Server merender `PaperFallback`, bukan gerbang.
 - **Satu tautan kembali saja di halaman baca.** Kepala yang memegangnya; kaki
   dulu punya tautan kedua ke tujuan yang sama, dan dua tautan dengan nama
@@ -282,23 +318,74 @@ kosong yang memang dirancang untuk itu.
 seluruhnya**, lewat `2026-09-09-peta-hidup.md` dan
 `2026-09-09-zoom-halaman-baca.md`.
 
-**1. Teks legenda dan catatan rail.** Utsman menyebut keduanya kurang
-informatif: `AxisLegend` (`KEDALAMAN tahun · TINGGI stack` dst) dan catatan di
-kaki `LogRail` ("Sistem yang diredupkan tetap di peta…").
+**Antrean nomor 1 berikutnya — "teks legenda dan catatan rail" — juga sudah
+selesai**, lewat `2026-09-10-teks-dan-data-sistem.md`, dan di jalan itu ia
+melebar sampai ke data sembilan sistem dan seluruh prosa halaman baca.
 
-**2. Kontras label tahun di peta.** `#4C555A` di atas ground ±2.3:1. Palet
+**1. Kontras label tahun di peta.** `#4C555A` di atas ground ±2.3:1. Palet
 handoff, informasinya juga ada di legenda dan rail, jadi dibiarkan — tapi belum
 pernah ditawarkan ke Utsman untuk dinaikkan.
 
-**3. Screenshot** `hris.png` dan `psb.png` → `public/assets/img/`. Sensor dulu
-kalau memuat data pegawai atau pasien asli.
+**2. Screenshot** `hris.png` dan `psb.png` → `public/assets/img/`. Sensor dulu
+kalau memuat data pegawai atau pasien asli. Ini juga dua halaman yang masih
+memakai kalimat "Screenshot menyusul".
 
-**4. Merge ke `main` dan deploy.**
+**3. Merge ke `main` dan deploy.**
 
-**Kalau nanti terasa perlu, bukan sekarang:** `← SEMUA SISTEM` memanggil
-`history.back()` waktu riwayatnya datang dari peta, supaya sudut kamera ikut
-pulih lewat tautan itu — bukan cuma lewat tombol kembali browser. Sudah diajukan
-ke Utsman dan tidak dipersoalkan, jadi ia menunggu keluhan sungguhan lebih dulu.
+**Kalau nanti terasa perlu, bukan sekarang:**
+
+- `← SEMUA SISTEM` memanggil `history.back()` waktu riwayatnya datang dari peta,
+  supaya sudut kamera ikut pulih lewat tautan itu — bukan cuma lewat tombol
+  kembali browser. Sudah diajukan ke Utsman dan tidak dipersoalkan, jadi ia
+  menunggu keluhan sungguhan lebih dulu.
+- **`siblings()` tidak lagi kronologis.** Ia mengambil urutan dari urutan array,
+  dan setelah tahun berubah pada 2026-09-10, `Sebelumnya`/`Berikutnya` di kaki
+  halaman baca melompat-lompat tahun. Bukan salah, tapi sekarang tidak
+  disengaja. Belum pernah dikeluhkan.
+- **`open ocr` tidak lagi menemukan apa pun.** `findSystem` hanya melihat slug,
+  `shortName` dan `title`, dan kata OCR sudah tidak ada di ketiganya sejak
+  halaman itu bercerita tentang situsnya. Kalau nanti terasa hilang, jalan
+  keluarnya menambah medan pencarian di `findSystem` — bukan menyelipkan "OCR"
+  kembali ke judul yang sudah disetujui.
+
+### Teks dan data sembilan sistem — **selesai 2026-09-10**
+
+Sepuluh task. Berangkat dari keluhan bahwa legenda dan catatan rail kurang
+informatif, dan menemukan bahwa keduanya juga **salah**: `TEPI publik` menunjuk
+bagian plate yang bukan penandanya, catatan rail menyebut peta padahal ia
+berdiri di kedua view dan menjanjikan sistem "didorong ke belakang" padahal
+tidak ada yang bergeser, dan tajuk `SISTEM YANG TAMPIL` menjanjikan penyaringan
+padahal `Shell` mengoper `systems` utuh.
+
+Dari situ melebar ke data. Yang berubah: SIMBAS masuk sebagai project
+kesembilan; `aset-kphl` jadi `simaset` dan pindah ke 2025; `sertifikasi-benih`
+jadi `sibenih`; web RSU pindah ke 2026 dan berhenti bercerita tentang OCR
+sendirian; SIGAP dan SIMASET naik jadi halaman baca; SOAP keluar dari IDRG;
+seluruh prosa dibakukan dan kata "saya" hilang; garis tahun berhenti punya
+lebar tetap.
+
+**Terukur di browser sungguhan pada 1280×800, lewat `javascript_tool`:** chip
+`stack:livewire` menyalakan empat sistem (HRIS, RME, SIGAP, SIBENIH) dan
+meredupkan lima — bukan nol seperti kalau `stack:soap` dibiarkan;
+`/kerja/sigap-bpn` dan `/kerja/simaset` menjawab `200` sementara
+`/kerja/sibenih` tetap `404`; judul `/kerja/rsu-nirwana-web` terbaca
+`Web Rumah Sakit dan Pendaftaran Pasien Baru`, dan kata "Khanza" maupun "saya"
+tidak ada di halaman mana pun; sembilan plate di peta; tiga garis tahun dengan
+lebar `375 / 865 / 685` — persis ujung barisnya masing-masing dikurangi 10;
+ketiga label tahun di dalam layar dan tidak tertimpa apa pun.
+
+**Satu hal ditemukan lewat mata, bukan lewat test:** kelegaan label 20px
+membuat label `2026` tertimpa label plate. Dikembalikan ke 35px, sama dengan
+sebelumnya, lalu diukur lagi.
+
+**Belum dijalankan, dan jangan diklaim sudah:** `npm run build`. Ia bentrok
+dengan dev server yang memegang `.next`, jadi ia menunggu Utsman. Yang harus
+diperiksa waktu dijalankan: sukses, `/` dan `/sistem` tetap `○ Static`, dan
+**tujuh** halaman `/kerja/*` terdaftar.
+
+**Belum dilihat Utsman, dan itu yang tersisa:** apakah `GULIR` terasa wajar
+atau lebih baik `SCROLL`; apakah `Web & Pendaftaran` dan `PSB & CBT` enak
+dilihat di plate; dan apakah peta yang menyusut ±4% masih terbaca nyaman.
 
 ### Zoom halaman baca — **selesai 2026-09-09**
 
